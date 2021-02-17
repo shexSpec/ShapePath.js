@@ -1,1 +1,6 @@
-123*456
+asdf
+
+  @<S1>.<p1>@<S2> union
+*[123] union
+ShapeAnd[456] union
+/ShapeAnd[789]/id

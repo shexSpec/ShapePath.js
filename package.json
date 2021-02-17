@@ -4,7 +4,10 @@
   "description": "A typescript library for executing ShapePaths",
   "main": "index.js",
   "scripts": {
+    "all": "npm run parser && npm run test",
     "parser": "ts-jison -t typescript -o ShapePathJison.ts ShapePathJison.jison",
+    "compile": "tsc ShapePathJison.ts",
+    "run": "node ShapePathJison.js txt",
     "test": "ts-node ShapePathJison.ts txt"
   },
   "repository": {
