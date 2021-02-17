@@ -28,9 +28,8 @@ PN_CHARS                {PN_CHARS_U} | '-' | [0-9] | [\u00b7] | [\u0300-\u036f] 
 PN_PREFIX               {PN_CHARS_BASE} (({PN_CHARS} | '.')* {PN_CHARS})?
 HEX                     [0-9] | [A-F] | [a-f]
 PERCENT                 '%' {HEX} {HEX}
-REGEXP                  '/' ([^\u002f\u005C\u000A\u000D] | '\\' [nrt\\|.?*+(){}$\u002D\u005B\u005D\u005E/] | {UCHAR})+ '/' [smix]*
-IT_asdf                 [Aa][Ss][Dd][Ff]
-IT_BASE                 [Bb][Aa][Ss][Ee]
+IT_UNION                [Uu][Nn][Ii][Oo][Nn]
+IT_INTERSECTION         [Ii][Nn][Tt][Ee][Rr][Ss][Ee][Cc][Tt][Ii][Oo][Nn]
 COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))* "*/"
 
 %%
@@ -54,10 +53,83 @@ COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))*
 //{PN_LOCAL}            return 'PN_LOCAL';
 //{HEX}                 return 'HEX';
 //{PERCENT}             return 'PERCENT';
-{REGEXP}                return 'REGEXP';
-{IT_asdf}               return 'IT_asdf';
-{IT_BASE}               return 'IT_BASE';
+{IT_UNION}              return 'IT_UNION';
+{IT_INTERSECTION}       return 'IT_INTERSECTION';
 <<EOF>>                 return 'EOF';
+"@"                     return 'IT_AT';
+"."                     return 'IT_DOT';
+"child::"               return 'IT_child';
+"nested::"              return 'IT_nested';
+"self::"                return 'IT_self';
+"parent::"              return 'IT_parent';
+"ancestor::"            return 'IT_ancestor';
+"Schema"                return 'IT_Schema';
+"SemAct"                return 'IT_SemAct';
+"Annotation"            return 'IT_Annotation';
+"ShapeAnd"              return 'IT_ShapeAnd';
+"ShapeOr"               return 'IT_ShapeOr';
+"ShapeNot"              return 'IT_ShapeNot';
+"NodeConstraint"        return 'IT_NodeConstraint';
+"Shape"                 return 'IT_Shape';
+"ShapeExternal"         return 'IT_ShapeExternal';
+"EachOf"                return 'IT_EachOf';
+"OneOf"                 return 'IT_OneOf';
+"TripleConstraint"      return 'IT_TripleConstraint';
+"IriStem"               return 'IT_IriStem';
+"IriStemRange"          return 'IT_IriStemRange';
+"LiteralStem"           return 'IT_LiteralStem';
+"LiteralStemRange"      return 'IT_LiteralStemRange';
+"Language"              return 'IT_Language';
+"LanguageStem"          return 'IT_LanguageStem';
+"LanguageStemRange"     return 'IT_LanguageStemRange';
+"Wildcard"              return 'IT_Wildcard';
+"type"                  return 'IT_type';
+"id"                    return 'IT_id';
+"semActs"               return 'IT_semActs';
+"annotations"           return 'IT_annotations';
+"predicate"             return 'IT_predicate';
+"@context"              return 'IT_@context';
+"startActs"             return 'IT_startActs';
+"start"                 return 'IT_start';
+"imports"               return 'IT_imports';
+"shapes"                return 'IT_shapes';
+"shapeExprs"            return 'IT_shapeExprs';
+"shapeExpr"             return 'IT_shapeExpr';
+"nodeKind"              return 'IT_nodeKind';
+"datatype"              return 'IT_datatype';
+"values"                return 'IT_values';
+"length"                return 'IT_length';
+"minlength"             return 'IT_minlength';
+"maxlength"             return 'IT_maxlength';
+"pattern"               return 'IT_pattern';
+"flags"                 return 'IT_flags';
+"mininclusive"          return 'IT_mininclusive';
+"minexclusive"          return 'IT_minexclusive';
+"maxinclusive"          return 'IT_maxinclusive';
+"maxexclusive"          return 'IT_maxexclusive';
+"totaldigits"           return 'IT_totaldigits';
+"fractiondigits"        return 'IT_fractiondigits';
+"value"                 return 'IT_value';
+"language"              return 'IT_language';
+"stem"                  return 'IT_stem';
+"exclusions"            return 'IT_exclusions';
+"languageTag"           return 'IT_languageTag';
+"closed"                return 'IT_closed';
+"extra"                 return 'IT_extra';
+"expression"            return 'IT_expression';
+"expressions"           return 'IT_expressions';
+"min"                   return 'IT_min';
+"max"                   return 'IT_max';
+"inverse"               return 'IT_inverse';
+"valueExpr"             return 'IT_valueExpr';
+"name"                  return 'IT_name';
+"code"                  return 'IT_code';
+"object"                return 'IT_object';
+"*"                     return 'IT_STAR';
+"["                     return 'IT_LBRACKET';
+"]"                     return 'IT_RBRACKET';
+"//"                    return 'IT_SLASHSLASH';
+"/"                     return 'IT_SLASH';
 [a-zA-Z0-9_-]+          return 'unexpected word "'+yytext+'"';
 .                       return 'invalid character '+yytext;
 
@@ -77,11 +149,11 @@ COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))*
 %% /* language grammar */
 
 shapePath:
-    IT_asdf intersectionStep _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star	
+    intersectionStep _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star EOF	
 ;
 
 _O_QIT_intersection_E_S_QintersectionStep_E_C:
-    "intersection" intersectionStep	
+    IT_INTERSECTION intersectionStep	
 ;
 
 _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star:
@@ -94,7 +166,7 @@ intersectionStep:
 ;
 
 _O_QIT_union_E_S_QunionStep_E_C:
-    "union" unionStep	
+    IT_UNION unionStep	
 ;
 
 _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star:
@@ -117,8 +189,8 @@ startStep:
 ;
 
 _O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C:
-    "/"
-  | "//"	
+    IT_SLASH
+  | IT_SLASHSLASH	
 ;
 
 _Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt:
@@ -136,8 +208,8 @@ shortcut:
 ;
 
 _O_QGT_AT_E_Or_QGT_DOT_E_C:
-    "@"	
-  | "."	
+    IT_AT	
+  | IT_DOT	
 ;
 
 step:
@@ -155,21 +227,21 @@ _Qfilter_E_Star:
 ;
 
 axis:
-    "child::"	
-  | "nested::"	
-  | "self::"	
-  | "parent::"	
-  | "ancestor::"	
+    IT_child	
+  | IT_nested	
+  | IT_self	
+  | IT_parent	
+  | IT_ancestor	
 ;
 
 selector:
-    "*"	
+    IT_STAR	
   | termType	
   | attribute	
 ;
 
 filter:
-    "[" _O_QshapePath_E_Or_QnumericExpr_E_C "]"	
+    IT_LBRACKET _O_QshapePath_E_Or_QnumericExpr_E_C IT_RBRACKET	
 ;
 
 _O_QshapePath_E_Or_QnumericExpr_E_C:
@@ -185,43 +257,43 @@ termType:
     shapeExprType	
   | tripleExprType	
   | valueType	
-  | "Schema"	
-  | "SemAct"	
-  | "Annotation"	
+  | IT_Schema	
+  | IT_SemAct	
+  | IT_Annotation	
 ;
 
 shapeExprType:
-    "ShapeAnd"	
-  | "ShapeOr"	
-  | "ShapeNot"	
-  | "NodeConstraint"	
-  | "Shape"	
-  | "ShapeExternal"	
+    IT_ShapeAnd	
+  | IT_ShapeOr	
+  | IT_ShapeNot	
+  | IT_NodeConstraint	
+  | IT_Shape	
+  | IT_ShapeExternal	
 ;
 
 tripleExprType:
-    "EachOf"	
-  | "OneOf"	
-  | "TripleConstraint"	
+    IT_EachOf	
+  | IT_OneOf	
+  | IT_TripleConstraint	
 ;
 
 valueType:
-    "IriStem"	
-  | "IriStemRange"	
-  | "LiteralStem"	
-  | "LiteralStemRange"	
-  | "Language"	
-  | "LanguageStem"	
-  | "LanguageStemRange"	
-  | "Wildcard"	
+    IT_IriStem	
+  | IT_IriStemRange	
+  | IT_LiteralStem	
+  | IT_LiteralStemRange	
+  | IT_Language	
+  | IT_LanguageStem	
+  | IT_LanguageStemRange	
+  | IT_Wildcard	
 ;
 
 attribute:
-    "type"	
-  | "id"	
-  | "semActs"	
-  | "annotations"	
-  | "predicate"	
+    IT_type	
+  | IT_id	
+  | IT_semActs	
+  | IT_annotations	
+  | IT_predicate	
   | schemaAttr	
   | shapeExprAttr	
   | tripleExprAttr	
@@ -231,25 +303,25 @@ attribute:
 ;
 
 schemaAttr:
-    "@context"	
-  | "startActs"	
-  | "start"	
-  | "imports"	
-  | "shapes"	
+    IT_@context	
+  | IT_startActs	
+  | IT_start	
+  | IT_imports	
+  | IT_shapes	
 ;
 
 shapeExprAttr:
-    "shapeExprs"	
-  | "shapeExpr"	
+    IT_shapeExprs	
+  | IT_shapeExpr	
   | nodeConstraintAttr	
   | shapeAttr	
 ;
 
 nodeConstraintAttr:
-    "nodeKind"	
-  | "datatype"	
+    IT_nodeKind	
+  | IT_datatype	
   | xsFacetAttr	
-  | "values"	
+  | IT_values	
 ;
 
 xsFacetAttr:
@@ -258,59 +330,59 @@ xsFacetAttr:
 ;
 
 stringFacetAttr:
-    "length"	
-  | "minlength"	
-  | "maxlength"	
-  | "pattern"	
-  | "flags"	
+    IT_length	
+  | IT_minlength	
+  | IT_maxlength	
+  | IT_pattern	
+  | IT_flags	
 ;
 
 numericFacetAttr:
-    "mininclusive"	
-  | "minexclusive"	
-  | "maxinclusive"	
-  | "maxexclusive"	
-  | "totaldigits"	
-  | "fractiondigits"	
+    IT_mininclusive	
+  | IT_minexclusive	
+  | IT_maxinclusive	
+  | IT_maxexclusive	
+  | IT_totaldigits	
+  | IT_fractiondigits	
 ;
 
 valueSetValueAttr:
-    "value"	
-  | "language"	
-  | "stem"	
-  | "exclusions"	
-  | "languageTag"	
+    IT_value	
+  | IT_language	
+  | IT_stem	
+  | IT_exclusions	
+  | IT_languageTag	
 ;
 
 
 
 shapeAttr:
-    "closed"	
-  | "extra"	
-  | "expression"	
+    IT_closed	
+  | IT_extra	
+  | IT_expression	
 ;
 
 tripleExprAttr:
-    "expressions"	
-  | "min"	
-  | "max"	
+    IT_expressions	
+  | IT_min	
+  | IT_max	
   | tripleConstraintAttr	
 ;
 
 tripleConstraintAttr:
-    "inverse"	
-  | "valueExpr"	
+    IT_inverse	
+  | IT_valueExpr	
 ;
 
 
 
 semActAttr:
-    "name"	
-  | "code"	
+    IT_name	
+  | IT_code	
 ;
 
 annotationAttr:
-    "object"	
+    IT_object	
 ;
 
 
