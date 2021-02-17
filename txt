@@ -1,4 +1,5 @@
-  @<S1>.<p1>@<S2> union
+  @<S1>/*.<p1>@<S2>*/ union
+/shapes/*[id=<S1>][assert length()=1] union
 *[123] intersection
 ShapeAnd[456] intersection
 /ShapeAnd[789]/id

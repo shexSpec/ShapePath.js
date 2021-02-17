@@ -8,6 +8,48 @@
   */
 
   const UNBOUNDED = -1;
+  function shapeLabel (label) {
+    return [
+      {
+        "t": "Step",
+        "selector": "shapes"
+      },
+      {
+        "t": "Step",
+        "selector": "*",
+        "filters": [
+          {
+            "t": "Filter",
+            "l": {
+              "t": "Path",
+              "steps": [
+                {
+                  "t": "Step",
+                  "selector": "id"
+                }
+              ]
+            },
+            "op": "=",
+            "r": label
+          },
+          {
+            "t": "Assertion",
+            "l": {
+              "t": "Path",
+              "steps": [
+                {
+                  "t": "Step",
+                  "selector": "length()"
+                }
+              ]
+            },
+            "op": "=",
+            "r": "1"
+          }
+        ]
+      }
+    ]
+  }
 %}
 
 /* lexical grammar */
@@ -30,6 +72,7 @@ HEX                     [0-9] | [A-F] | [a-f]
 PERCENT                 '%' {HEX} {HEX}
 IT_UNION                [Uu][Nn][Ii][Oo][Nn]
 IT_INTERSECTION         [Ii][Nn][Tt][Ee][Rr][Ss][Ee][Cc][Tt][Ii][Oo][Nn]
+IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))* "*/"
 
 %%
@@ -55,14 +98,14 @@ COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))*
 //{PERCENT}             return 'PERCENT';
 {IT_UNION}              return 'IT_UNION';
 {IT_INTERSECTION}       return 'IT_INTERSECTION';
-<<EOF>>                 return 'EOF';
-"@"                     return 'IT_AT';
-"."                     return 'IT_DOT';
+{IT_ASSERT}             return 'IT_ASSERT';
 "child::"               return 'IT_child';
 "nested::"              return 'IT_nested';
 "self::"                return 'IT_self';
 "parent::"              return 'IT_parent';
 "ancestor::"            return 'IT_ancestor';
+"index()"               return 'IT_index';
+"length()"              return 'IT_length';
 "Schema"                return 'IT_Schema';
 "SemAct"                return 'IT_SemAct';
 "Annotation"            return 'IT_Annotation';
@@ -125,13 +168,19 @@ COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))*
 "name"                  return 'IT_name';
 "code"                  return 'IT_code';
 "object"                return 'IT_object';
+"@"                     return 'IT_AT';
+"."                     return 'IT_DOT';
 "*"                     return 'IT_STAR';
 "["                     return 'IT_LBRACKET';
 "]"                     return 'IT_RBRACKET';
 "//"                    return 'IT_DIVIDEDIVIDE';
 "/"                     return 'IT_DIVIDE';
+"="                     return 'IT_EQUAL';
+"<"                     return 'IT_LT';
+">"                     return 'IT_GT';
 [a-zA-Z0-9_-]+          return 'unexpected word "'+yytext+'"';
 .                       return 'invalid character '+yytext;
+<<EOF>>                 return 'EOF';
 
 /lex
 
@@ -148,10 +197,10 @@ COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))*
 
 %% /* language grammar */
 
-top: shapePath { console.log(JSON.stringify($1, null, 2)); };
+top: shapePath EOF { console.log(JSON.stringify($1, null, 2)); };
 
 shapePath:
-    intersectionStep _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star EOF	-> $2.length ? {t: 'Intersection', exprs:[$1].concat($2) } : $1
+    intersectionStep _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star	-> $2.length ? {t: 'Intersection', exprs:[$1].concat($2) } : $1
 ;
 
 _O_QIT_intersection_E_S_QintersectionStep_E_C:
@@ -177,16 +226,16 @@ _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star:
 ;
 
 unionStep:
-    startStep _QnextStep_E_Star	-> { t: "Path", steps: [$1].concat($2) }
+    startStep _QnextStep_E_Star	-> { t: "Path", steps: $1.concat($2) }
 ;
 
 _QnextStep_E_Star:
     	-> []
-  | _QnextStep_E_Star nextStep	-> $1.concat([$2])
+  | _QnextStep_E_Star nextStep	-> $1.concat($2)
 ;
 
 startStep:
-    _Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt step	-> $2
+    _Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt step	-> [$2]
   | shortcut	
 ;
 
@@ -201,12 +250,12 @@ _Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt:
 ;
 
 nextStep:
-    _O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C step	-> $2
+    _O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C step	-> [$2]
   | shortcut	
 ;
 
 shortcut:
-    _O_QGT_AT_E_Or_QGT_DOT_E_C iri	-> $1 === '@' ? { ShapeLabel: $2 } : { Predicate: $2 }
+    _O_QGT_AT_E_Or_QGT_DOT_E_C iri	-> $1 === '@' ? shapeLabel($2) : { Predicate: $2 }
 ;
 
 _O_QGT_AT_E_Or_QGT_DOT_E_C:
@@ -215,7 +264,7 @@ _O_QGT_AT_E_Or_QGT_DOT_E_C:
 ;
 
 step:
-    _Qaxis_E_Opt selector _Qfilter_E_Star	-> { t: 'Step', axis: $1, selector: $2, filters: $3 }
+    _Qaxis_E_Opt selector _Qfilter_E_Star	-> { t: 'Step', axis: $1, selector: $2, filters: ($3.length > 0 ? $3 : undefined) }
 ;
 
 _Qaxis_E_Opt:
@@ -243,12 +292,43 @@ selector:
 ;
 
 filter:
-    IT_LBRACKET _O_QshapePath_E_Or_QnumericExpr_E_C IT_RBRACKET	-> $2
+    IT_LBRACKET filterExpr IT_RBRACKET	-> $2
 ;
 
-_O_QshapePath_E_Or_QnumericExpr_E_C:
-    shapePath	
-  | numericExpr	
+filterExpr:
+    _QIT_ASSERT_E_Opt shapePath _Qcomparison_E_Opt	-> Object.assign({t: ($1 ? 'Assertion' : 'Filter'), l: $2 }, $3)
+  | _QIT_ASSERT_E_Opt function comparison	-> Object.assign({t: ($1 ? 'Assertion' : 'Filter'), l: $2 }, $3)
+  | numericExpr	-> { index: $1 }
+;
+
+_QIT_ASSERT_E_Opt:
+    	-> false
+  | IT_ASSERT	-> true
+;
+
+_Qcomparison_E_Opt:
+    	-> {}
+  | comparison	
+;
+
+function:
+    GT_index_LPAREN_RPAREN	
+  | GT_length_LPAREN_RPAREN	
+;
+
+comparison:
+    comparitor rvalue	-> { op: $1, r: $2 }
+;
+
+comparitor:
+    IT_EQUAL	
+  | IT_LT	
+  | IT_GT	
+;
+
+rvalue:
+    INTEGER	
+  | iri	
 ;
 
 numericExpr:
