@@ -1,6 +1,4 @@
-
-
   @<S1>.<p1>@<S2> union
-*[123] union
-ShapeAnd[456] union
+*[123] intersection
+ShapeAnd[456] intersection
 /ShapeAnd[789]/id

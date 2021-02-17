@@ -128,8 +128,8 @@ COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))*
 "*"                     return 'IT_STAR';
 "["                     return 'IT_LBRACKET';
 "]"                     return 'IT_RBRACKET';
-"//"                    return 'IT_SLASHSLASH';
-"/"                     return 'IT_SLASH';
+"//"                    return 'IT_DIVIDEDIVIDE';
+"/"                     return 'IT_DIVIDE';
 [a-zA-Z0-9_-]+          return 'unexpected word "'+yytext+'"';
 .                       return 'invalid character '+yytext;
 
@@ -144,53 +144,55 @@ COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))*
 // %right '%'
 // %left UMINUS
 
-%start shapePath
+%start top
 
 %% /* language grammar */
 
+top: shapePath { console.log(JSON.stringify($1, null, 2)); };
+
 shapePath:
-    intersectionStep _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star EOF	
+    intersectionStep _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star EOF	-> $2.length ? {t: 'Intersection', exprs:[$1].concat($2) } : $1
 ;
 
 _O_QIT_intersection_E_S_QintersectionStep_E_C:
-    IT_INTERSECTION intersectionStep	
+    IT_INTERSECTION intersectionStep	-> $2
 ;
 
 _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star:
-    
-  | _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star _O_QIT_intersection_E_S_QintersectionStep_E_C	
+    	-> []
+  | _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star _O_QIT_intersection_E_S_QintersectionStep_E_C	-> $1.concat([$2])
 ;
 
 intersectionStep:
-    unionStep _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star	
+    unionStep _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star	-> $2.length ? {t: 'Union', exprs:[$1].concat($2) } : $1
 ;
 
 _O_QIT_union_E_S_QunionStep_E_C:
-    IT_UNION unionStep	
+    IT_UNION unionStep	-> $2
 ;
 
 _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star:
-    
-  | _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star _O_QIT_union_E_S_QunionStep_E_C	
+    	-> []
+  | _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star _O_QIT_union_E_S_QunionStep_E_C	-> $1.concat([$2])
 ;
 
 unionStep:
-    startStep _QnextStep_E_Star	
+    startStep _QnextStep_E_Star	-> { t: "Path", steps: [$1].concat($2) }
 ;
 
 _QnextStep_E_Star:
-    
-  | _QnextStep_E_Star nextStep	
+    	-> []
+  | _QnextStep_E_Star nextStep	-> $1.concat([$2])
 ;
 
 startStep:
-    _Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt step	
+    _Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt step	-> $2
   | shortcut	
 ;
 
 _O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C:
-    IT_SLASH
-  | IT_SLASHSLASH	
+    IT_DIVIDE
+  | IT_DIVIDEDIVIDE	
 ;
 
 _Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt:
@@ -199,12 +201,12 @@ _Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt:
 ;
 
 nextStep:
-    _O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C step	
+    _O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C step	-> $2
   | shortcut	
 ;
 
 shortcut:
-    _O_QGT_AT_E_Or_QGT_DOT_E_C iri	
+    _O_QGT_AT_E_Or_QGT_DOT_E_C iri	-> $1 === '@' ? { ShapeLabel: $2 } : { Predicate: $2 }
 ;
 
 _O_QGT_AT_E_Or_QGT_DOT_E_C:
@@ -213,7 +215,7 @@ _O_QGT_AT_E_Or_QGT_DOT_E_C:
 ;
 
 step:
-    _Qaxis_E_Opt selector _Qfilter_E_Star	
+    _Qaxis_E_Opt selector _Qfilter_E_Star	-> { t: 'Step', axis: $1, selector: $2, filters: $3 }
 ;
 
 _Qaxis_E_Opt:
@@ -222,8 +224,8 @@ _Qaxis_E_Opt:
 ;
 
 _Qfilter_E_Star:
-    
-  | _Qfilter_E_Star filter	
+    	-> []
+  | _Qfilter_E_Star filter	-> $1.concat([$2])
 ;
 
 axis:
@@ -241,7 +243,7 @@ selector:
 ;
 
 filter:
-    IT_LBRACKET _O_QshapePath_E_Or_QnumericExpr_E_C IT_RBRACKET	
+    IT_LBRACKET _O_QshapePath_E_Or_QnumericExpr_E_C IT_RBRACKET	-> $2
 ;
 
 _O_QshapePath_E_Or_QnumericExpr_E_C:
