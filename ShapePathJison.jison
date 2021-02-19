@@ -7,8 +7,7 @@
     ShEx parser in the Jison parser generator format.
   */
 
-  const UNBOUNDED = -1;
-  function shapeLabel (label) {
+  function shapeLabelShortCut (label) {
     return [
       {
         "t": "Step",
@@ -48,13 +47,49 @@
           }
         ]
       }
-    ]
+    ];
+  }
+
+  function predicateShortCut (label) {
+    return [
+      {
+        "t": "Step",
+        "axis": "thisShapeExpr::",
+        "selector": "Shape"
+      },
+      {
+        "t": "Step",
+        "selector": "expression"
+      },
+      {
+        "t": "Step",
+        "axis": "thisTripleExpr::",
+        "selector": "TripleConstraint",
+        "filters": [
+          {
+            "t": "Filter",
+            "l": {
+              "t": "Path",
+              "steps": [
+                {
+                  "t": "Step",
+                  "selector": "predicate"
+                }
+              ]
+            },
+            "op": "=",
+            "r": label
+          }
+        ]
+      }
+    ];
   }
 %}
 
 /* lexical grammar */
 %lex
 
+COMMENT                 '#' [^\u000a\u000d]* | "<--" ([^-] | '-' [^-] | '--' [^>])* "-->"
 IRIREF                  '<' ([^\u0000-\u0020<>\"{}|^`\\] | {UCHAR})* '>' /* #x00=NULL #01-#x1F=control codes #x20=space */
 PNAME_NS                {PN_PREFIX}? ':'
 PNAME_LN                {PNAME_NS} {PN_LOCAL}
@@ -73,34 +108,16 @@ PERCENT                 '%' {HEX} {HEX}
 IT_UNION                [Uu][Nn][Ii][Oo][Nn]
 IT_INTERSECTION         [Ii][Nn][Tt][Ee][Rr][Ss][Ee][Cc][Tt][Ii][Oo][Nn]
 IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
-COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))* "*/"
 
 %%
 
-\s+|{COMMENT} /*skip*/
-{IRIREF}                return 'IRIREF';
-{PNAME_NS}              return 'PNAME_NS';
-{PNAME_LN}              return 'PNAME_LN';
-{BLANK_NODE_LABEL}      return 'BLANK_NODE_LABEL';
-{INTEGER}               return 'INTEGER';
-{STRING_LITERAL1}       return 'STRING_LITERAL1';
-{STRING_LITERAL2}       return 'STRING_LITERAL2';
-//{UCHAR}               return 'UCHAR';
-//{ECHAR}               return 'ECHAR';
-//{PN_CHARS_BASE}       return 'PN_CHARS_BASE';
-//{PN_CHARS_U}          return 'PN_CHARS_U';
-//{PN_CHARS}            return 'PN_CHARS';
-//{PN_PREFIX}           return 'PN_PREFIX';
-//{PN_LOCAL_ESC}        return 'PN_LOCAL_ESC';
-//{PLX}                 return 'PLX';
-//{PN_LOCAL}            return 'PN_LOCAL';
-//{HEX}                 return 'HEX';
-//{PERCENT}             return 'PERCENT';
+\s+|{COMMENT}           /*skip*/
 {IT_UNION}              return 'IT_UNION';
 {IT_INTERSECTION}       return 'IT_INTERSECTION';
 {IT_ASSERT}             return 'IT_ASSERT';
 "child::"               return 'IT_child';
-"nested::"              return 'IT_nested';
+"thisShapeExpr::"       return 'IT_thisShapeExpr';
+"thisTripleExpr::"      return 'IT_thisTripleExpr';
 "self::"                return 'IT_self';
 "parent::"              return 'IT_parent';
 "ancestor::"            return 'IT_ancestor';
@@ -168,6 +185,26 @@ COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))*
 "name"                  return 'IT_name';
 "code"                  return 'IT_code';
 "object"                return 'IT_object';
+
+{IRIREF}                return 'IRIREF';
+{PNAME_NS}              return 'PNAME_NS';
+{PNAME_LN}              return 'PNAME_LN';
+{BLANK_NODE_LABEL}      return 'BLANK_NODE_LABEL';
+{INTEGER}               return 'INTEGER';
+{STRING_LITERAL1}       return 'STRING_LITERAL1';
+{STRING_LITERAL2}       return 'STRING_LITERAL2';
+//{UCHAR}               return 'UCHAR';
+//{ECHAR}               return 'ECHAR';
+//{PN_CHARS_BASE}       return 'PN_CHARS_BASE';
+//{PN_CHARS_U}          return 'PN_CHARS_U';
+//{PN_CHARS}            return 'PN_CHARS';
+//{PN_PREFIX}           return 'PN_PREFIX';
+//{PN_LOCAL_ESC}        return 'PN_LOCAL_ESC';
+//{PLX}                 return 'PLX';
+//{PN_LOCAL}            return 'PN_LOCAL';
+//{HEX}                 return 'HEX';
+//{PERCENT}             return 'PERCENT';
+
 "@"                     return 'IT_AT';
 "."                     return 'IT_DOT';
 "*"                     return 'IT_STAR';
@@ -178,6 +215,7 @@ COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))*
 "="                     return 'IT_EQUAL';
 "<"                     return 'IT_LT';
 ">"                     return 'IT_GT';
+
 [a-zA-Z0-9_-]+          return 'unexpected word "'+yytext+'"';
 .                       return 'invalid character '+yytext;
 <<EOF>>                 return 'EOF';
@@ -186,9 +224,8 @@ COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))*
 
 /* operator associations and precedence */
 
-// %left '+' '-'
-// %left '*' '/'
-// %left '^'
+// %left 'intersection'
+// %left 'union'
 // %right '!'
 // %right '%'
 // %left UMINUS
@@ -200,19 +237,6 @@ COMMENT                 '#' [^\u000a\u000d]* | "/*" ([^*] | '*' ([^/] | '\\/'))*
 top: shapePath EOF { console.log(JSON.stringify($1, null, 2)); };
 
 shapePath:
-    intersectionStep _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star	-> $2.length ? {t: 'Intersection', exprs:[$1].concat($2) } : $1
-;
-
-_O_QIT_intersection_E_S_QintersectionStep_E_C:
-    IT_INTERSECTION intersectionStep	-> $2
-;
-
-_Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star:
-    	-> []
-  | _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star _O_QIT_intersection_E_S_QintersectionStep_E_C	-> $1.concat([$2])
-;
-
-intersectionStep:
     unionStep _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star	-> $2.length ? {t: 'Union', exprs:[$1].concat($2) } : $1
 ;
 
@@ -226,6 +250,19 @@ _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star:
 ;
 
 unionStep:
+    intersectionStep _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star	-> $2.length ? {t: 'Intersection', exprs:[$1].concat($2) } : $1
+;
+
+_O_QIT_intersection_E_S_QintersectionStep_E_C:
+    IT_INTERSECTION intersectionStep	-> $2
+;
+
+_Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star:
+    	-> []
+  | _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star _O_QIT_intersection_E_S_QintersectionStep_E_C	-> $1.concat([$2])
+;
+
+intersectionStep:
     startStep _QnextStep_E_Star	-> { t: "Path", steps: $1.concat($2) }
 ;
 
@@ -255,7 +292,7 @@ nextStep:
 ;
 
 shortcut:
-    _O_QGT_AT_E_Or_QGT_DOT_E_C iri	-> $1 === '@' ? shapeLabel($2) : { Predicate: $2 }
+    _O_QGT_AT_E_Or_QGT_DOT_E_C iri	-> $1 === '@' ? shapeLabelShortCut($2) : predicateShortCut($2)
 ;
 
 _O_QGT_AT_E_Or_QGT_DOT_E_C:
@@ -279,7 +316,8 @@ _Qfilter_E_Star:
 
 axis:
     IT_child	
-  | IT_nested	
+  | IT_thisShapeExpr	
+  | IT_thisTripleExpr	
   | IT_self	
   | IT_parent	
   | IT_ancestor	
