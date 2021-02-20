@@ -2,13 +2,17 @@
   "name": "ShapePath.js",
   "version": "1.0.0",
   "description": "A typescript library for executing ShapePaths",
-  "main": "index.js",
+  "main": "ShapePathJison.js",
+  "type": "package",
   "scripts": {
     "all": "npm run parser && npm run test",
     "parser": "ts-jison -t typescript -o ShapePathJison.ts ShapePathJison.jison",
     "compile": "tsc ShapePathJison.ts",
     "run": "node ShapePathJison.js txt",
-    "test": "ts-node ShapePathJison.ts txt"
+    "test": "ts-node ShapePathJison.ts txt",
+    "compile2": "tsc",
+    "test2": "jest",
+    "test3": "npm run parser && npm run compile && npm run test2"
   },
   "repository": {
     "type": "git",
@@ -25,7 +29,7 @@
     "@types/node": "^14.14.28",
     "@types/shexj": "^2.1.0",
     "ts-jest": "^26.5.1",
-    "ts-jison": "^0.0.3",
+    "ts-jison": "^0.0.5",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.5",
     "tyson": "^1.7.0"

@@ -3,11 +3,48 @@
  */
 
 %{
-  /*
-    ShEx parser in the Jison parser generator format.
-  */
+// { t: 'Step', axis: $1, selector: $2, filters: ($3.length > 0 ? $3 : undefined) }
+// { t: 'Assertion', l: $2, op: $1, r: $2 }
+// { t: 'Filter', l: $2, op: $1, r: $2 }
+  abstract class Junction {
+    abstract t: string
+    constructor (
+      public exprs: Array<Path | Intersection | Union>
+    ) { }
+  }
+  class Union extends Junction { t = "Union" }
+  class Intersection extends Junction { t = "Intersection" }
+  class Path {
+    t = 'Path'
+    constructor (
+      public steps: Step[]
+    ) { }
+  }
+  enum axes {
+    thisShapeExpr, thisTripleExpr
+  }
+  enum selectors {
+    shapes = 'shapes',
+    Any = '*',
+    id = 'id',
+    Shape = 'Shape',
+    expression = 'expression',
+    TripleConstraint = 'TripleConstraint',
+    predicate = 'predicate',
+    ShapeAnd = 'ShapeAnd',
+    ShapeOr = 'ShapeOr',
+    F_length = 'length()',
+  }
+  class Step {
+    t = 'Step'
+    constructor (
+      public selector: selectors | string,
+      public axis?: axes | string,
+      public filters?: any
+    ) { }
+  }
 
-  function shapeLabelShortCut (label) {
+  function shapeLabelShortCut (label: string) {debugger
     return [
       {
         "t": "Step",
@@ -19,29 +56,17 @@
         "filters": [
           {
             "t": "Filter",
-            "l": {
-              "t": "Path",
-              "steps": [
-                {
-                  "t": "Step",
-                  "selector": "id"
-                }
-              ]
-            },
+            "l": new Path([
+                new Step(selectors.id)
+              ]),
             "op": "=",
             "r": label
           },
           {
             "t": "Assertion",
-            "l": {
-              "t": "Path",
-              "steps": [
-                {
-                  "t": "Step",
-                  "selector": "length()"
-                }
-              ]
-            },
+            "l": new Path([
+                new Step(selectors.F_length)
+              ]),
             "op": "=",
             "r": "1"
           }
@@ -50,7 +75,7 @@
     ];
   }
 
-  function predicateShortCut (label) {
+  function predicateShortCut (label: string) {
     return [
       {
         "t": "Step",
@@ -68,15 +93,9 @@
         "filters": [
           {
             "t": "Filter",
-            "l": {
-              "t": "Path",
-              "steps": [
-                {
-                  "t": "Step",
-                  "selector": "predicate"
-                }
-              ]
-            },
+            "l": new Path([
+                new Step(selectors.predicate)
+              ]),
             "op": "=",
             "r": label
           }
@@ -234,10 +253,10 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 
 %% /* language grammar */
 
-top: shapePath EOF { console.log(JSON.stringify($1, null, 2)); };
+top: shapePath EOF { return $1 };
 
 shapePath:
-    unionStep _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star	-> $2.length ? {t: 'Union', exprs:[$1].concat($2) } : $1
+    unionStep _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star	-> $2.length ? new Union([$1].concat($2)) : $1
 ;
 
 _O_QIT_union_E_S_QunionStep_E_C:
@@ -250,7 +269,7 @@ _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star:
 ;
 
 unionStep:
-    intersectionStep _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star	-> $2.length ? {t: 'Intersection', exprs:[$1].concat($2) } : $1
+    intersectionStep _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star	-> $2.length ? new Intersection([$1].concat($2)) : $1
 ;
 
 _O_QIT_intersection_E_S_QintersectionStep_E_C:
@@ -263,7 +282,7 @@ _Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star:
 ;
 
 intersectionStep:
-    startStep _QnextStep_E_Star	-> { t: "Path", steps: $1.concat($2) }
+    startStep _QnextStep_E_Star	-> new Path($1.concat($2))
 ;
 
 _QnextStep_E_Star:
@@ -334,8 +353,8 @@ filter:
 ;
 
 filterExpr:
-    _QIT_ASSERT_E_Opt shapePath _Qcomparison_E_Opt	-> Object.assign({t: ($1 ? 'Assertion' : 'Filter'), l: $2 }, $3)
-  | _QIT_ASSERT_E_Opt function comparison	-> Object.assign({t: ($1 ? 'Assertion' : 'Filter'), l: $2 }, $3)
+    _QIT_ASSERT_E_Opt shapePath _Qcomparison_E_Opt	-> Object.assign({ t: ($1 ? 'Assertion' : 'Filter'), l: $2 }, $3)
+  | _QIT_ASSERT_E_Opt function comparison	-> Object.assign({ t: ($1 ? 'Assertion' : 'Filter'), l: $2 }, $3)
   | numericExpr	-> { index: $1 }
 ;
 
