@@ -12,7 +12,8 @@
     "test": "ts-node ShapePathJison.ts txt",
     "compile2": "tsc",
     "test2": "jest",
-    "test3": "npm run parser && npm run compile && npm run test2"
+    "test3999": "npm run parser && npm run compile && npm run test2",
+    "test3": "npm run compile && npm run test2"
   },
   "repository": {
     "type": "git",
