@@ -2,14 +2,19 @@
 /**
  * Returns a Parser object implementing JisonParserApi:
  */
-import { JisonParser, JisonParserApi, LexerType, StateType, SymbolsType, TerminalsType, ProductionsType, TokenLocation, o, JisonLexer } from './ts-jison-common';
-export const ShapePathJison = (function(){
+import { JisonParser, JisonParserApi, StateType, SymbolsType, TerminalsType, ProductionsType, o } from './ts-jison-parser';
+import { JisonLexer, LexerType } from './ts-jison-lexer';
+import { TokenLocation } from './ts-jison-common';
 
 const $V0=[32,33,34,35,36,37,38,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,92,94,95,96,97,98,99,102,103,105,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,131,132,133,134,135],$V1=[2,17],$V2=[1,10],$V3=[1,11],$V4=[1,12],$V5=[1,13],$V6=[5,9,43,54,55,56],$V7=[5,9,13,43,54,55,56],$V8=[5,9,13,21,22,25,26,43,54,55,56],$V9=[38,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,92,94,95,96,97,98,99,102,103,105,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,131,132,133,134,135],$Va=[2,25],$Vb=[1,21],$Vc=[1,22],$Vd=[1,23],$Ve=[1,24],$Vf=[1,25],$Vg=[1,26],$Vh=[1,28],$Vi=[1,30],$Vj=[1,31],$Vk=[136,138,139],$Vl=[5,9,13,21,22,25,26,41,43,54,55,56],$Vm=[21,22,25,26,32,33,34,35,36,37,38,50,51,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,92,94,95,96,97,98,99,102,103,105,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,131,132,133,134,135],$Vn=[1,140],$Vo=[1,141],$Vp=[1,142],$Vq=[54,55,56],$Vr=[57,136,138,139];
 
-class ParserClass extends JisonParser implements JisonParserApi {
-  public Parser?: ParserClass;
+export class ShapePathParser extends JisonParser implements JisonParserApi {
+  public Parser?: ShapePathParser;
   $?: any;
+
+  constructor () {
+    super(new ShapePathLexer());
+  }
 
   symbols_: SymbolsType = {"error":2,"top":3,"shapePath":4,"EOF":5,"unionStep":6,"Q_O_QIT_union_E_S_QunionStep_E_C_E_Star":7,"O_QIT_union_E_S_QunionStep_E_C":8,"IT_UNION":9,"intersectionStep":10,"Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star":11,"O_QIT_intersection_E_S_QintersectionStep_E_C":12,"IT_INTERSECTION":13,"startStep":14,"QnextStep_E_Star":15,"nextStep":16,"Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt":17,"step":18,"shortcut":19,"O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C":20,"IT_DIVIDE":21,"IT_DIVIDEDIVIDE":22,"O_QGT_AT_E_Or_QGT_DOT_E_C":23,"iri":24,"IT_AT":25,"IT_DOT":26,"Qaxis_E_Opt":27,"selector":28,"Qfilter_E_Star":29,"axis":30,"filter":31,"IT_child":32,"IT_thisShapeExpr":33,"IT_thisTripleExpr":34,"IT_self":35,"IT_parent":36,"IT_ancestor":37,"IT_STAR":38,"termType":39,"attribute":40,"IT_LBRACKET":41,"filterExpr":42,"IT_RBRACKET":43,"QIT_ASSERT_E_Opt":44,"Qcomparison_E_Opt":45,"function":46,"comparison":47,"numericExpr":48,"IT_ASSERT":49,"GT_index_LPAREN_RPAREN":50,"GT_length_LPAREN_RPAREN":51,"comparitor":52,"rvalue":53,"IT_EQUAL":54,"IT_LT":55,"IT_GT":56,"INTEGER":57,"shapeExprType":58,"tripleExprType":59,"valueType":60,"IT_Schema":61,"IT_SemAct":62,"IT_Annotation":63,"IT_ShapeAnd":64,"IT_ShapeOr":65,"IT_ShapeNot":66,"IT_NodeConstraint":67,"IT_Shape":68,"IT_ShapeExternal":69,"IT_EachOf":70,"IT_OneOf":71,"IT_TripleConstraint":72,"IT_IriStem":73,"IT_IriStemRange":74,"IT_LiteralStem":75,"IT_LiteralStemRange":76,"IT_Language":77,"IT_LanguageStem":78,"IT_LanguageStemRange":79,"IT_Wildcard":80,"IT_type":81,"IT_id":82,"IT_semActs":83,"IT_annotations":84,"IT_predicate":85,"schemaAttr":86,"shapeExprAttr":87,"tripleExprAttr":88,"valueSetValueAttr":89,"semActAttr":90,"annotationAttr":91,"IT_":92,"context":93,"IT_startActs":94,"IT_start":95,"IT_imports":96,"IT_shapes":97,"IT_shapeExprs":98,"IT_shapeExpr":99,"nodeConstraintAttr":100,"shapeAttr":101,"IT_nodeKind":102,"IT_datatype":103,"xsFacetAttr":104,"IT_values":105,"stringFacetAttr":106,"numericFacetAttr":107,"IT_length":108,"IT_minlength":109,"IT_maxlength":110,"IT_pattern":111,"IT_flags":112,"IT_mininclusive":113,"IT_minexclusive":114,"IT_maxinclusive":115,"IT_maxexclusive":116,"IT_totaldigits":117,"IT_fractiondigits":118,"IT_value":119,"IT_language":120,"IT_stem":121,"IT_exclusions":122,"IT_languageTag":123,"IT_closed":124,"IT_extra":125,"IT_expression":126,"IT_expressions":127,"IT_min":128,"IT_max":129,"tripleConstraintAttr":130,"IT_inverse":131,"IT_valueExpr":132,"IT_name":133,"IT_code":134,"IT_object":135,"IRIREF":136,"prefixedName":137,"PNAME_LN":138,"PNAME_NS":139,"$accept":0,"$end":1};
   terminals_: TerminalsType = {2:"error",5:"EOF",9:"IT_UNION",13:"IT_INTERSECTION",21:"IT_DIVIDE",22:"IT_DIVIDEDIVIDE",25:"IT_AT",26:"IT_DOT",32:"IT_child",33:"IT_thisShapeExpr",34:"IT_thisTripleExpr",35:"IT_self",36:"IT_parent",37:"IT_ancestor",38:"IT_STAR",41:"IT_LBRACKET",43:"IT_RBRACKET",49:"IT_ASSERT",50:"GT_index_LPAREN_RPAREN",51:"GT_length_LPAREN_RPAREN",54:"IT_EQUAL",55:"IT_LT",56:"IT_GT",57:"INTEGER",61:"IT_Schema",62:"IT_SemAct",63:"IT_Annotation",64:"IT_ShapeAnd",65:"IT_ShapeOr",66:"IT_ShapeNot",67:"IT_NodeConstraint",68:"IT_Shape",69:"IT_ShapeExternal",70:"IT_EachOf",71:"IT_OneOf",72:"IT_TripleConstraint",73:"IT_IriStem",74:"IT_IriStemRange",75:"IT_LiteralStem",76:"IT_LiteralStemRange",77:"IT_Language",78:"IT_LanguageStem",79:"IT_LanguageStemRange",80:"IT_Wildcard",81:"IT_type",82:"IT_id",83:"IT_semActs",84:"IT_annotations",85:"IT_predicate",92:"IT_",93:"context",94:"IT_startActs",95:"IT_start",96:"IT_imports",97:"IT_shapes",98:"IT_shapeExprs",99:"IT_shapeExpr",102:"IT_nodeKind",103:"IT_datatype",105:"IT_values",108:"IT_length",109:"IT_minlength",110:"IT_maxlength",111:"IT_pattern",112:"IT_flags",113:"IT_mininclusive",114:"IT_minexclusive",115:"IT_maxinclusive",116:"IT_maxexclusive",117:"IT_totaldigits",118:"IT_fractiondigits",119:"IT_value",120:"IT_language",121:"IT_stem",122:"IT_exclusions",123:"IT_languageTag",124:"IT_closed",125:"IT_extra",126:"IT_expression",127:"IT_expressions",128:"IT_min",129:"IT_max",131:"IT_inverse",132:"IT_valueExpr",133:"IT_name",134:"IT_code",135:"IT_object",136:"IRIREF",138:"PNAME_LN",139:"PNAME_NS"};
@@ -79,7 +84,7 @@ break;
   }
 
 }
-var parser = new ParserClass();
+
 
 // { t: 'Step', axis: $1, selector: $2, filters: ($3.length > 0 ? $3 : undefined) }
 // { t: 'Assertion', l: $2, op: $1, r: $2 }
@@ -181,8 +186,9 @@ var parser = new ParserClass();
       }
     ];
   }
-var lexer = (/* generated by ts-jison-lex 0.0.2 */function(){
-class LexerClass extends JisonLexer implements LexerType {
+
+/* generated by ts-jison-lex 0.0.2 */
+export class ShapePathLexer extends JisonLexer implements LexerType {
   options: any = {};
   performAction (yy:any,yy_:any,$avoiding_name_collisions:any,YY_START:any): any {
     var YYSTATE=YY_START;
@@ -379,30 +385,4 @@ class LexerClass extends JisonLexer implements LexerType {
   }
   rules: RegExp[] = [/^(?:\s+|(#[^\u000a\u000d]*|<--([^-]|-[^-]|--[^>])*-->))/,/^(?:([Uu][Nn][Ii][Oo][Nn]))/,/^(?:([Ii][Nn][Tt][Ee][Rr][Ss][Ee][Cc][Tt][Ii][Oo][Nn]))/,/^(?:([Aa][Ss][Ss][Ee][Rr][Tt]))/,/^(?:child::)/,/^(?:thisShapeExpr::)/,/^(?:thisTripleExpr::)/,/^(?:self::)/,/^(?:parent::)/,/^(?:ancestor::)/,/^(?:index\(\))/,/^(?:length\(\))/,/^(?:Schema\b)/,/^(?:SemAct\b)/,/^(?:Annotation\b)/,/^(?:ShapeAnd\b)/,/^(?:ShapeOr\b)/,/^(?:ShapeNot\b)/,/^(?:NodeConstraint\b)/,/^(?:Shape\b)/,/^(?:ShapeExternal\b)/,/^(?:EachOf\b)/,/^(?:OneOf\b)/,/^(?:TripleConstraint\b)/,/^(?:IriStem\b)/,/^(?:IriStemRange\b)/,/^(?:LiteralStem\b)/,/^(?:LiteralStemRange\b)/,/^(?:Language\b)/,/^(?:LanguageStem\b)/,/^(?:LanguageStemRange\b)/,/^(?:Wildcard\b)/,/^(?:type\b)/,/^(?:id\b)/,/^(?:semActs\b)/,/^(?:annotations\b)/,/^(?:predicate\b)/,/^(?:@context\b)/,/^(?:startActs\b)/,/^(?:start\b)/,/^(?:imports\b)/,/^(?:shapes\b)/,/^(?:shapeExprs\b)/,/^(?:shapeExpr\b)/,/^(?:nodeKind\b)/,/^(?:datatype\b)/,/^(?:values\b)/,/^(?:length\b)/,/^(?:minlength\b)/,/^(?:maxlength\b)/,/^(?:pattern\b)/,/^(?:flags\b)/,/^(?:mininclusive\b)/,/^(?:minexclusive\b)/,/^(?:maxinclusive\b)/,/^(?:maxexclusive\b)/,/^(?:totaldigits\b)/,/^(?:fractiondigits\b)/,/^(?:value\b)/,/^(?:language\b)/,/^(?:stem\b)/,/^(?:exclusions\b)/,/^(?:languageTag\b)/,/^(?:closed\b)/,/^(?:extra\b)/,/^(?:expression\b)/,/^(?:expressions\b)/,/^(?:min\b)/,/^(?:max\b)/,/^(?:inverse\b)/,/^(?:valueExpr\b)/,/^(?:name\b)/,/^(?:code\b)/,/^(?:object\b)/,/^(?:(<([^\u0000-\u0020<>\"{}|^`\\]|(\\u([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])|\\U([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])))*>))/,/^(?:((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:))/,/^(?:(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:){PN_LOCAL}))/,/^(?:(_:((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|[0-9])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?))/,/^(?:(([+-])?([0-9])+))/,/^(?:('([^\u0027\u005c\u000a\u000d]|(\\[\"\'\\bfnrt])|(\\u([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])|\\U([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])))*'))/,/^(?:("([^\u0022\u005c\u000a\u000d]|(\\[\"\'\\bfnrt])|(\\u([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])|\\U([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])))*"))/,/^(?:@)/,/^(?:\.)/,/^(?:\*)/,/^(?:\[)/,/^(?:\])/,/^(?:\/\/)/,/^(?:\/)/,/^(?:=)/,/^(?:<)/,/^(?:>)/,/^(?:[a-zA-Z0-9_-]+)/,/^(?:.)/,/^(?:$)/];
   conditions: any = {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93],"inclusive":true}}
-}
-return new LexerClass();
-})();
-parser.lexer = lexer;
-return parser;
-})();
-
-// istanbul ignore if
-if (false) {
-if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
-exports.parser = ShapePathJison;
-exports.Parser = ShapePathJison.Parser;
-exports.parse = function () { return ShapePathJison.parse.apply(ShapePathJison, arguments[0]); };
-// @ts-ignore;
-exports.main = function commonjsMain (args) {
-    if (!args[1]) {
-        console.log('Usage: '+args[0]+' FILE');
-        process.exit(1);
-    }
-    var source = require('fs').readFileSync(require('path').normalize(args[1]), "utf8");
-    return exports.parser.parse(source);
-};
-if (typeof module !== 'undefined' && require.main === module) {
-  exports.main(process.argv.slice(1));
-}
-}
 }
