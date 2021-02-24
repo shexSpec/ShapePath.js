@@ -3,111 +3,12 @@
  * Returns a Parser implementing JisonParserApi and a Lexer implementing JisonLexerApi.
  */
 
-// { t: 'Step', axis: $1, selector: $2, filters: ($3.length > 0 ? $3 : undefined) }
-// { t: 'Assertion', l: $2, op: $1, r: $2 }
-// { t: 'Filter', l: $2, op: $1, r: $2 }
-  abstract class Junction {
-    abstract t: string
-    constructor (
-      public exprs: Array<Path | Intersection | Union>
-    ) { }
-  }
-  class Union extends Junction { t = "Union" }
-  class Intersection extends Junction { t = "Intersection" }
-  class Path {
-    t = 'Path'
-    constructor (
-      public steps: Step[]
-    ) { }
-  }
-  enum axes {
-    thisShapeExpr, thisTripleExpr
-  }
-  enum selectors {
-    shapes = 'shapes',
-    Any = '*',
-    id = 'id',
-    Shape = 'Shape',
-    expression = 'expression',
-    TripleConstraint = 'TripleConstraint',
-    predicate = 'predicate',
-    ShapeAnd = 'ShapeAnd',
-    ShapeOr = 'ShapeOr',
-    F_length = 'length()',
-  }
-  class Step {
-    t = 'Step'
-    constructor (
-      public selector: selectors | string,
-      public axis?: axes | string,
-      public filters?: any
-    ) { }
-  }
-
-  function shapeLabelShortCut (label: string) {debugger
-    return [
-      {
-        "t": "Step",
-        "selector": "shapes"
-      },
-      {
-        "t": "Step",
-        "selector": "*",
-        "filters": [
-          {
-            "t": "Filter",
-            "l": new Path([
-                new Step(selectors.id)
-              ]),
-            "op": "=",
-            "r": label
-          },
-          {
-            "t": "Assertion",
-            "l": new Path([
-                new Step(selectors.F_length)
-              ]),
-            "op": "=",
-            "r": "1"
-          }
-        ]
-      }
-    ];
-  }
-
-  function predicateShortCut (label: string) {
-    return [
-      {
-        "t": "Step",
-        "axis": "thisShapeExpr::",
-        "selector": "Shape"
-      },
-      {
-        "t": "Step",
-        "selector": "expression"
-      },
-      {
-        "t": "Step",
-        "axis": "thisTripleExpr::",
-        "selector": "TripleConstraint",
-        "filters": [
-          {
-            "t": "Filter",
-            "l": new Path([
-                new Step(selectors.predicate)
-              ]),
-            "op": "=",
-            "r": label
-          }
-        ]
-      }
-    ];
-  }
+import {Union, Intersection, Path, shapeLabelShortCut, predicateShortCut} from './ShapePathAst'
 
 import { JisonParser, JisonParserApi, StateType, SymbolsType, TerminalsType, ProductionsType, o } from '@ts-jison/parser';
 import { JisonLexer, JisonLexerApi } from '@ts-jison/lexer';
 
-const $V0=[32,33,34,35,36,37,38,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,92,94,95,96,97,98,99,102,103,105,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,131,132,133,134,135],$V1=[2,17],$V2=[1,10],$V3=[1,11],$V4=[1,12],$V5=[1,13],$V6=[5,9,43,54,55,56],$V7=[5,9,13,43,54,55,56],$V8=[5,9,13,21,22,25,26,43,54,55,56],$V9=[38,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,92,94,95,96,97,98,99,102,103,105,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,131,132,133,134,135],$Va=[2,25],$Vb=[1,21],$Vc=[1,22],$Vd=[1,23],$Ve=[1,24],$Vf=[1,25],$Vg=[1,26],$Vh=[1,28],$Vi=[1,30],$Vj=[1,31],$Vk=[136,138,139],$Vl=[5,9,13,21,22,25,26,41,43,54,55,56],$Vm=[21,22,25,26,32,33,34,35,36,37,38,50,51,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,92,94,95,96,97,98,99,102,103,105,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,131,132,133,134,135],$Vn=[1,140],$Vo=[1,141],$Vp=[1,142],$Vq=[54,55,56],$Vr=[57,136,138,139];
+const $V0=[30,34,35,36,37,38,39,40,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,94,96,97,98,99,100,101,104,105,107,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,133,134,135,136,137],$V1=[2,17],$V2=[1,10],$V3=[1,11],$V4=[1,12],$V5=[1,13],$V6=[5,9,31,45,56,57,58],$V7=[5,9,13,31,45,56,57,58],$V8=[5,9,13,21,22,25,26,31,45,56,57,58],$V9=[40,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,94,96,97,98,99,100,101,104,105,107,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,133,134,135,136,137],$Va=[2,26],$Vb=[1,20],$Vc=[1,22],$Vd=[1,23],$Ve=[1,24],$Vf=[1,25],$Vg=[1,26],$Vh=[1,27],$Vi=[1,29],$Vj=[1,31],$Vk=[1,32],$Vl=[138,140,141],$Vm=[5,9,13,21,22,25,26,31,43,45,56,57,58],$Vn=[21,22,25,26,30,34,35,36,37,38,39,40,52,53,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,94,96,97,98,99,100,101,104,105,107,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,133,134,135,136,137],$Vo=[1,143],$Vp=[1,144],$Vq=[1,145],$Vr=[56,57,58],$Vs=[59,138,140,141];
 
 export class ShapePathParser extends JisonParser implements JisonParserApi {
   public Parser?: ShapePathParser;
