@@ -3,7 +3,32 @@
  */
 
 %{
-import {Union, Intersection, Path, shapeLabelShortCut, predicateShortCut} from './ShapePathAst'
+import {Union, Intersection, Path, Step, Axis, t_Selector, Assertion, Filter,
+        Func, FuncArg, FuncName,
+        t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
+        t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
+        t_numericFacetAttr, t_valueSetValueAttr, t_shapeAttr, t_tripleExprAttr,
+        t_tripleConstraintAttr, t_semActAttr, t_annotationAttr
+       } from './ShapePathAst'
+import {comparison, rvalue, shapeLabelShortCut, predicateShortCut
+       } from './ShapePathJisonInternals'
+function makeFunction (assertionP: boolean, l: FuncArg, comp: comparison): Func {
+  const { op, r } = comp
+  const ret = new Filter(l, op, r)
+  return assertionP
+    ? new Assertion(ret)
+    : ret
+}
+
+function pnameToUrl (pname: string, yy: any): URL {
+  const idx = pname.indexOf(':')
+  const pre = pname.substr(0, idx)
+  const lname = pname.substr(idx+1)
+  if (!(pre in yy.prefixes))
+    throw Error(`unknown prefix in ${pname}`)
+  const ns = yy.prefixes[pre]
+  return new URL(ns + lname, yy.base)
+}
 %}
 
 /* lexical grammar */
@@ -41,8 +66,8 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 "self::"                return 'IT_self';
 "parent::"              return 'IT_parent';
 "ancestor::"            return 'IT_ancestor';
-"index()"               return 'IT_index';
-"length()"              return 'IT_length';
+"index()"               return 'GT_index';
+"length()"              return 'GT_length';
 "Schema"                return 'IT_Schema';
 "SemAct"                return 'IT_SemAct';
 "Annotation"            return 'IT_Annotation';
@@ -68,7 +93,7 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 "semActs"               return 'IT_semActs';
 "annotations"           return 'IT_annotations';
 "predicate"             return 'IT_predicate';
-"@context"              return 'IT_@context';
+"@context"              return 'GT_atContext';
 "startActs"             return 'IT_startActs';
 "start"                 return 'IT_start';
 "imports"               return 'IT_imports';
@@ -109,10 +134,10 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 {IRIREF}                return 'IRIREF';
 {PNAME_NS}              return 'PNAME_NS';
 {PNAME_LN}              return 'PNAME_LN';
-{BLANK_NODE_LABEL}      return 'BLANK_NODE_LABEL';
+// {BLANK_NODE_LABEL}      return 'BLANK_NODE_LABEL';
 {INTEGER}               return 'INTEGER';
-{STRING_LITERAL1}       return 'STRING_LITERAL1';
-{STRING_LITERAL2}       return 'STRING_LITERAL2';
+//{STRING_LITERAL1}       return 'STRING_LITERAL1';
+//{STRING_LITERAL2}       return 'STRING_LITERAL2';
 //{UCHAR}               return 'UCHAR';
 //{ECHAR}               return 'ECHAR';
 //{PN_CHARS_BASE}       return 'PN_CHARS_BASE';
@@ -128,6 +153,8 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 "@"                     return 'IT_AT';
 "."                     return 'IT_DOT';
 "*"                     return 'IT_STAR';
+"("                     return 'GT_LPAREN';
+")"                     return 'GT_RPAREN';
 "["                     return 'IT_LBRACKET';
 "]"                     return 'IT_RBRACKET';
 "//"                    return 'IT_DIVIDEDIVIDE';
@@ -202,7 +229,7 @@ _O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C:
 ;
 
 _Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt:
-    
+    	-> null
   | _O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C	
 ;
 
@@ -221,11 +248,12 @@ _O_QGT_AT_E_Or_QGT_DOT_E_C:
 ;
 
 step:
-    _Qaxis_E_Opt selector _Qfilter_E_Star	-> { t: 'Step', axis: $1, selector: $2, filters: ($3.length > 0 ? $3 : undefined) }
+    _Qaxis_E_Opt selector _Qfilter_E_Star	-> new Step($2, $1 ? $1 : undefined, $3.length > 0 ? $3 : undefined)
+//  | GT_LPAREN shapePath GT_RPAREN	-> $2
 ;
 
 _Qaxis_E_Opt:
-    
+    	-> null
   | axis	
 ;
 
@@ -235,16 +263,16 @@ _Qfilter_E_Star:
 ;
 
 axis:
-    IT_child	
-  | IT_thisShapeExpr	
-  | IT_thisTripleExpr	
-  | IT_self	
-  | IT_parent	
-  | IT_ancestor	
+    IT_child	-> Axis.child
+  | IT_thisShapeExpr	-> Axis.thisShapeExpr
+  | IT_thisTripleExpr	-> Axis.thisTripleExpr
+  | IT_self	-> Axis.self
+  | IT_parent	-> Axis.parent
+  | IT_ancestor	-> Axis.ancestor
 ;
 
 selector:
-    IT_STAR	
+    IT_STAR	-> t_Selector.Any
   | termType	
   | attribute	
 ;
@@ -254,9 +282,9 @@ filter:
 ;
 
 filterExpr:
-    _QIT_ASSERT_E_Opt shapePath _Qcomparison_E_Opt	-> Object.assign({ t: ($1 ? 'Assertion' : 'Filter'), l: $2 }, $3)
-  | _QIT_ASSERT_E_Opt function comparison	-> Object.assign({ t: ($1 ? 'Assertion' : 'Filter'), l: $2 }, $3)
-  | numericExpr	-> { index: $1 }
+    _QIT_ASSERT_E_Opt shapePath _Qcomparison_E_Opt	-> makeFunction($1, $2, $3 ? $3 : { op: FuncName.ebv, r: null })
+  | _QIT_ASSERT_E_Opt function comparison	-> makeFunction($1, $2, $3)
+  | numericExpr	-> new Filter($1, FuncName.index, '@@')
 ;
 
 _QIT_ASSERT_E_Opt:
@@ -265,13 +293,15 @@ _QIT_ASSERT_E_Opt:
 ;
 
 _Qcomparison_E_Opt:
-    	-> {}
+    	-> null
   | comparison	
 ;
 
 function:
-    GT_index_LPAREN_RPAREN	
-  | GT_length_LPAREN_RPAREN	
+    GT_index	-> new Filter('@@', FuncName.index, '@@')
+  | GT_length	-> new Filter('@@', FuncName.length, '@@')
+  //   GT_index GT_LPAREN GT_RPAREN	-> new Filter('@@', FuncName.index, '@@')
+  // | GT_length IT_AT GT_LPAREN GT_RPAREN	-> new Filter('@@', FuncName.length, '@@')
 ;
 
 comparison:
@@ -279,61 +309,61 @@ comparison:
 ;
 
 comparitor:
-    IT_EQUAL	
-  | IT_LT	
-  | IT_GT	
+    IT_EQUAL	-> FuncName.equal
+  | IT_LT	-> FuncName.lessThan
+  | IT_GT	-> FuncName.greaterThan
 ;
 
 rvalue:
-    INTEGER	
+    INTEGER	-> parseInt($1)
   | iri	
 ;
 
 numericExpr:
-    INTEGER	
+    INTEGER	-> parseInt($1)
 ;
 
 termType:
     shapeExprType	
   | tripleExprType	
   | valueType	
-  | IT_Schema	
-  | IT_SemAct	
-  | IT_Annotation	
+  | IT_Schema	-> t_termType.Schema
+  | IT_SemAct	-> t_termType.SemAct
+  | IT_Annotation	-> t_termType.Annotation
 ;
 
 shapeExprType:
-    IT_ShapeAnd	
-  | IT_ShapeOr	
-  | IT_ShapeNot	
-  | IT_NodeConstraint	
-  | IT_Shape	
-  | IT_ShapeExternal	
+    IT_ShapeAnd	-> t_shapeExprType.ShapeAnd
+  | IT_ShapeOr	-> t_shapeExprType.ShapeOr
+  | IT_ShapeNot	-> t_shapeExprType.ShapeNot
+  | IT_NodeConstraint	-> t_shapeExprType.NodeConstraint
+  | IT_Shape	-> t_shapeExprType.Shape
+  | IT_ShapeExternal	-> t_shapeExprType.ShapeExternal
 ;
 
 tripleExprType:
-    IT_EachOf	
-  | IT_OneOf	
-  | IT_TripleConstraint	
+    IT_EachOf	-> t_tripleExprType.EachOf
+  | IT_OneOf	-> t_tripleExprType.OneOf
+  | IT_TripleConstraint	-> t_tripleExprType.TripleConstraint
 ;
 
 valueType:
-    IT_IriStem	
-  | IT_IriStemRange	
-  | IT_LiteralStem	
-  | IT_LiteralStemRange	
-  | IT_Language	
-  | IT_LanguageStem	
-  | IT_LanguageStemRange	
-  | IT_Wildcard	
+    IT_IriStem	-> t_valueType.IriStem
+  | IT_IriStemRange	-> t_valueType.IriStemRange
+  | IT_LiteralStem	-> t_valueType.LiteralStem
+  | IT_LiteralStemRange	-> t_valueType.LiteralStemRange
+  | IT_Language	-> t_valueType.Language
+  | IT_LanguageStem	-> t_valueType.LanguageStem
+  | IT_LanguageStemRange	-> t_valueType.LanguageStemRange
+  | IT_Wildcard	-> t_valueType.Wildcard
 ;
 
 attribute:
-    IT_type	
-  | IT_id	
-  | IT_semActs	
-  | IT_annotations	
-  | IT_predicate	
+    IT_type	-> t_attribute.type
+  | IT_id	-> t_attribute.id
+  | IT_semActs	-> t_attribute.semActs
+  | IT_annotations	-> t_attribute.annotations
+  | IT_predicate	-> t_attribute.predicate
   | schemaAttr	
   | shapeExprAttr	
   | tripleExprAttr	
@@ -343,25 +373,25 @@ attribute:
 ;
 
 schemaAttr:
-    IT_@context	
-  | IT_startActs	
-  | IT_start	
-  | IT_imports	
-  | IT_shapes	
+    GT_atContext	-> t_schemaAttr.atContext
+  | IT_startActs	-> t_schemaAttr.startActs
+  | IT_start	-> t_schemaAttr.start
+  | IT_imports	-> t_schemaAttr.imports
+  | IT_shapes	-> t_schemaAttr.shapes
 ;
 
 shapeExprAttr:
-    IT_shapeExprs	
-  | IT_shapeExpr	
+    IT_shapeExprs	-> t_shapeExprAttr.shapeExprs
+  | IT_shapeExpr	-> t_shapeExprAttr.shapeExpr
   | nodeConstraintAttr	
   | shapeAttr	
 ;
 
 nodeConstraintAttr:
-    IT_nodeKind	
-  | IT_datatype	
+    IT_nodeKind	-> t_nodeConstraintAttr.nodeKind
+  | IT_datatype	-> t_nodeConstraintAttr.datatype
   | xsFacetAttr	
-  | IT_values	
+  | IT_values	-> t_nodeConstraintAttr.values
 ;
 
 xsFacetAttr:
@@ -370,69 +400,63 @@ xsFacetAttr:
 ;
 
 stringFacetAttr:
-    IT_length	
-  | IT_minlength	
-  | IT_maxlength	
-  | IT_pattern	
-  | IT_flags	
+    IT_length	-> t_stringFacetAttr.length
+  | IT_minlength	-> t_stringFacetAttr.minlength
+  | IT_maxlength	-> t_stringFacetAttr.maxlength
+  | IT_pattern	-> t_stringFacetAttr.pattern
+  | IT_flags	-> t_stringFacetAttr.flags
 ;
 
 numericFacetAttr:
-    IT_mininclusive	
-  | IT_minexclusive	
-  | IT_maxinclusive	
-  | IT_maxexclusive	
-  | IT_totaldigits	
-  | IT_fractiondigits	
+    IT_mininclusive	-> t_numericFacetAttr.mininclusive
+  | IT_minexclusive	-> t_numericFacetAttr.minexclusive
+  | IT_maxinclusive	-> t_numericFacetAttr.maxinclusive
+  | IT_maxexclusive	-> t_numericFacetAttr.maxexclusive
+  | IT_totaldigits	-> t_numericFacetAttr.totaldigits
+  | IT_fractiondigits	-> t_numericFacetAttr.fractiondigits
 ;
 
 valueSetValueAttr:
-    IT_value	
-  | IT_language	
-  | IT_stem	
-  | IT_exclusions	
-  | IT_languageTag	
+    IT_value	-> t_valueSetValueAttr.value
+  | IT_language	-> t_valueSetValueAttr.language
+  | IT_stem	-> t_valueSetValueAttr.stem
+  | IT_exclusions	-> t_valueSetValueAttr.exclusions
+  | IT_languageTag	-> t_valueSetValueAttr.languageTag
 ;
 
-
-
 shapeAttr:
-    IT_closed	
-  | IT_extra	
-  | IT_expression	
+    IT_closed	-> t_shapeAttr.closed
+  | IT_extra	-> t_shapeAttr.extra
+  | IT_expression	-> t_shapeAttr.expression
 ;
 
 tripleExprAttr:
-    IT_expressions	
-  | IT_min	
-  | IT_max	
+    IT_expressions	-> t_tripleExprAttr.expressions
+  | IT_min	-> t_tripleExprAttr.min
+  | IT_max	-> t_tripleExprAttr.max
   | tripleConstraintAttr	
 ;
 
 tripleConstraintAttr:
-    IT_inverse	
-  | IT_valueExpr	
+    IT_inverse	-> t_tripleConstraintAttr.inverse
+  | IT_valueExpr	-> t_tripleConstraintAttr.valueExpr
 ;
 
-
-
 semActAttr:
-    IT_name	
-  | IT_code	
+    IT_name	-> t_semActAttr.name
+  | IT_code	-> t_semActAttr.code
 ;
 
 annotationAttr:
-    IT_object	
+    IT_object	-> t_annotationAttr.object
 ;
 
-
-
 iri:
-    IRIREF	
+    IRIREF	-> new URL($1.substr(1, $1.length - 2), yy.base)
   | prefixedName	
 ;
 
 prefixedName:
-    PNAME_LN	
-  | PNAME_NS	
+    PNAME_LN	-> pnameToUrl($1, yy)
+  | PNAME_NS	-> pnameToUrl($1, yy)
 ;

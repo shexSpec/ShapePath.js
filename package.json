@@ -12,8 +12,10 @@
     "test": "ts-node ShapePathJison.ts txt",
     "compile2": "tsc",
     "test2": "jest",
+    "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand ./__tests__/static-test.ts",
     "test3999": "npm run parser && npm run compile && npm run test2",
-    "test3": "npm run compile && npm run test2"
+    "test3": "tsc --noEmit ShapePathJison.ts && npm run test2",
+    "tyson": "tyson ./ShapePathJison.jison ./ShapePath.typedict.ts --out ./ShapePath.typecheck.ts && ./fixupNames ./ShapePath.typecheck.ts && tsc --noEmit ./ShapePath.typecheck.ts"
   },
   "repository": {
     "type": "git",

@@ -4,8 +4,15 @@ import { ShapePathParser } from '../ShapePathJison'
 
 describe("ShapePathParser", () => {
   test("txt", () => {
+    const yy = {
+      base: new URL('file://' + __dirname),
+      prefixes: {
+        '': 'http://a.example/default',
+        bar: 'http://a.example/bar',
+      }
+    }
     const txt = Fs.readFileSync(Path.join(__dirname, '../txt'), "utf8")
-    const parsed = new ShapePathParser().parse(txt)
+    const parsed = new ShapePathParser(yy).parse(txt)
     const stripped = JSON.parse(JSON.stringify(parsed))
     expect(stripped).toEqual(Ref1)
   })
@@ -36,22 +43,30 @@ const Ref1 = {
                   }
                 ]
               },
-              "op": "=",
-              "r": "<S1>"
+              "op": "equal",
+              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/S1"
             },
             {
               "t": "Assertion",
+              // "l": {
+              //   "t": "Path",
+              //   "steps": [
+              //     {
+              //       "t": "Step",
+              //       "selector": "length()"
+              //     }
+              //   ]
+              // },
               "l": {
-                "t": "Path",
-                "steps": [
-                  {
-                    "t": "Step",
-                    "selector": "length()"
-                  }
-                ]
-              },
-              "op": "=",
-              "r": "1"
+                "t": "Filter",
+                "l": {
+                  "l": "@@",
+                  "op": "length",
+                  "t": "Filter",
+                },
+                "op": "equal",
+                "r": 1
+              }
             }
           ]
         },
@@ -80,8 +95,8 @@ const Ref1 = {
                   }
                 ]
               },
-              "op": "=",
-              "r": "<p1>"
+              "op": "equal",
+              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/p1"
             }
           ]
         },
@@ -104,22 +119,21 @@ const Ref1 = {
                   }
                 ]
               },
-              "op": "=",
-              "r": "<S2>"
+              "op": "equal",
+              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/S2"
             },
             {
               "t": "Assertion",
               "l": {
-                "t": "Path",
-                "steps": [
-                  {
-                    "t": "Step",
-                    "selector": "length()"
-                  }
-                ]
-              },
-              "op": "=",
-              "r": "1"
+                "t": "Filter",
+                "l": {
+                  "l": "@@",
+                  "op": "length",
+                  "t": "Filter",
+                },
+                "op": "equal",
+                "r": 1
+              }
             }
           ]
         }
@@ -147,22 +161,22 @@ const Ref1 = {
                   }
                 ]
               },
-              "op": "=",
-              "r": "<S1>"
+              "op": "equal",
+              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/S1"
             },
             {
               "t": "Assertion",
               "l": {
-                "t": "Path",
-                "steps": [
-                  {
-                    "t": "Step",
-                    "selector": "length()"
-                  }
-                ]
-              },
-              "op": "=",
-              "r": "1"
+                "t": "Filter",
+                "l": {
+                  "l": "@@",
+                  "op": "length",
+                  "r": "@@",
+                  "t": "Filter",
+                },
+                "op": "equal",
+                "r": 1
+              }
             }
           ]
         },
@@ -191,8 +205,8 @@ const Ref1 = {
                   }
                 ]
               },
-              "op": "=",
-              "r": "<p1>"
+              "op": "equal",
+              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/p1"
             }
           ]
         },
@@ -215,22 +229,22 @@ const Ref1 = {
                   }
                 ]
               },
-              "op": "=",
-              "r": "<S2>"
+              "op": "equal",
+              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/S2"
             },
             {
               "t": "Assertion",
               "l": {
-                "t": "Path",
-                "steps": [
-                  {
-                    "t": "Step",
-                    "selector": "length()"
-                  }
-                ]
-              },
-              "op": "=",
-              "r": "1"
+                "t": "Filter",
+                "l": {
+                  "l": "@@",
+                  "op": "length",
+                  "r": "@@",
+                  "t": "Filter",
+                },
+                "op": "equal",
+                "r": 1
+              }
             }
           ]
         }
@@ -251,7 +265,10 @@ const Ref1 = {
               "selector": "*",
               "filters": [
                 {
-                  "index": "1"
+                  "t": "Filter",
+                  "op": "index",
+                  "l": 1,
+                  "r": "@@"
                 }
               ]
             },
@@ -260,7 +277,10 @@ const Ref1 = {
               "selector": "*",
               "filters": [
                 {
-                  "index": "2"
+                  "t": "Filter",
+                  "op": "index",
+                  "l": 2,
+                  "r": "@@"
                 }
               ]
             }
@@ -278,7 +298,10 @@ const Ref1 = {
               "selector": "ShapeAnd",
               "filters": [
                 {
-                  "index": "2"
+                  "t": "Filter",
+                  "op": "index",
+                  "l": 2,
+                  "r": "@@"
                 }
               ]
             }
@@ -292,7 +315,10 @@ const Ref1 = {
               "selector": "ShapeOr",
               "filters": [
                 {
-                  "index": "1"
+                  "t": "Filter",
+                  "op": "index",
+                  "l": 1,
+                  "r": "@@"
                 }
               ]
             },
@@ -301,7 +327,10 @@ const Ref1 = {
               "selector": "*",
               "filters": [
                 {
-                  "index": "2"
+                  "t": "Filter",
+                  "op": "index",
+                  "l": 2,
+                  "r": "@@"
                 }
               ]
             }

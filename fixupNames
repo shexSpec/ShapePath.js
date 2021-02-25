@@ -1,0 +1,4 @@
+perl -pi -e 's/([" ])O/$1_O/g' $1
+perl -pi -e 's/__O/_O/g' $1
+perl -pi -e 's/([" ])Q/$1_Q/g' $1
+perl -pi -e 's/__Q/_Q/g' $1
