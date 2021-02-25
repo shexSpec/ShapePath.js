@@ -1,11 +1,12 @@
 const Fs = require('fs')
 const Path = require('path')
 import { ShapePathParser } from '../ShapePathJison'
+const Base = 'http://a.example/some/path/' // 'file://'+__dirname
 
 describe("ShapePathParser", () => {
   test("txt", () => {
     const yy = {
-      base: new URL('file://' + __dirname),
+      base: new URL(Base),
       prefixes: {
         '': 'http://a.example/default',
         bar: 'http://a.example/bar',
@@ -44,19 +45,10 @@ const Ref1 = {
                 ]
               },
               "op": "equal",
-              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/S1"
+              "r": "http://a.example/some/path/S1"
             },
             {
               "t": "Assertion",
-              // "l": {
-              //   "t": "Path",
-              //   "steps": [
-              //     {
-              //       "t": "Step",
-              //       "selector": "length()"
-              //     }
-              //   ]
-              // },
               "l": {
                 "t": "Filter",
                 "l": {
@@ -96,7 +88,7 @@ const Ref1 = {
                 ]
               },
               "op": "equal",
-              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/p1"
+              "r": "http://a.example/some/path/p1"
             }
           ]
         },
@@ -120,7 +112,7 @@ const Ref1 = {
                 ]
               },
               "op": "equal",
-              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/S2"
+              "r": "http://a.example/some/path/S2"
             },
             {
               "t": "Assertion",
@@ -162,7 +154,7 @@ const Ref1 = {
                 ]
               },
               "op": "equal",
-              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/S1"
+              "r": "http://a.example/some/path/S1"
             },
             {
               "t": "Assertion",
@@ -206,7 +198,7 @@ const Ref1 = {
                 ]
               },
               "op": "equal",
-              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/p1"
+              "r": "http://a.example/some/path/p1"
             }
           ]
         },
@@ -230,7 +222,7 @@ const Ref1 = {
                 ]
               },
               "op": "equal",
-              "r": "file:///home/eric/checkouts/shexSpec/ShapePath.js/S2"
+              "r": "http://a.example/some/path/S2"
             },
             {
               "t": "Assertion",
