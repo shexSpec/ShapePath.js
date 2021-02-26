@@ -53,7 +53,7 @@ const Ref1 = {
                 "t": "Filter",
                 "l": {
                   "l": "@@",
-                  "op": "length",
+                  "op": "count",
                   "t": "Filter",
                 },
                 "op": "equal",
@@ -120,7 +120,7 @@ const Ref1 = {
                 "t": "Filter",
                 "l": {
                   "l": "@@",
-                  "op": "length",
+                  "op": "count",
                   "t": "Filter",
                 },
                 "op": "equal",
@@ -162,7 +162,7 @@ const Ref1 = {
                 "t": "Filter",
                 "l": {
                   "l": "@@",
-                  "op": "length",
+                  "op": "count",
                   "r": "@@",
                   "t": "Filter",
                 },
@@ -230,7 +230,7 @@ const Ref1 = {
                 "t": "Filter",
                 "l": {
                   "l": "@@",
-                  "op": "length",
+                  "op": "count",
                   "r": "@@",
                   "t": "Filter",
                 },

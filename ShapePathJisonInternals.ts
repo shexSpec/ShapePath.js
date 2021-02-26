@@ -22,7 +22,7 @@ export function shapeLabelShortCut(label: URL) {
       ),
       new Assertion(
         new Filter(
-          new Filter('@@', FuncName.length),
+          new Filter('@@', FuncName.count),
           FuncName.equal,
           1
         )

@@ -33,7 +33,7 @@ function pnameToUrl (pname: string, yy: any): URL {
 import { JisonParser, JisonParserApi, StateType, SymbolsType, TerminalsType, ProductionsType, o } from '@ts-jison/parser';
 import { JisonLexer, JisonLexerApi } from '@ts-jison/lexer';
 
-const $V0=[32,33,34,35,36,37,38,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,92,93,94,95,96,97,98,101,102,104,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,130,131,132,133,134],$V1=[2,17],$V2=[1,10],$V3=[1,11],$V4=[1,12],$V5=[1,13],$V6=[5,9,43,54,55,56],$V7=[5,9,13,43,54,55,56],$V8=[5,9,13,21,22,25,26,43,54,55,56],$V9=[38,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,92,93,94,95,96,97,98,101,102,104,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,130,131,132,133,134],$Va=[2,25],$Vb=[1,21],$Vc=[1,22],$Vd=[1,23],$Ve=[1,24],$Vf=[1,25],$Vg=[1,26],$Vh=[1,28],$Vi=[1,30],$Vj=[1,31],$Vk=[135,137,138],$Vl=[5,9,13,21,22,25,26,41,43,54,55,56],$Vm=[21,22,25,26,32,33,34,35,36,37,38,50,51,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,92,93,94,95,96,97,98,101,102,104,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,130,131,132,133,134],$Vn=[1,139],$Vo=[1,140],$Vp=[1,141],$Vq=[54,55,56],$Vr=[57,135,137,138];
+const $V0=[32,33,34,35,36,37,38,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,97,98,99,100,101,102,103,106,107,109,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,135,136,137,138,139],$V1=[2,17],$V2=[1,10],$V3=[1,11],$V4=[1,12],$V5=[1,13],$V6=[5,9,43,60,61,62],$V7=[5,9,13,43,60,61,62],$V8=[5,9,13,21,22,25,26,43,60,61,62],$V9=[38,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,97,98,99,100,101,102,103,106,107,109,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,135,136,137,138,139],$Va=[2,25],$Vb=[1,21],$Vc=[1,22],$Vd=[1,23],$Ve=[1,24],$Vf=[1,25],$Vg=[1,26],$Vh=[1,28],$Vi=[1,30],$Vj=[1,31],$Vk=[140,142,143],$Vl=[5,9,13,21,22,25,26,43,52,60,61,62],$Vm=[5,9,13,21,22,25,26,41,43,60,61,62],$Vn=[21,22,25,26,32,33,34,35,36,37,38,50,53,54,55,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,97,98,99,100,101,102,103,106,107,109,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,135,136,137,138,139],$Vo=[2,44],$Vp=[1,141],$Vq=[1,142],$Vr=[1,143],$Vs=[57,140,142,143],$Vt=[43,60,61,62];
 
 export class ShapePathParser extends JisonParser implements JisonParserApi {
   public Parser?: ShapePathParser;
@@ -43,11 +43,11 @@ export class ShapePathParser extends JisonParser implements JisonParserApi {
     super(yy, lexer);
   }
 
-  symbols_: SymbolsType = {"error":2,"top":3,"shapePath":4,"EOF":5,"unionStep":6,"Q_O_QIT_union_E_S_QunionStep_E_C_E_Star":7,"O_QIT_union_E_S_QunionStep_E_C":8,"IT_UNION":9,"intersectionStep":10,"Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star":11,"O_QIT_intersection_E_S_QintersectionStep_E_C":12,"IT_INTERSECTION":13,"startStep":14,"QnextStep_E_Star":15,"nextStep":16,"Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt":17,"step":18,"shortcut":19,"O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C":20,"IT_DIVIDE":21,"IT_DIVIDEDIVIDE":22,"O_QGT_AT_E_Or_QGT_DOT_E_C":23,"iri":24,"IT_AT":25,"IT_DOT":26,"Qaxis_E_Opt":27,"selector":28,"Qfilter_E_Star":29,"axis":30,"filter":31,"IT_child":32,"IT_thisShapeExpr":33,"IT_thisTripleExpr":34,"IT_self":35,"IT_parent":36,"IT_ancestor":37,"IT_STAR":38,"termType":39,"attribute":40,"IT_LBRACKET":41,"filterExpr":42,"IT_RBRACKET":43,"QIT_ASSERT_E_Opt":44,"Qcomparison_E_Opt":45,"function":46,"comparison":47,"numericExpr":48,"IT_ASSERT":49,"GT_index":50,"GT_length":51,"comparitor":52,"rvalue":53,"IT_EQUAL":54,"IT_LT":55,"IT_GT":56,"INTEGER":57,"shapeExprType":58,"tripleExprType":59,"valueType":60,"IT_Schema":61,"IT_SemAct":62,"IT_Annotation":63,"IT_ShapeAnd":64,"IT_ShapeOr":65,"IT_ShapeNot":66,"IT_NodeConstraint":67,"IT_Shape":68,"IT_ShapeExternal":69,"IT_EachOf":70,"IT_OneOf":71,"IT_TripleConstraint":72,"IT_IriStem":73,"IT_IriStemRange":74,"IT_LiteralStem":75,"IT_LiteralStemRange":76,"IT_Language":77,"IT_LanguageStem":78,"IT_LanguageStemRange":79,"IT_Wildcard":80,"IT_type":81,"IT_id":82,"IT_semActs":83,"IT_annotations":84,"IT_predicate":85,"schemaAttr":86,"shapeExprAttr":87,"tripleExprAttr":88,"valueSetValueAttr":89,"semActAttr":90,"annotationAttr":91,"GT_atContext":92,"IT_startActs":93,"IT_start":94,"IT_imports":95,"IT_shapes":96,"IT_shapeExprs":97,"IT_shapeExpr":98,"nodeConstraintAttr":99,"shapeAttr":100,"IT_nodeKind":101,"IT_datatype":102,"xsFacetAttr":103,"IT_values":104,"stringFacetAttr":105,"numericFacetAttr":106,"IT_length":107,"IT_minlength":108,"IT_maxlength":109,"IT_pattern":110,"IT_flags":111,"IT_mininclusive":112,"IT_minexclusive":113,"IT_maxinclusive":114,"IT_maxexclusive":115,"IT_totaldigits":116,"IT_fractiondigits":117,"IT_value":118,"IT_language":119,"IT_stem":120,"IT_exclusions":121,"IT_languageTag":122,"IT_closed":123,"IT_extra":124,"IT_expression":125,"IT_expressions":126,"IT_min":127,"IT_max":128,"tripleConstraintAttr":129,"IT_inverse":130,"IT_valueExpr":131,"IT_name":132,"IT_code":133,"IT_object":134,"IRIREF":135,"prefixedName":136,"PNAME_LN":137,"PNAME_NS":138,"$accept":0,"$end":1};
-  terminals_: TerminalsType = {2:"error",5:"EOF",9:"IT_UNION",13:"IT_INTERSECTION",21:"IT_DIVIDE",22:"IT_DIVIDEDIVIDE",25:"IT_AT",26:"IT_DOT",32:"IT_child",33:"IT_thisShapeExpr",34:"IT_thisTripleExpr",35:"IT_self",36:"IT_parent",37:"IT_ancestor",38:"IT_STAR",41:"IT_LBRACKET",43:"IT_RBRACKET",49:"IT_ASSERT",50:"GT_index",51:"GT_length",54:"IT_EQUAL",55:"IT_LT",56:"IT_GT",57:"INTEGER",61:"IT_Schema",62:"IT_SemAct",63:"IT_Annotation",64:"IT_ShapeAnd",65:"IT_ShapeOr",66:"IT_ShapeNot",67:"IT_NodeConstraint",68:"IT_Shape",69:"IT_ShapeExternal",70:"IT_EachOf",71:"IT_OneOf",72:"IT_TripleConstraint",73:"IT_IriStem",74:"IT_IriStemRange",75:"IT_LiteralStem",76:"IT_LiteralStemRange",77:"IT_Language",78:"IT_LanguageStem",79:"IT_LanguageStemRange",80:"IT_Wildcard",81:"IT_type",82:"IT_id",83:"IT_semActs",84:"IT_annotations",85:"IT_predicate",92:"GT_atContext",93:"IT_startActs",94:"IT_start",95:"IT_imports",96:"IT_shapes",97:"IT_shapeExprs",98:"IT_shapeExpr",101:"IT_nodeKind",102:"IT_datatype",104:"IT_values",107:"IT_length",108:"IT_minlength",109:"IT_maxlength",110:"IT_pattern",111:"IT_flags",112:"IT_mininclusive",113:"IT_minexclusive",114:"IT_maxinclusive",115:"IT_maxexclusive",116:"IT_totaldigits",117:"IT_fractiondigits",118:"IT_value",119:"IT_language",120:"IT_stem",121:"IT_exclusions",122:"IT_languageTag",123:"IT_closed",124:"IT_extra",125:"IT_expression",126:"IT_expressions",127:"IT_min",128:"IT_max",130:"IT_inverse",131:"IT_valueExpr",132:"IT_name",133:"IT_code",134:"IT_object",135:"IRIREF",137:"PNAME_LN",138:"PNAME_NS"};
-  productions_: ProductionsType = [0,[3,2],[4,2],[8,2],[7,0],[7,2],[6,2],[12,2],[11,0],[11,2],[10,2],[15,0],[15,2],[14,2],[14,1],[20,1],[20,1],[17,0],[17,1],[16,2],[16,1],[19,2],[23,1],[23,1],[18,3],[27,0],[27,1],[29,0],[29,2],[30,1],[30,1],[30,1],[30,1],[30,1],[30,1],[28,1],[28,1],[28,1],[31,3],[42,3],[42,3],[42,1],[44,0],[44,1],[45,0],[45,1],[46,1],[46,1],[47,2],[52,1],[52,1],[52,1],[53,1],[53,1],[48,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[58,1],[58,1],[58,1],[58,1],[58,1],[58,1],[59,1],[59,1],[59,1],[60,1],[60,1],[60,1],[60,1],[60,1],[60,1],[60,1],[60,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[86,1],[86,1],[86,1],[86,1],[86,1],[87,1],[87,1],[87,1],[87,1],[99,1],[99,1],[99,1],[99,1],[103,1],[103,1],[105,1],[105,1],[105,1],[105,1],[105,1],[106,1],[106,1],[106,1],[106,1],[106,1],[106,1],[89,1],[89,1],[89,1],[89,1],[89,1],[100,1],[100,1],[100,1],[88,1],[88,1],[88,1],[88,1],[129,1],[129,1],[90,1],[90,1],[91,1],[24,1],[24,1],[136,1],[136,1]];
-  table: Array<StateType> = [o($V0,$V1,{3:1,4:2,6:3,10:4,14:5,17:6,19:7,20:8,23:9,21:$V2,22:$V3,25:$V4,26:$V5}),{1:[3]},{5:[1,14]},o($V6,[2,4],{7:15}),o($V7,[2,8],{11:16}),o($V8,[2,11],{15:17}),o($V9,$Va,{18:18,27:19,30:20,32:$Vb,33:$Vc,34:$Vd,35:$Ve,36:$Vf,37:$Vg}),o($V8,[2,14]),o($V0,[2,18]),{24:27,135:$Vh,136:29,137:$Vi,138:$Vj},o($V0,[2,15]),o($V0,[2,16]),o($Vk,[2,22]),o($Vk,[2,23]),{1:[2,1]},o([5,43,54,55,56],[2,2],{8:32,9:[1,33]}),o($V6,[2,6],{12:34,13:[1,35]}),o($V7,[2,10],{23:9,16:36,20:37,19:38,21:$V2,22:$V3,25:$V4,26:$V5}),o($V8,[2,13]),{28:39,38:[1,40],39:41,40:42,58:43,59:44,60:45,61:[1,46],62:[1,47],63:[1,48],64:[1,60],65:[1,61],66:[1,62],67:[1,63],68:[1,64],69:[1,65],70:[1,66],71:[1,67],72:[1,68],73:[1,69],74:[1,70],75:[1,71],76:[1,72],77:[1,73],78:[1,74],79:[1,75],80:[1,76],81:[1,49],82:[1,50],83:[1,51],84:[1,52],85:[1,53],86:54,87:55,88:56,89:57,90:58,91:59,92:[1,77],93:[1,78],94:[1,79],95:[1,80],96:[1,81],97:[1,82],98:[1,83],99:84,100:85,101:[1,98],102:[1,99],103:100,104:[1,101],105:107,106:108,107:[1,109],108:[1,110],109:[1,111],110:[1,112],111:[1,113],112:[1,114],113:[1,115],114:[1,116],115:[1,117],116:[1,118],117:[1,119],118:[1,90],119:[1,91],120:[1,92],121:[1,93],122:[1,94],123:[1,102],124:[1,103],125:[1,104],126:[1,86],127:[1,87],128:[1,88],129:89,130:[1,105],131:[1,106],132:[1,95],133:[1,96],134:[1,97]},o($V9,[2,26]),o($V9,[2,29]),o($V9,[2,30]),o($V9,[2,31]),o($V9,[2,32]),o($V9,[2,33]),o($V9,[2,34]),o($V8,[2,21]),o($V8,[2,132]),o($V8,[2,133]),o($V8,[2,134]),o($V8,[2,135]),o($V6,[2,5]),o($V0,$V1,{10:4,14:5,17:6,19:7,20:8,23:9,6:120,21:$V2,22:$V3,25:$V4,26:$V5}),o($V7,[2,9]),o($V0,$V1,{14:5,17:6,19:7,20:8,23:9,10:121,21:$V2,22:$V3,25:$V4,26:$V5}),o($V8,[2,12]),o($V9,$Va,{27:19,30:20,18:122,32:$Vb,33:$Vc,34:$Vd,35:$Ve,36:$Vf,37:$Vg}),o($V8,[2,20]),o($Vl,[2,27],{29:123}),o($Vl,[2,35]),o($Vl,[2,36]),o($Vl,[2,37]),o($Vl,[2,55]),o($Vl,[2,56]),o($Vl,[2,57]),o($Vl,[2,58]),o($Vl,[2,59]),o($Vl,[2,60]),o($Vl,[2,78]),o($Vl,[2,79]),o($Vl,[2,80]),o($Vl,[2,81]),o($Vl,[2,82]),o($Vl,[2,83]),o($Vl,[2,84]),o($Vl,[2,85]),o($Vl,[2,86]),o($Vl,[2,87]),o($Vl,[2,88]),o($Vl,[2,61]),o($Vl,[2,62]),o($Vl,[2,63]),o($Vl,[2,64]),o($Vl,[2,65]),o($Vl,[2,66]),o($Vl,[2,67]),o($Vl,[2,68]),o($Vl,[2,69]),o($Vl,[2,70]),o($Vl,[2,71]),o($Vl,[2,72]),o($Vl,[2,73]),o($Vl,[2,74]),o($Vl,[2,75]),o($Vl,[2,76]),o($Vl,[2,77]),o($Vl,[2,89]),o($Vl,[2,90]),o($Vl,[2,91]),o($Vl,[2,92]),o($Vl,[2,93]),o($Vl,[2,94]),o($Vl,[2,95]),o($Vl,[2,96]),o($Vl,[2,97]),o($Vl,[2,123]),o($Vl,[2,124]),o($Vl,[2,125]),o($Vl,[2,126]),o($Vl,[2,115]),o($Vl,[2,116]),o($Vl,[2,117]),o($Vl,[2,118]),o($Vl,[2,119]),o($Vl,[2,129]),o($Vl,[2,130]),o($Vl,[2,131]),o($Vl,[2,98]),o($Vl,[2,99]),o($Vl,[2,100]),o($Vl,[2,101]),o($Vl,[2,120]),o($Vl,[2,121]),o($Vl,[2,122]),o($Vl,[2,127]),o($Vl,[2,128]),o($Vl,[2,102]),o($Vl,[2,103]),o($Vl,[2,104]),o($Vl,[2,105]),o($Vl,[2,106]),o($Vl,[2,107]),o($Vl,[2,108]),o($Vl,[2,109]),o($Vl,[2,110]),o($Vl,[2,111]),o($Vl,[2,112]),o($Vl,[2,113]),o($Vl,[2,114]),o($V6,[2,3]),o($V7,[2,7]),o($V8,[2,19]),o($V8,[2,24],{31:124,41:[1,125]}),o($Vl,[2,28]),o($Vm,[2,42],{42:126,44:127,48:128,49:[1,129],57:[1,130]}),{43:[1,131]},o($V0,$V1,{6:3,10:4,14:5,17:6,19:7,20:8,23:9,4:132,46:133,21:$V2,22:$V3,25:$V4,26:$V5,50:[1,134],51:[1,135]}),{43:[2,41]},o($Vm,[2,43]),{43:[2,54]},o($Vl,[2,38]),{43:[2,44],45:136,47:137,52:138,54:$Vn,55:$Vo,56:$Vp},{47:142,52:138,54:$Vn,55:$Vo,56:$Vp},o($Vq,[2,46]),o($Vq,[2,47]),{43:[2,39]},{43:[2,45]},{24:145,53:143,57:[1,144],135:$Vh,136:29,137:$Vi,138:$Vj},o($Vr,[2,49]),o($Vr,[2,50]),o($Vr,[2,51]),{43:[2,40]},{43:[2,48]},{43:[2,52]},{43:[2,53]}];
-  defaultActions: {[key:number]: any} = {14:[2,1],128:[2,41],130:[2,54],136:[2,39],137:[2,45],142:[2,40],143:[2,48],144:[2,52],145:[2,53]};
+  symbols_: SymbolsType = {"error":2,"top":3,"shapePath":4,"EOF":5,"unionStep":6,"Q_O_QIT_union_E_S_QunionStep_E_C_E_Star":7,"O_QIT_union_E_S_QunionStep_E_C":8,"IT_UNION":9,"intersectionStep":10,"Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star":11,"O_QIT_intersection_E_S_QintersectionStep_E_C":12,"IT_INTERSECTION":13,"startStep":14,"QnextStep_E_Star":15,"nextStep":16,"Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt":17,"step":18,"shortcut":19,"O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C":20,"IT_DIVIDE":21,"IT_DIVIDEDIVIDE":22,"O_QGT_AT_E_Or_QGT_DOT_E_C":23,"iri":24,"IT_AT":25,"IT_DOT":26,"Qaxis_E_Opt":27,"selector":28,"Qfilter_E_Star":29,"axis":30,"filter":31,"IT_child":32,"IT_thisShapeExpr":33,"IT_thisTripleExpr":34,"IT_self":35,"IT_parent":36,"IT_ancestor":37,"IT_STAR":38,"termType":39,"attribute":40,"IT_LBRACKET":41,"filterExpr":42,"IT_RBRACKET":43,"QIT_ASSERT_E_Opt":44,"Qcomparison_E_Opt":45,"function":46,"numericExpr":47,"IT_ASSERT":48,"comparison":49,"IT_index":50,"GT_LPAREN":51,"GT_RPAREN":52,"IT_count":53,"IT_foo1":54,"IT_foo2":55,"fooArg":56,"INTEGER":57,"comparitor":58,"rvalue":59,"IT_EQUAL":60,"IT_LT":61,"IT_GT":62,"shapeExprType":63,"tripleExprType":64,"valueType":65,"IT_Schema":66,"IT_SemAct":67,"IT_Annotation":68,"IT_ShapeAnd":69,"IT_ShapeOr":70,"IT_ShapeNot":71,"IT_NodeConstraint":72,"IT_Shape":73,"IT_ShapeExternal":74,"IT_EachOf":75,"IT_OneOf":76,"IT_TripleConstraint":77,"IT_IriStem":78,"IT_IriStemRange":79,"IT_LiteralStem":80,"IT_LiteralStemRange":81,"IT_Language":82,"IT_LanguageStem":83,"IT_LanguageStemRange":84,"IT_Wildcard":85,"IT_type":86,"IT_id":87,"IT_semActs":88,"IT_annotations":89,"IT_predicate":90,"schemaAttr":91,"shapeExprAttr":92,"tripleExprAttr":93,"valueSetValueAttr":94,"semActAttr":95,"annotationAttr":96,"GT_atContext":97,"IT_startActs":98,"IT_start":99,"IT_imports":100,"IT_shapes":101,"IT_shapeExprs":102,"IT_shapeExpr":103,"nodeConstraintAttr":104,"shapeAttr":105,"IT_nodeKind":106,"IT_datatype":107,"xsFacetAttr":108,"IT_values":109,"stringFacetAttr":110,"numericFacetAttr":111,"IT_length":112,"IT_minlength":113,"IT_maxlength":114,"IT_pattern":115,"IT_flags":116,"IT_mininclusive":117,"IT_minexclusive":118,"IT_maxinclusive":119,"IT_maxexclusive":120,"IT_totaldigits":121,"IT_fractiondigits":122,"IT_value":123,"IT_language":124,"IT_stem":125,"IT_exclusions":126,"IT_languageTag":127,"IT_closed":128,"IT_extra":129,"IT_expression":130,"IT_expressions":131,"IT_min":132,"IT_max":133,"tripleConstraintAttr":134,"IT_inverse":135,"IT_valueExpr":136,"IT_name":137,"IT_code":138,"IT_object":139,"IRIREF":140,"prefixedName":141,"PNAME_LN":142,"PNAME_NS":143,"$accept":0,"$end":1};
+  terminals_: TerminalsType = {2:"error",5:"EOF",9:"IT_UNION",13:"IT_INTERSECTION",21:"IT_DIVIDE",22:"IT_DIVIDEDIVIDE",25:"IT_AT",26:"IT_DOT",32:"IT_child",33:"IT_thisShapeExpr",34:"IT_thisTripleExpr",35:"IT_self",36:"IT_parent",37:"IT_ancestor",38:"IT_STAR",41:"IT_LBRACKET",43:"IT_RBRACKET",48:"IT_ASSERT",50:"IT_index",51:"GT_LPAREN",52:"GT_RPAREN",53:"IT_count",54:"IT_foo1",55:"IT_foo2",57:"INTEGER",60:"IT_EQUAL",61:"IT_LT",62:"IT_GT",66:"IT_Schema",67:"IT_SemAct",68:"IT_Annotation",69:"IT_ShapeAnd",70:"IT_ShapeOr",71:"IT_ShapeNot",72:"IT_NodeConstraint",73:"IT_Shape",74:"IT_ShapeExternal",75:"IT_EachOf",76:"IT_OneOf",77:"IT_TripleConstraint",78:"IT_IriStem",79:"IT_IriStemRange",80:"IT_LiteralStem",81:"IT_LiteralStemRange",82:"IT_Language",83:"IT_LanguageStem",84:"IT_LanguageStemRange",85:"IT_Wildcard",86:"IT_type",87:"IT_id",88:"IT_semActs",89:"IT_annotations",90:"IT_predicate",97:"GT_atContext",98:"IT_startActs",99:"IT_start",100:"IT_imports",101:"IT_shapes",102:"IT_shapeExprs",103:"IT_shapeExpr",106:"IT_nodeKind",107:"IT_datatype",109:"IT_values",112:"IT_length",113:"IT_minlength",114:"IT_maxlength",115:"IT_pattern",116:"IT_flags",117:"IT_mininclusive",118:"IT_minexclusive",119:"IT_maxinclusive",120:"IT_maxexclusive",121:"IT_totaldigits",122:"IT_fractiondigits",123:"IT_value",124:"IT_language",125:"IT_stem",126:"IT_exclusions",127:"IT_languageTag",128:"IT_closed",129:"IT_extra",130:"IT_expression",131:"IT_expressions",132:"IT_min",133:"IT_max",135:"IT_inverse",136:"IT_valueExpr",137:"IT_name",138:"IT_code",139:"IT_object",140:"IRIREF",142:"PNAME_LN",143:"PNAME_NS"};
+  productions_: ProductionsType = [0,[3,2],[4,2],[8,2],[7,0],[7,2],[6,2],[12,2],[11,0],[11,2],[10,2],[15,0],[15,2],[14,2],[14,1],[20,1],[20,1],[17,0],[17,1],[16,2],[16,1],[19,2],[23,1],[23,1],[18,3],[27,0],[27,1],[29,0],[29,2],[30,1],[30,1],[30,1],[30,1],[30,1],[30,1],[28,1],[28,1],[28,1],[31,3],[42,3],[42,3],[42,1],[44,0],[44,1],[45,0],[45,1],[46,3],[46,3],[46,4],[46,4],[56,2],[56,1],[56,1],[49,2],[58,1],[58,1],[58,1],[59,1],[59,1],[47,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[63,1],[63,1],[63,1],[63,1],[63,1],[63,1],[64,1],[64,1],[64,1],[65,1],[65,1],[65,1],[65,1],[65,1],[65,1],[65,1],[65,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[40,1],[91,1],[91,1],[91,1],[91,1],[91,1],[92,1],[92,1],[92,1],[92,1],[104,1],[104,1],[104,1],[104,1],[108,1],[108,1],[110,1],[110,1],[110,1],[110,1],[110,1],[111,1],[111,1],[111,1],[111,1],[111,1],[111,1],[94,1],[94,1],[94,1],[94,1],[94,1],[105,1],[105,1],[105,1],[93,1],[93,1],[93,1],[93,1],[134,1],[134,1],[95,1],[95,1],[96,1],[24,1],[24,1],[141,1],[141,1]];
+  table: Array<StateType> = [o($V0,$V1,{3:1,4:2,6:3,10:4,14:5,17:6,19:7,20:8,23:9,21:$V2,22:$V3,25:$V4,26:$V5}),{1:[3]},{5:[1,14]},o($V6,[2,4],{7:15}),o($V7,[2,8],{11:16}),o($V8,[2,11],{15:17}),o($V9,$Va,{18:18,27:19,30:20,32:$Vb,33:$Vc,34:$Vd,35:$Ve,36:$Vf,37:$Vg}),o($V8,[2,14]),o($V0,[2,18]),{24:27,140:$Vh,141:29,142:$Vi,143:$Vj},o($V0,[2,15]),o($V0,[2,16]),o($Vk,[2,22]),o($Vk,[2,23]),{1:[2,1]},o([5,43,60,61,62],[2,2],{8:32,9:[1,33]}),o($V6,[2,6],{12:34,13:[1,35]}),o($V7,[2,10],{23:9,16:36,20:37,19:38,21:$V2,22:$V3,25:$V4,26:$V5}),o($V8,[2,13]),{28:39,38:[1,40],39:41,40:42,63:43,64:44,65:45,66:[1,46],67:[1,47],68:[1,48],69:[1,60],70:[1,61],71:[1,62],72:[1,63],73:[1,64],74:[1,65],75:[1,66],76:[1,67],77:[1,68],78:[1,69],79:[1,70],80:[1,71],81:[1,72],82:[1,73],83:[1,74],84:[1,75],85:[1,76],86:[1,49],87:[1,50],88:[1,51],89:[1,52],90:[1,53],91:54,92:55,93:56,94:57,95:58,96:59,97:[1,77],98:[1,78],99:[1,79],100:[1,80],101:[1,81],102:[1,82],103:[1,83],104:84,105:85,106:[1,98],107:[1,99],108:100,109:[1,101],110:107,111:108,112:[1,109],113:[1,110],114:[1,111],115:[1,112],116:[1,113],117:[1,114],118:[1,115],119:[1,116],120:[1,117],121:[1,118],122:[1,119],123:[1,90],124:[1,91],125:[1,92],126:[1,93],127:[1,94],128:[1,102],129:[1,103],130:[1,104],131:[1,86],132:[1,87],133:[1,88],134:89,135:[1,105],136:[1,106],137:[1,95],138:[1,96],139:[1,97]},o($V9,[2,26]),o($V9,[2,29]),o($V9,[2,30]),o($V9,[2,31]),o($V9,[2,32]),o($V9,[2,33]),o($V9,[2,34]),o($V8,[2,21]),o($Vl,[2,137]),o($Vl,[2,138]),o($Vl,[2,139]),o($Vl,[2,140]),o($V6,[2,5]),o($V0,$V1,{10:4,14:5,17:6,19:7,20:8,23:9,6:120,21:$V2,22:$V3,25:$V4,26:$V5}),o($V7,[2,9]),o($V0,$V1,{14:5,17:6,19:7,20:8,23:9,10:121,21:$V2,22:$V3,25:$V4,26:$V5}),o($V8,[2,12]),o($V9,$Va,{27:19,30:20,18:122,32:$Vb,33:$Vc,34:$Vd,35:$Ve,36:$Vf,37:$Vg}),o($V8,[2,20]),o($Vm,[2,27],{29:123}),o($Vm,[2,35]),o($Vm,[2,36]),o($Vm,[2,37]),o($Vm,[2,60]),o($Vm,[2,61]),o($Vm,[2,62]),o($Vm,[2,63]),o($Vm,[2,64]),o($Vm,[2,65]),o($Vm,[2,83]),o($Vm,[2,84]),o($Vm,[2,85]),o($Vm,[2,86]),o($Vm,[2,87]),o($Vm,[2,88]),o($Vm,[2,89]),o($Vm,[2,90]),o($Vm,[2,91]),o($Vm,[2,92]),o($Vm,[2,93]),o($Vm,[2,66]),o($Vm,[2,67]),o($Vm,[2,68]),o($Vm,[2,69]),o($Vm,[2,70]),o($Vm,[2,71]),o($Vm,[2,72]),o($Vm,[2,73]),o($Vm,[2,74]),o($Vm,[2,75]),o($Vm,[2,76]),o($Vm,[2,77]),o($Vm,[2,78]),o($Vm,[2,79]),o($Vm,[2,80]),o($Vm,[2,81]),o($Vm,[2,82]),o($Vm,[2,94]),o($Vm,[2,95]),o($Vm,[2,96]),o($Vm,[2,97]),o($Vm,[2,98]),o($Vm,[2,99]),o($Vm,[2,100]),o($Vm,[2,101]),o($Vm,[2,102]),o($Vm,[2,128]),o($Vm,[2,129]),o($Vm,[2,130]),o($Vm,[2,131]),o($Vm,[2,120]),o($Vm,[2,121]),o($Vm,[2,122]),o($Vm,[2,123]),o($Vm,[2,124]),o($Vm,[2,134]),o($Vm,[2,135]),o($Vm,[2,136]),o($Vm,[2,103]),o($Vm,[2,104]),o($Vm,[2,105]),o($Vm,[2,106]),o($Vm,[2,125]),o($Vm,[2,126]),o($Vm,[2,127]),o($Vm,[2,132]),o($Vm,[2,133]),o($Vm,[2,107]),o($Vm,[2,108]),o($Vm,[2,109]),o($Vm,[2,110]),o($Vm,[2,111]),o($Vm,[2,112]),o($Vm,[2,113]),o($Vm,[2,114]),o($Vm,[2,115]),o($Vm,[2,116]),o($Vm,[2,117]),o($Vm,[2,118]),o($Vm,[2,119]),o($V6,[2,3]),o($V7,[2,7]),o($V8,[2,19]),o($V8,[2,24],{31:124,41:[1,125]}),o($Vm,[2,28]),o($Vn,[2,42],{42:126,44:127,47:128,48:[1,129],57:[1,130]}),{43:[1,131]},o($V0,$V1,{6:3,10:4,14:5,17:6,19:7,20:8,23:9,4:132,46:133,21:$V2,22:$V3,25:$V4,26:$V5,50:[1,134],53:[1,135],54:[1,136],55:[1,137]}),{43:[2,41]},o($Vn,[2,43]),{43:[2,59]},o($Vm,[2,38]),{43:$Vo,45:138,49:139,58:140,60:$Vp,61:$Vq,62:$Vr},{43:$Vo,45:144,49:139,58:140,60:$Vp,61:$Vq,62:$Vr},{51:[1,145]},{51:[1,146]},{51:[1,147]},{51:[1,148]},{43:[2,39]},{43:[2,45]},{24:151,57:[1,150],59:149,140:$Vh,141:29,142:$Vi,143:$Vj},o($Vs,[2,54]),o($Vs,[2,55]),o($Vs,[2,56]),{43:[2,40]},{52:[1,152]},{52:[1,153]},{24:154,140:$Vh,141:29,142:$Vi,143:$Vj},{24:157,56:155,57:[1,156],140:$Vh,141:29,142:$Vi,143:$Vj},{43:[2,53]},{43:[2,57]},{43:[2,58]},o($Vt,[2,46]),o($Vt,[2,47]),{52:[1,158]},{52:[1,159]},{24:160,52:[2,51],140:$Vh,141:29,142:$Vi,143:$Vj},{52:[2,52]},o($Vt,[2,48]),o($Vt,[2,49]),{52:[2,50]}];
+  defaultActions: {[key:number]: any} = {14:[2,1],128:[2,41],130:[2,59],138:[2,39],139:[2,45],144:[2,40],149:[2,53],150:[2,57],151:[2,58],157:[2,52],160:[2,50]};
 
   performAction (yytext:string, yyleng:number, yylineno:number, yy:any, yystate:number /* action[1] */, $$:any /* vstack */, _$:any /* lstack */): any {
 /* this == yyval */
@@ -77,7 +77,7 @@ break;
 case 12:
 this.$ = $$[$0-1].concat($$[$0]);
 break;
-case 13: case 19:
+case 13: case 19: case 51: case 52:
 this.$ = [$$[$0]];
 break;
 case 17: case 25: case 44:
@@ -113,11 +113,8 @@ break;
 case 38:
 this.$ = $$[$0-1];
 break;
-case 39:
+case 39: case 40:
 this.$ = makeFunction($$[$0-2], $$[$0-1], $$[$0] ? $$[$0] : { op: FuncName.ebv, r: null });
-break;
-case 40:
-this.$ = makeFunction($$[$0-2], $$[$0-1], $$[$0]);
 break;
 case 41:
 this.$ = new Filter($$[$0], FuncName.index, '@@');
@@ -131,214 +128,217 @@ break;
 case 46:
 this.$ = new Filter('@@', FuncName.index, '@@');
 break;
-case 47:
-this.$ = new Filter('@@', FuncName.length, '@@');
-break;
-case 48:
-this.$ = { op: $$[$0-1], r: $$[$0] };
-break;
-case 49:
-this.$ = FuncName.equal;
+case 47: case 48: case 49:
+this.$ = new Filter('@@', FuncName.count, '@@');
 break;
 case 50:
+this.$ = [$$[$0-1], $$[$0]];
+break;
+case 53:
+this.$ = { op: $$[$0-1], r: $$[$0] };
+break;
+case 54:
+this.$ = FuncName.equal;
+break;
+case 55:
 this.$ = FuncName.lessThan;
 break;
-case 51:
+case 56:
 this.$ = FuncName.greaterThan;
 break;
-case 52: case 54:
+case 57: case 59:
 this.$ = parseInt($$[$0]);
 break;
-case 58:
+case 63:
 this.$ = t_termType.Schema;
 break;
-case 59:
+case 64:
 this.$ = t_termType.SemAct;
 break;
-case 60:
+case 65:
 this.$ = t_termType.Annotation;
 break;
-case 61:
+case 66:
 this.$ = t_shapeExprType.ShapeAnd;
 break;
-case 62:
+case 67:
 this.$ = t_shapeExprType.ShapeOr;
 break;
-case 63:
+case 68:
 this.$ = t_shapeExprType.ShapeNot;
 break;
-case 64:
+case 69:
 this.$ = t_shapeExprType.NodeConstraint;
 break;
-case 65:
+case 70:
 this.$ = t_shapeExprType.Shape;
 break;
-case 66:
+case 71:
 this.$ = t_shapeExprType.ShapeExternal;
 break;
-case 67:
+case 72:
 this.$ = t_tripleExprType.EachOf;
 break;
-case 68:
+case 73:
 this.$ = t_tripleExprType.OneOf;
 break;
-case 69:
+case 74:
 this.$ = t_tripleExprType.TripleConstraint;
 break;
-case 70:
+case 75:
 this.$ = t_valueType.IriStem;
 break;
-case 71:
+case 76:
 this.$ = t_valueType.IriStemRange;
 break;
-case 72:
+case 77:
 this.$ = t_valueType.LiteralStem;
 break;
-case 73:
+case 78:
 this.$ = t_valueType.LiteralStemRange;
 break;
-case 74:
+case 79:
 this.$ = t_valueType.Language;
 break;
-case 75:
+case 80:
 this.$ = t_valueType.LanguageStem;
 break;
-case 76:
+case 81:
 this.$ = t_valueType.LanguageStemRange;
 break;
-case 77:
+case 82:
 this.$ = t_valueType.Wildcard;
 break;
-case 78:
+case 83:
 this.$ = t_attribute.type;
 break;
-case 79:
+case 84:
 this.$ = t_attribute.id;
 break;
-case 80:
+case 85:
 this.$ = t_attribute.semActs;
 break;
-case 81:
+case 86:
 this.$ = t_attribute.annotations;
 break;
-case 82:
+case 87:
 this.$ = t_attribute.predicate;
 break;
-case 89:
+case 94:
 this.$ = t_schemaAttr.atContext;
 break;
-case 90:
+case 95:
 this.$ = t_schemaAttr.startActs;
 break;
-case 91:
+case 96:
 this.$ = t_schemaAttr.start;
 break;
-case 92:
+case 97:
 this.$ = t_schemaAttr.imports;
 break;
-case 93:
+case 98:
 this.$ = t_schemaAttr.shapes;
 break;
-case 94:
+case 99:
 this.$ = t_shapeExprAttr.shapeExprs;
 break;
-case 95:
+case 100:
 this.$ = t_shapeExprAttr.shapeExpr;
 break;
-case 98:
+case 103:
 this.$ = t_nodeConstraintAttr.nodeKind;
 break;
-case 99:
+case 104:
 this.$ = t_nodeConstraintAttr.datatype;
 break;
-case 101:
+case 106:
 this.$ = t_nodeConstraintAttr.values;
 break;
-case 104:
+case 109:
 this.$ = t_stringFacetAttr.length;
 break;
-case 105:
+case 110:
 this.$ = t_stringFacetAttr.minlength;
 break;
-case 106:
+case 111:
 this.$ = t_stringFacetAttr.maxlength;
 break;
-case 107:
+case 112:
 this.$ = t_stringFacetAttr.pattern;
 break;
-case 108:
+case 113:
 this.$ = t_stringFacetAttr.flags;
 break;
-case 109:
+case 114:
 this.$ = t_numericFacetAttr.mininclusive;
 break;
-case 110:
+case 115:
 this.$ = t_numericFacetAttr.minexclusive;
 break;
-case 111:
+case 116:
 this.$ = t_numericFacetAttr.maxinclusive;
 break;
-case 112:
+case 117:
 this.$ = t_numericFacetAttr.maxexclusive;
 break;
-case 113:
+case 118:
 this.$ = t_numericFacetAttr.totaldigits;
 break;
-case 114:
+case 119:
 this.$ = t_numericFacetAttr.fractiondigits;
 break;
-case 115:
+case 120:
 this.$ = t_valueSetValueAttr.value;
 break;
-case 116:
+case 121:
 this.$ = t_valueSetValueAttr.language;
 break;
-case 117:
+case 122:
 this.$ = t_valueSetValueAttr.stem;
 break;
-case 118:
+case 123:
 this.$ = t_valueSetValueAttr.exclusions;
 break;
-case 119:
+case 124:
 this.$ = t_valueSetValueAttr.languageTag;
 break;
-case 120:
+case 125:
 this.$ = t_shapeAttr.closed;
 break;
-case 121:
+case 126:
 this.$ = t_shapeAttr.extra;
 break;
-case 122:
+case 127:
 this.$ = t_shapeAttr.expression;
 break;
-case 123:
+case 128:
 this.$ = t_tripleExprAttr.expressions;
 break;
-case 124:
+case 129:
 this.$ = t_tripleExprAttr.min;
 break;
-case 125:
+case 130:
 this.$ = t_tripleExprAttr.max;
 break;
-case 127:
+case 132:
 this.$ = t_tripleConstraintAttr.inverse;
 break;
-case 128:
+case 133:
 this.$ = t_tripleConstraintAttr.valueExpr;
 break;
-case 129:
+case 134:
 this.$ = t_semActAttr.name;
 break;
-case 130:
+case 135:
 this.$ = t_semActAttr.code;
 break;
-case 131:
+case 136:
 this.$ = t_annotationAttr.object;
 break;
-case 132:
+case 137:
 this.$ = new URL($$[$0].substr(1, $$[$0].length - 2), yy.base);
 break;
-case 134: case 135:
+case 139: case 140:
 this.$ = pnameToUrl($$[$0], yy);
 break;
     }
@@ -352,8 +352,8 @@ export class ShapePathLexer extends JisonLexer implements JisonLexerApi {
     super(yy);
   }
 
-  rules: RegExp[] = [/^(?:\s+|(#[^\u000a\u000d]*|<--([^-]|-[^-]|--[^>])*-->))/,/^(?:([Uu][Nn][Ii][Oo][Nn]))/,/^(?:([Ii][Nn][Tt][Ee][Rr][Ss][Ee][Cc][Tt][Ii][Oo][Nn]))/,/^(?:([Aa][Ss][Ss][Ee][Rr][Tt]))/,/^(?:child::)/,/^(?:thisShapeExpr::)/,/^(?:thisTripleExpr::)/,/^(?:self::)/,/^(?:parent::)/,/^(?:ancestor::)/,/^(?:index\(\))/,/^(?:length\(\))/,/^(?:Schema\b)/,/^(?:SemAct\b)/,/^(?:Annotation\b)/,/^(?:ShapeAnd\b)/,/^(?:ShapeOr\b)/,/^(?:ShapeNot\b)/,/^(?:NodeConstraint\b)/,/^(?:Shape\b)/,/^(?:ShapeExternal\b)/,/^(?:EachOf\b)/,/^(?:OneOf\b)/,/^(?:TripleConstraint\b)/,/^(?:IriStem\b)/,/^(?:IriStemRange\b)/,/^(?:LiteralStem\b)/,/^(?:LiteralStemRange\b)/,/^(?:Language\b)/,/^(?:LanguageStem\b)/,/^(?:LanguageStemRange\b)/,/^(?:Wildcard\b)/,/^(?:type\b)/,/^(?:id\b)/,/^(?:semActs\b)/,/^(?:annotations\b)/,/^(?:predicate\b)/,/^(?:@context\b)/,/^(?:startActs\b)/,/^(?:start\b)/,/^(?:imports\b)/,/^(?:shapes\b)/,/^(?:shapeExprs\b)/,/^(?:shapeExpr\b)/,/^(?:nodeKind\b)/,/^(?:datatype\b)/,/^(?:values\b)/,/^(?:length\b)/,/^(?:minlength\b)/,/^(?:maxlength\b)/,/^(?:pattern\b)/,/^(?:flags\b)/,/^(?:mininclusive\b)/,/^(?:minexclusive\b)/,/^(?:maxinclusive\b)/,/^(?:maxexclusive\b)/,/^(?:totaldigits\b)/,/^(?:fractiondigits\b)/,/^(?:value\b)/,/^(?:language\b)/,/^(?:stem\b)/,/^(?:exclusions\b)/,/^(?:languageTag\b)/,/^(?:closed\b)/,/^(?:extra\b)/,/^(?:expression\b)/,/^(?:expressions\b)/,/^(?:min\b)/,/^(?:max\b)/,/^(?:inverse\b)/,/^(?:valueExpr\b)/,/^(?:name\b)/,/^(?:code\b)/,/^(?:object\b)/,/^(?:(<([^\u0000-\u0020<>\"{}|^`\\]|(\\u([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])|\\U([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])))*>))/,/^(?:((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:))/,/^(?:(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:){PN_LOCAL}))/,/^(?:(([+-])?([0-9])+))/,/^(?:@)/,/^(?:\.)/,/^(?:\*)/,/^(?:\()/,/^(?:\))/,/^(?:\[)/,/^(?:\])/,/^(?:\/\/)/,/^(?:\/)/,/^(?:=)/,/^(?:<)/,/^(?:>)/,/^(?:[a-zA-Z0-9_-]+)/,/^(?:.)/,/^(?:$)/];
-  conditions: any = {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92],"inclusive":true}}
+  rules: RegExp[] = [/^(?:\s+|(#[^\u000a\u000d]*|<--([^-]|-[^-]|--[^>])*-->))/,/^(?:([Uu][Nn][Ii][Oo][Nn]))/,/^(?:([Ii][Nn][Tt][Ee][Rr][Ss][Ee][Cc][Tt][Ii][Oo][Nn]))/,/^(?:([Aa][Ss][Ss][Ee][Rr][Tt]))/,/^(?:child::)/,/^(?:thisShapeExpr::)/,/^(?:thisTripleExpr::)/,/^(?:self::)/,/^(?:parent::)/,/^(?:ancestor::)/,/^(?:index\b)/,/^(?:count\b)/,/^(?:foo1\b)/,/^(?:foo2\b)/,/^(?:Schema\b)/,/^(?:SemAct\b)/,/^(?:Annotation\b)/,/^(?:ShapeAnd\b)/,/^(?:ShapeOr\b)/,/^(?:ShapeNot\b)/,/^(?:NodeConstraint\b)/,/^(?:Shape\b)/,/^(?:ShapeExternal\b)/,/^(?:EachOf\b)/,/^(?:OneOf\b)/,/^(?:TripleConstraint\b)/,/^(?:IriStem\b)/,/^(?:IriStemRange\b)/,/^(?:LiteralStem\b)/,/^(?:LiteralStemRange\b)/,/^(?:Language\b)/,/^(?:LanguageStem\b)/,/^(?:LanguageStemRange\b)/,/^(?:Wildcard\b)/,/^(?:type\b)/,/^(?:id\b)/,/^(?:semActs\b)/,/^(?:annotations\b)/,/^(?:predicate\b)/,/^(?:@context\b)/,/^(?:startActs\b)/,/^(?:start\b)/,/^(?:imports\b)/,/^(?:shapes\b)/,/^(?:shapeExprs\b)/,/^(?:shapeExpr\b)/,/^(?:nodeKind\b)/,/^(?:datatype\b)/,/^(?:values\b)/,/^(?:length\b)/,/^(?:minlength\b)/,/^(?:maxlength\b)/,/^(?:pattern\b)/,/^(?:flags\b)/,/^(?:mininclusive\b)/,/^(?:minexclusive\b)/,/^(?:maxinclusive\b)/,/^(?:maxexclusive\b)/,/^(?:totaldigits\b)/,/^(?:fractiondigits\b)/,/^(?:value\b)/,/^(?:language\b)/,/^(?:stem\b)/,/^(?:exclusions\b)/,/^(?:languageTag\b)/,/^(?:closed\b)/,/^(?:extra\b)/,/^(?:expression\b)/,/^(?:expressions\b)/,/^(?:min\b)/,/^(?:max\b)/,/^(?:inverse\b)/,/^(?:valueExpr\b)/,/^(?:name\b)/,/^(?:code\b)/,/^(?:object\b)/,/^(?:(<([^\u0000-\u0020<>\"{}|^`\\]|(\\u([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])|\\U([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])))*>))/,/^(?:((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:))/,/^(?:(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:){PN_LOCAL}))/,/^(?:(([+-])?([0-9])+))/,/^(?:@)/,/^(?:\.)/,/^(?:\*)/,/^(?:\()/,/^(?:\))/,/^(?:\[)/,/^(?:\])/,/^(?:\/\/)/,/^(?:\/)/,/^(?:=)/,/^(?:<)/,/^(?:>)/,/^(?:[a-zA-Z0-9_-]+)/,/^(?:.)/,/^(?:$)/];
+  conditions: any = {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94],"inclusive":true}}
   performAction (yy:any,yy_:any,$avoiding_name_collisions:any,YY_START:any): any {
     var YYSTATE=YY_START;
     switch($avoiding_name_collisions) {
@@ -363,7 +363,7 @@ export class ShapePathLexer extends JisonLexer implements JisonLexerApi {
       break;
     case 2:return 13;
       break;
-    case 3:return 49;
+    case 3:return 48;
       break;
     case 4:return 32;
       break;
@@ -379,169 +379,173 @@ export class ShapePathLexer extends JisonLexer implements JisonLexerApi {
       break;
     case 10:return 50;
       break;
-    case 11:return 51;
+    case 11:return 53;
       break;
-    case 12:return 61;
+    case 12:return 54;
       break;
-    case 13:return 62;
+    case 13:return 55;
       break;
-    case 14:return 63;
+    case 14:return 66;
       break;
-    case 15:return 64;
+    case 15:return 67;
       break;
-    case 16:return 65;
+    case 16:return 68;
       break;
-    case 17:return 66;
+    case 17:return 69;
       break;
-    case 18:return 67;
+    case 18:return 70;
       break;
-    case 19:return 68;
+    case 19:return 71;
       break;
-    case 20:return 69;
+    case 20:return 72;
       break;
-    case 21:return 70;
+    case 21:return 73;
       break;
-    case 22:return 71;
+    case 22:return 74;
       break;
-    case 23:return 72;
+    case 23:return 75;
       break;
-    case 24:return 73;
+    case 24:return 76;
       break;
-    case 25:return 74;
+    case 25:return 77;
       break;
-    case 26:return 75;
+    case 26:return 78;
       break;
-    case 27:return 76;
+    case 27:return 79;
       break;
-    case 28:return 77;
+    case 28:return 80;
       break;
-    case 29:return 78;
+    case 29:return 81;
       break;
-    case 30:return 79;
+    case 30:return 82;
       break;
-    case 31:return 80;
+    case 31:return 83;
       break;
-    case 32:return 81;
+    case 32:return 84;
       break;
-    case 33:return 82;
+    case 33:return 85;
       break;
-    case 34:return 83;
+    case 34:return 86;
       break;
-    case 35:return 84;
+    case 35:return 87;
       break;
-    case 36:return 85;
+    case 36:return 88;
       break;
-    case 37:return 92;
+    case 37:return 89;
       break;
-    case 38:return 93;
+    case 38:return 90;
       break;
-    case 39:return 94;
+    case 39:return 97;
       break;
-    case 40:return 95;
+    case 40:return 98;
       break;
-    case 41:return 96;
+    case 41:return 99;
       break;
-    case 42:return 97;
+    case 42:return 100;
       break;
-    case 43:return 98;
+    case 43:return 101;
       break;
-    case 44:return 101;
+    case 44:return 102;
       break;
-    case 45:return 102;
+    case 45:return 103;
       break;
-    case 46:return 104;
+    case 46:return 106;
       break;
     case 47:return 107;
       break;
-    case 48:return 108;
+    case 48:return 109;
       break;
-    case 49:return 109;
+    case 49:return 112;
       break;
-    case 50:return 110;
+    case 50:return 113;
       break;
-    case 51:return 111;
+    case 51:return 114;
       break;
-    case 52:return 112;
+    case 52:return 115;
       break;
-    case 53:return 113;
+    case 53:return 116;
       break;
-    case 54:return 114;
+    case 54:return 117;
       break;
-    case 55:return 115;
+    case 55:return 118;
       break;
-    case 56:return 116;
+    case 56:return 119;
       break;
-    case 57:return 117;
+    case 57:return 120;
       break;
-    case 58:return 118;
+    case 58:return 121;
       break;
-    case 59:return 119;
+    case 59:return 122;
       break;
-    case 60:return 120;
+    case 60:return 123;
       break;
-    case 61:return 121;
+    case 61:return 124;
       break;
-    case 62:return 122;
+    case 62:return 125;
       break;
-    case 63:return 123;
+    case 63:return 126;
       break;
-    case 64:return 124;
+    case 64:return 127;
       break;
-    case 65:return 125;
+    case 65:return 128;
       break;
-    case 66:return 126;
+    case 66:return 129;
       break;
-    case 67:return 127;
+    case 67:return 130;
       break;
-    case 68:return 128;
+    case 68:return 131;
       break;
-    case 69:return 130;
+    case 69:return 132;
       break;
-    case 70:return 131;
+    case 70:return 133;
       break;
-    case 71:return 132;
+    case 71:return 135;
       break;
-    case 72:return 133;
+    case 72:return 136;
       break;
-    case 73:return 134;
+    case 73:return 137;
       break;
-    case 74:return 135;
+    case 74:return 138;
       break;
-    case 75:return 138;
+    case 75:return 139;
       break;
-    case 76:return 137;
+    case 76:return 140;
       break;
-    case 77:return 57;
+    case 77:return 143;
       break;
-    case 78:return 25;
+    case 78:return 142;
       break;
-    case 79:return 26;
+    case 79:return 57;
       break;
-    case 80:return 38;
+    case 80:return 25;
       break;
-    case 81:return 'GT_LPAREN';
+    case 81:return 26;
       break;
-    case 82:return 'GT_RPAREN';
+    case 82:return 38;
       break;
-    case 83:return 41;
+    case 83:return 51;
       break;
-    case 84:return 43;
+    case 84:return 52;
       break;
-    case 85:return 22;
+    case 85:return 41;
       break;
-    case 86:return 21;
+    case 86:return 43;
       break;
-    case 87:return 54;
+    case 87:return 22;
       break;
-    case 88:return 55;
+    case 88:return 21;
       break;
-    case 89:return 56;
+    case 89:return 60;
       break;
-    case 90:return 'unexpected word "'+yy_.yytext+'"';
+    case 90:return 61;
       break;
-    case 91:return 'invalid character '+yy_.yytext;
+    case 91:return 62;
       break;
-    case 92:return 5;
+    case 92:return 'unexpected word "'+yy_.yytext+'"';
+      break;
+    case 93:return 'invalid character '+yy_.yytext;
+      break;
+    case 94:return 5;
       break;
     }
   }

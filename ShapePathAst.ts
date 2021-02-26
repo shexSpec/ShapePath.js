@@ -38,7 +38,7 @@ export enum t_Selector {
 export enum FuncName {
   ebv = 'ebv',
   index = 'index',
-  length = 'length',
+  count = 'count',
   // operators
   equal = 'equal',
   lessThan = 'lessThan',

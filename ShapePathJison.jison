@@ -66,8 +66,10 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 "self::"                return 'IT_self';
 "parent::"              return 'IT_parent';
 "ancestor::"            return 'IT_ancestor';
-"index()"               return 'GT_index';
-"length()"              return 'GT_length';
+"index"                 return 'IT_index';
+"count"                 return 'IT_count';
+"foo1"                  return 'IT_foo1';
+"foo2"                  return 'IT_foo2';
 "Schema"                return 'IT_Schema';
 "SemAct"                return 'IT_SemAct';
 "Annotation"            return 'IT_Annotation';
@@ -283,7 +285,7 @@ filter:
 
 filterExpr:
     _QIT_ASSERT_E_Opt shapePath _Qcomparison_E_Opt	-> makeFunction($1, $2, $3 ? $3 : { op: FuncName.ebv, r: null })
-  | _QIT_ASSERT_E_Opt function comparison	-> makeFunction($1, $2, $3)
+  | _QIT_ASSERT_E_Opt function _Qcomparison_E_Opt	-> makeFunction($1, $2, $3 ? $3 : { op: FuncName.ebv, r: null })
   | numericExpr	-> new Filter($1, FuncName.index, '@@')
 ;
 
@@ -298,10 +300,16 @@ _Qcomparison_E_Opt:
 ;
 
 function:
-    GT_index	-> new Filter('@@', FuncName.index, '@@')
-  | GT_length	-> new Filter('@@', FuncName.length, '@@')
-  //   GT_index GT_LPAREN GT_RPAREN	-> new Filter('@@', FuncName.index, '@@')
-  // | GT_length IT_AT GT_LPAREN GT_RPAREN	-> new Filter('@@', FuncName.length, '@@')
+    IT_index GT_LPAREN GT_RPAREN	-> new Filter('@@', FuncName.index, '@@')
+  | IT_count GT_LPAREN GT_RPAREN	-> new Filter('@@', FuncName.count, '@@')
+  | IT_foo1 GT_LPAREN iri GT_RPAREN	-> new Filter('@@', FuncName.count, '@@')
+  | IT_foo2 GT_LPAREN fooArg GT_RPAREN	-> new Filter('@@', FuncName.count, '@@')
+;
+
+fooArg:
+    INTEGER iri	-> [$1, $2]
+  | INTEGER	-> [$1]
+  | iri	-> [$1]
 ;
 
 comparison:
