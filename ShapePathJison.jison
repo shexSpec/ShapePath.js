@@ -11,8 +11,7 @@ import {Union, Intersection, Path, Step, Axis, t_Selector, Assertion, Filter,
         t_tripleConstraintAttr, t_semActAttr, t_annotationAttr
        } from './ShapePathAst'
 
-import {comparison, rvalue, shapeLabelShortCut, predicateShortCut
-       } from './ShapePathJisonInternals'
+import {comparison, rvalue} from './ShapePathJisonInternals'
 
 function makeFunction (assertionP: boolean, firstArg: FuncArg, comp: comparison = { op: FuncName.ebv, r: null }): Func {
   const { op, r } = comp
@@ -33,6 +32,43 @@ function pnameToUrl (pname: string, yy: any): URL {
   const ns = yy.prefixes[pre]
   return new URL(ns + lname, yy.base)
 }
+
+export function shapeLabelShortCut(label: URL) {
+  return [
+    new Step(t_schemaAttr.shapes),
+    new Step(t_Selector.Any, undefined, [
+      new Filter(FuncName.equal, [
+        new Path([new Step(t_attribute.id)]),
+        label
+      ]),
+      new Assertion(
+        new Filter(FuncName.equal, [
+          new Filter(FuncName.count, []),
+          1
+        ])
+      )
+    ])
+  ]
+}
+
+
+export function predicateShortCut(label: URL) {
+  return [
+    new Step(t_shapeExprType.Shape, Axis.thisShapeExpr),
+    new Step(t_shapeAttr.expression),
+    new Step(
+      t_tripleExprType.TripleConstraint,
+      Axis.thisTripleExpr,
+      [
+        new Filter(FuncName.equal, [
+          new Path([new Step(t_attribute.predicate)]),
+          label
+        ])
+      ]
+    )
+  ];
+}
+
 %}
 
 /* lexical grammar */
@@ -311,8 +347,8 @@ function:
 ;
 
 fooArg:
-    INTEGER iri	-> [$1, $2]
-  | INTEGER	-> [$1]
+    INTEGER iri	-> [parseInt($1), $2]
+  | INTEGER	-> [parseInt($1)]
   | iri	-> [$1]
 ;
 

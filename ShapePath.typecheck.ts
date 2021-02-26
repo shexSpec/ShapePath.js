@@ -29,16 +29,53 @@ import {
   t_semActAttr,
   t_annotationAttr,
 } from "./ShapePathAst";
-import {
-  comparison,
-  rvalue,
-  shapeLabelShortCut,
-  predicateShortCut,
-} from "./ShapePathJisonInternals";
-function makeFunction(assertionP: boolean, l: FuncArg, comp: comparison): Func {
+
+import { comparison, rvalue } from "./ShapePathJisonInternals";
+
+function makeFunction(
+  assertionP: boolean,
+  firstArg: FuncArg,
+  comp: comparison = { op: FuncName.ebv, r: null }
+): Func {
   const { op, r } = comp;
-  const ret = new Filter(l, op, r);
+  const args = [firstArg];
+  if (r) args.push(r);
+  const ret = new Filter(op, args);
   return assertionP ? new Assertion(ret) : ret;
+}
+
+function pnameToUrl(pname: string, yy: any): URL {
+  const idx = pname.indexOf(":");
+  const pre = pname.substr(0, idx);
+  const lname = pname.substr(idx + 1);
+  if (!(pre in yy.prefixes)) throw Error(`unknown prefix in ${pname}`);
+  const ns = yy.prefixes[pre];
+  return new URL(ns + lname, yy.base);
+}
+
+export function shapeLabelShortCut(label: URL) {
+  return [
+    new Step(t_schemaAttr.shapes),
+    new Step(t_Selector.Any, undefined, [
+      new Filter(FuncName.equal, [new Path([new Step(t_attribute.id)]), label]),
+      new Assertion(
+        new Filter(FuncName.equal, [new Filter(FuncName.count, []), 1])
+      ),
+    ]),
+  ];
+}
+
+export function predicateShortCut(label: URL) {
+  return [
+    new Step(t_shapeExprType.Shape, Axis.thisShapeExpr),
+    new Step(t_shapeAttr.expression),
+    new Step(t_tripleExprType.TripleConstraint, Axis.thisTripleExpr, [
+      new Filter(FuncName.equal, [
+        new Path([new Step(t_attribute.predicate)]),
+        label,
+      ]),
+    ]),
+  ];
 }
 
 const semanticActions = {
@@ -230,7 +267,7 @@ const semanticActions = {
     $3: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
     let $$: TysonTypeDictionary["step"];
-    $$ = new Step($2, $1, $3.length > 0 ? $3 : undefined);
+    $$ = new Step($2, $1 ? $1 : undefined, $3.length > 0 ? $3 : undefined);
     return $$;
   },
 
@@ -335,17 +372,17 @@ const semanticActions = {
     $3: TysonTypeDictionary["_Qcomparison_E_Opt"]
   ): TysonTypeDictionary["filterExpr"] {
     let $$: TysonTypeDictionary["filterExpr"];
-    $$ = makeFunction($1, $2, $3 ? $3 : { op: FuncName.ebv, r: null });
+    $$ = makeFunction($1, $2, $3 ? $3 : undefined);
     return $$;
   },
 
-  "filterExpr -> _QIT_ASSERT_E_Opt function comparison"(
+  "filterExpr -> _QIT_ASSERT_E_Opt function _Qcomparison_E_Opt"(
     $1: TysonTypeDictionary["_QIT_ASSERT_E_Opt"],
     $2: TysonTypeDictionary["function"],
-    $3: TysonTypeDictionary["comparison"]
+    $3: TysonTypeDictionary["_Qcomparison_E_Opt"]
   ): TysonTypeDictionary["filterExpr"] {
     let $$: TysonTypeDictionary["filterExpr"];
-    $$ = makeFunction($1, $2, $3);
+    $$ = makeFunction($1, $2, $3 ? $3 : undefined);
     return $$;
   },
 
@@ -353,7 +390,7 @@ const semanticActions = {
     $1: TysonTypeDictionary["numericExpr"]
   ): TysonTypeDictionary["filterExpr"] {
     let $$: TysonTypeDictionary["filterExpr"];
-    $$ = new Filter($1, FuncName.index, null);
+    $$ = new Filter(FuncName.index, [$1]);
     return $$;
   },
 
@@ -383,15 +420,52 @@ const semanticActions = {
     return $$;
   },
 
-  "function -> GT_index GT_LPAREN GT_RPAREN"(): TysonTypeDictionary["function"] {
+  "function -> IT_index GT_LPAREN GT_RPAREN"(): TysonTypeDictionary["function"] {
     let $$: TysonTypeDictionary["function"];
-    $$ = new Filter("@@", FuncName.index, "@@");
+    $$ = new Filter(FuncName.index, []);
     return $$;
   },
 
-  "function -> GT_length GT_LPAREN GT_RPAREN"(): TysonTypeDictionary["function"] {
+  "function -> IT_count GT_LPAREN GT_RPAREN"(): TysonTypeDictionary["function"] {
     let $$: TysonTypeDictionary["function"];
-    $$ = new Filter("@@", FuncName.length, "@@");
+    $$ = new Filter(FuncName.count, []);
+    return $$;
+  },
+
+  "function -> IT_foo1 GT_LPAREN iri GT_RPAREN"(): TysonTypeDictionary["function"] {
+    let $$: TysonTypeDictionary["function"];
+    $$ = new Filter(FuncName.count, []);
+    return $$;
+  },
+
+  "function -> IT_foo2 GT_LPAREN fooArg GT_RPAREN"(): TysonTypeDictionary["function"] {
+    let $$: TysonTypeDictionary["function"];
+    $$ = new Filter(FuncName.count, []);
+    return $$;
+  },
+
+  "fooArg -> INTEGER iri"(
+    $1: TysonTypeDictionary["INTEGER"],
+    $2: TysonTypeDictionary["iri"]
+  ): TysonTypeDictionary["fooArg"] {
+    let $$: TysonTypeDictionary["fooArg"];
+    $$ = [parseInt($1), $2];
+    return $$;
+  },
+
+  "fooArg -> INTEGER"(
+    $1: TysonTypeDictionary["INTEGER"]
+  ): TysonTypeDictionary["fooArg"] {
+    let $$: TysonTypeDictionary["fooArg"];
+    $$ = [parseInt($1)];
+    return $$;
+  },
+
+  "fooArg -> iri"(
+    $1: TysonTypeDictionary["iri"]
+  ): TysonTypeDictionary["fooArg"] {
+    let $$: TysonTypeDictionary["fooArg"];
+    $$ = [$1];
     return $$;
   },
 
@@ -942,7 +1016,7 @@ const semanticActions = {
     $1: TysonTypeDictionary["IRIREF"]
   ): TysonTypeDictionary["iri"] {
     let $$: TysonTypeDictionary["iri"];
-    $$ = new URL($1);
+    $$ = new URL($1.substr(1, $1.length - 2), yy.base);
     return $$;
   },
 
@@ -958,7 +1032,7 @@ const semanticActions = {
     $1: TysonTypeDictionary["PNAME_LN"]
   ): TysonTypeDictionary["prefixedName"] {
     let $$: TysonTypeDictionary["prefixedName"];
-    $$ = new URL($1);
+    $$ = pnameToUrl($1, yy);
     return $$;
   },
 
@@ -966,7 +1040,7 @@ const semanticActions = {
     $1: TysonTypeDictionary["PNAME_NS"]
   ): TysonTypeDictionary["prefixedName"] {
     let $$: TysonTypeDictionary["prefixedName"];
-    $$ = new URL($1); // @@ resolve against prefixes in yy;
+    $$ = pnameToUrl($1, yy);
     return $$;
   },
 };

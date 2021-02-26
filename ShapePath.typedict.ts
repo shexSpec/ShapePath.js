@@ -17,6 +17,7 @@ import {
   tripleConstraintAttr,
   semActAttr,
   annotationAttr,
+  FuncArg,
 } from './ShapePathAst'
 import { comparison, rvalue } from './ShapePathJisonInternals'
 
@@ -46,6 +47,7 @@ export interface TysonTypeDictionary {
   _QIT_ASSERT_E_Opt: boolean;
   _Qcomparison_E_Opt: comparison | null;
   function: Func;
+  fooArg: Array<FuncArg>;
   comparison: comparison;
   comparitor: FuncName;
   rvalue: rvalue;

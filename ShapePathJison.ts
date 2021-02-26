@@ -11,8 +11,7 @@ import {Union, Intersection, Path, Step, Axis, t_Selector, Assertion, Filter,
         t_tripleConstraintAttr, t_semActAttr, t_annotationAttr
        } from './ShapePathAst'
 
-import {comparison, rvalue, shapeLabelShortCut, predicateShortCut
-       } from './ShapePathJisonInternals'
+import {comparison, rvalue} from './ShapePathJisonInternals'
 
 function makeFunction (assertionP: boolean, firstArg: FuncArg, comp: comparison = { op: FuncName.ebv, r: null }): Func {
   const { op, r } = comp
@@ -33,6 +32,43 @@ function pnameToUrl (pname: string, yy: any): URL {
   const ns = yy.prefixes[pre]
   return new URL(ns + lname, yy.base)
 }
+
+export function shapeLabelShortCut(label: URL) {
+  return [
+    new Step(t_schemaAttr.shapes),
+    new Step(t_Selector.Any, undefined, [
+      new Filter(FuncName.equal, [
+        new Path([new Step(t_attribute.id)]),
+        label
+      ]),
+      new Assertion(
+        new Filter(FuncName.equal, [
+          new Filter(FuncName.count, []),
+          1
+        ])
+      )
+    ])
+  ]
+}
+
+
+export function predicateShortCut(label: URL) {
+  return [
+    new Step(t_shapeExprType.Shape, Axis.thisShapeExpr),
+    new Step(t_shapeAttr.expression),
+    new Step(
+      t_tripleExprType.TripleConstraint,
+      Axis.thisTripleExpr,
+      [
+        new Filter(FuncName.equal, [
+          new Path([new Step(t_attribute.predicate)]),
+          label
+        ])
+      ]
+    )
+  ];
+}
+
 
 import { JisonParser, JisonParserApi, StateType, SymbolsType, TerminalsType, ProductionsType, o } from '@ts-jison/parser';
 import { JisonLexer, JisonLexerApi } from '@ts-jison/lexer';
@@ -81,7 +117,7 @@ break;
 case 12:
 this.$ = $$[$0-1].concat($$[$0]);
 break;
-case 13: case 19: case 51: case 52:
+case 13: case 19: case 52:
 this.$ = [$$[$0]];
 break;
 case 17: case 25: case 44:
@@ -136,7 +172,10 @@ case 47: case 48: case 49:
 this.$ = new Filter(FuncName.count, []);
 break;
 case 50:
-this.$ = [$$[$0-1], $$[$0]];
+this.$ = [parseInt($$[$0-1]), $$[$0]];
+break;
+case 51:
+this.$ = [parseInt($$[$0])];
 break;
 case 53:
 this.$ = { op: $$[$0-1], r: $$[$0] };
