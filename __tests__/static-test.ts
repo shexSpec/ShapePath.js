@@ -35,29 +35,34 @@ const Ref1 = {
           "filters": [
             {
               "t": "Filter",
-              "l": {
-                "t": "Path",
-                "steps": [
-                  {
-                    "t": "Step",
-                    "selector": "id"
-                  }
-                ]
-              },
               "op": "equal",
-              "r": "http://a.example/some/path/S1"
+              "args": [
+                {
+                  "t": "Path",
+                  "steps": [
+                    {
+                      "t": "Step",
+                      "selector": "id"
+                    }
+                  ]
+                },
+                "http://a.example/some/path/S1"
+              ]
             },
             {
               "t": "Assertion",
-              "l": {
+              "expect": {
                 "t": "Filter",
-                "l": {
-                  "l": "@@",
-                  "op": "count",
-                  "t": "Filter",
-                },
                 "op": "equal",
-                "r": 1
+                "args": [
+                  {
+                    "t": "Filter",
+                    "op": "count",
+                    "args": [
+                    ]
+                  },
+                  1
+                ]
               }
             }
           ]
@@ -78,17 +83,19 @@ const Ref1 = {
           "filters": [
             {
               "t": "Filter",
-              "l": {
-                "t": "Path",
-                "steps": [
-                  {
-                    "t": "Step",
-                    "selector": "predicate"
-                  }
-                ]
-              },
               "op": "equal",
-              "r": "http://a.example/some/path/p1"
+              "args": [
+                {
+                  "t": "Path",
+                  "steps": [
+                    {
+                      "t": "Step",
+                      "selector": "predicate"
+                    }
+                  ]
+                },
+                "http://a.example/some/path/p1"
+              ]
             }
           ]
         },
@@ -102,29 +109,34 @@ const Ref1 = {
           "filters": [
             {
               "t": "Filter",
-              "l": {
-                "t": "Path",
-                "steps": [
-                  {
-                    "t": "Step",
-                    "selector": "id"
-                  }
-                ]
-              },
               "op": "equal",
-              "r": "http://a.example/some/path/S2"
+              "args": [
+                {
+                  "t": "Path",
+                  "steps": [
+                    {
+                      "t": "Step",
+                      "selector": "id"
+                    }
+                  ]
+                },
+                "http://a.example/some/path/S2"
+              ]
             },
             {
               "t": "Assertion",
-              "l": {
+              "expect": {
                 "t": "Filter",
-                "l": {
-                  "l": "@@",
-                  "op": "count",
-                  "t": "Filter",
-                },
                 "op": "equal",
-                "r": 1
+                "args": [
+                  {
+                    "t": "Filter",
+                    "op": "count",
+                    "args": [
+                    ]
+                  },
+                  1
+                ]
               }
             }
           ]
@@ -144,30 +156,34 @@ const Ref1 = {
           "filters": [
             {
               "t": "Filter",
-              "l": {
-                "t": "Path",
-                "steps": [
-                  {
-                    "t": "Step",
-                    "selector": "id"
-                  }
-                ]
-              },
               "op": "equal",
-              "r": "http://a.example/some/path/S1"
+              "args": [
+                {
+                  "t": "Path",
+                  "steps": [
+                    {
+                      "t": "Step",
+                      "selector": "id"
+                    }
+                  ]
+                },
+                "http://a.example/some/path/S1"
+              ]
             },
             {
               "t": "Assertion",
-              "l": {
+              "expect": {
                 "t": "Filter",
-                "l": {
-                  "l": "@@",
-                  "op": "count",
-                  "r": "@@",
-                  "t": "Filter",
-                },
                 "op": "equal",
-                "r": 1
+                "args": [
+                  {
+                    "t": "Filter",
+                    "op": "count",
+                    "args": [
+                    ]
+                  },
+                  1
+                ]
               }
             }
           ]
@@ -188,17 +204,19 @@ const Ref1 = {
           "filters": [
             {
               "t": "Filter",
-              "l": {
-                "t": "Path",
-                "steps": [
-                  {
-                    "t": "Step",
-                    "selector": "predicate"
-                  }
-                ]
-              },
               "op": "equal",
-              "r": "http://a.example/some/path/p1"
+              "args": [
+                {
+                  "t": "Path",
+                  "steps": [
+                    {
+                      "t": "Step",
+                      "selector": "predicate"
+                    }
+                  ]
+                },
+                "http://a.example/some/path/p1"
+              ]
             }
           ]
         },
@@ -212,30 +230,34 @@ const Ref1 = {
           "filters": [
             {
               "t": "Filter",
-              "l": {
-                "t": "Path",
-                "steps": [
-                  {
-                    "t": "Step",
-                    "selector": "id"
-                  }
-                ]
-              },
               "op": "equal",
-              "r": "http://a.example/some/path/S2"
+              "args": [
+                {
+                  "t": "Path",
+                  "steps": [
+                    {
+                      "t": "Step",
+                      "selector": "id"
+                    }
+                  ]
+                },
+                "http://a.example/some/path/S2"
+              ]
             },
             {
               "t": "Assertion",
-              "l": {
+              "expect": {
                 "t": "Filter",
-                "l": {
-                  "l": "@@",
-                  "op": "count",
-                  "r": "@@",
-                  "t": "Filter",
-                },
                 "op": "equal",
-                "r": 1
+                "args": [
+                  {
+                    "t": "Filter",
+                    "op": "count",
+                    "args": [
+                    ]
+                  },
+                  1
+                ]
               }
             }
           ]
@@ -259,8 +281,9 @@ const Ref1 = {
                 {
                   "t": "Filter",
                   "op": "index",
-                  "l": 1,
-                  "r": "@@"
+                  "args": [
+                    1,
+                  ]
                 }
               ]
             },
@@ -271,8 +294,9 @@ const Ref1 = {
                 {
                   "t": "Filter",
                   "op": "index",
-                  "l": 2,
-                  "r": "@@"
+                  "args": [
+                    2,
+                  ]
                 }
               ]
             }
@@ -292,8 +316,9 @@ const Ref1 = {
                 {
                   "t": "Filter",
                   "op": "index",
-                  "l": 2,
-                  "r": "@@"
+                  "args": [
+                    2,
+                  ]
                 }
               ]
             }
@@ -309,8 +334,9 @@ const Ref1 = {
                 {
                   "t": "Filter",
                   "op": "index",
-                  "l": 1,
-                  "r": "@@"
+                  "args": [
+                    1,
+                  ]
                 }
               ]
             },
@@ -321,8 +347,9 @@ const Ref1 = {
                 {
                   "t": "Filter",
                   "op": "index",
-                  "l": 2,
-                  "r": "@@"
+                  "args": [
+                    2,
+                  ]
                 }
               ]
             }

@@ -7,7 +7,7 @@ import { FuncName, Filter, Assertion, Path, Step, Axis, t_attribute, t_schemaAtt
 export type rvalue = number | URL
 export interface comparison {
   op: FuncName;
-  r: rvalue
+  r: rvalue | null
 }
 
 export function shapeLabelShortCut(label: URL) {
@@ -15,17 +15,15 @@ export function shapeLabelShortCut(label: URL) {
   return [
     new Step(t_schemaAttr.shapes),
     new Step(t_Selector.Any, undefined, [
-      new Filter(
+      new Filter(FuncName.equal, [
         new Path([new Step(t_attribute.id)]),
-        FuncName.equal,
         label
-      ),
+      ]),
       new Assertion(
-        new Filter(
-          new Filter('@@', FuncName.count),
-          FuncName.equal,
+        new Filter(FuncName.equal, [
+          new Filter(FuncName.count, []),
           1
-        )
+        ])
       )
     ])
   ]
@@ -40,11 +38,10 @@ export function predicateShortCut(label: URL) {
       t_tripleExprType.TripleConstraint,
       Axis.thisTripleExpr,
       [
-        new Filter(
+        new Filter(FuncName.equal, [
           new Path([new Step(t_attribute.predicate)]),
-          FuncName.equal,
           label
-        )
+        ])
       ]
     )
   ];

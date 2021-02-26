@@ -45,7 +45,7 @@ export enum FuncName {
   greaterThan = 'greaterThan',
 }
 
-export type FuncArg = Func | Path | number | '@@'
+export type FuncArg = Func | Path | URL | number
 
 export abstract class Func {
   abstract t: string
@@ -54,16 +54,15 @@ export abstract class Func {
 export class Filter extends Func {
   t = 'Filter'
   constructor(
-    public l: FuncArg,
     public op: string,
-    public r?: number | URL | '@@'
+    public args: FuncArg[],
   ) { super() }
 }
 
 export class Assertion extends Func {
   t = 'Assertion'
   constructor(
-    public l: Func,
+    public expect: Func,
   ) { super() }
 }
 

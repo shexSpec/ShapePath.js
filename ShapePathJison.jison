@@ -10,11 +10,15 @@ import {Union, Intersection, Path, Step, Axis, t_Selector, Assertion, Filter,
         t_numericFacetAttr, t_valueSetValueAttr, t_shapeAttr, t_tripleExprAttr,
         t_tripleConstraintAttr, t_semActAttr, t_annotationAttr
        } from './ShapePathAst'
+
 import {comparison, rvalue, shapeLabelShortCut, predicateShortCut
        } from './ShapePathJisonInternals'
-function makeFunction (assertionP: boolean, l: FuncArg, comp: comparison): Func {
+
+function makeFunction (assertionP: boolean, firstArg: FuncArg, comp: comparison = { op: FuncName.ebv, r: null }): Func {
   const { op, r } = comp
-  const ret = new Filter(l, op, r)
+  const args = [firstArg]
+  if (r) args.push(r)
+  const ret = new Filter(op, args)
   return assertionP
     ? new Assertion(ret)
     : ret
@@ -284,9 +288,9 @@ filter:
 ;
 
 filterExpr:
-    _QIT_ASSERT_E_Opt shapePath _Qcomparison_E_Opt	-> makeFunction($1, $2, $3 ? $3 : { op: FuncName.ebv, r: null })
-  | _QIT_ASSERT_E_Opt function _Qcomparison_E_Opt	-> makeFunction($1, $2, $3 ? $3 : { op: FuncName.ebv, r: null })
-  | numericExpr	-> new Filter($1, FuncName.index, '@@')
+    _QIT_ASSERT_E_Opt shapePath _Qcomparison_E_Opt	-> makeFunction($1, $2, $3 ? $3 : undefined)
+  | _QIT_ASSERT_E_Opt function _Qcomparison_E_Opt	-> makeFunction($1, $2, $3 ? $3 : undefined)
+  | numericExpr	-> new Filter(FuncName.index, [$1])
 ;
 
 _QIT_ASSERT_E_Opt:
@@ -300,10 +304,10 @@ _Qcomparison_E_Opt:
 ;
 
 function:
-    IT_index GT_LPAREN GT_RPAREN	-> new Filter('@@', FuncName.index, '@@')
-  | IT_count GT_LPAREN GT_RPAREN	-> new Filter('@@', FuncName.count, '@@')
-  | IT_foo1 GT_LPAREN iri GT_RPAREN	-> new Filter('@@', FuncName.count, '@@')
-  | IT_foo2 GT_LPAREN fooArg GT_RPAREN	-> new Filter('@@', FuncName.count, '@@')
+    IT_index GT_LPAREN GT_RPAREN	-> new Filter(FuncName.index, [])
+  | IT_count GT_LPAREN GT_RPAREN	-> new Filter(FuncName.count, [])
+  | IT_foo1 GT_LPAREN iri GT_RPAREN	-> new Filter(FuncName.count, [])
+  | IT_foo2 GT_LPAREN fooArg GT_RPAREN	-> new Filter(FuncName.count, [])
 ;
 
 fooArg:

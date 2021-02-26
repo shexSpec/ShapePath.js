@@ -10,11 +10,15 @@ import {Union, Intersection, Path, Step, Axis, t_Selector, Assertion, Filter,
         t_numericFacetAttr, t_valueSetValueAttr, t_shapeAttr, t_tripleExprAttr,
         t_tripleConstraintAttr, t_semActAttr, t_annotationAttr
        } from './ShapePathAst'
+
 import {comparison, rvalue, shapeLabelShortCut, predicateShortCut
        } from './ShapePathJisonInternals'
-function makeFunction (assertionP: boolean, l: FuncArg, comp: comparison): Func {
+
+function makeFunction (assertionP: boolean, firstArg: FuncArg, comp: comparison = { op: FuncName.ebv, r: null }): Func {
   const { op, r } = comp
-  const ret = new Filter(l, op, r)
+  const args = [firstArg]
+  if (r) args.push(r)
+  const ret = new Filter(op, args)
   return assertionP
     ? new Assertion(ret)
     : ret
@@ -114,10 +118,10 @@ case 38:
 this.$ = $$[$0-1];
 break;
 case 39: case 40:
-this.$ = makeFunction($$[$0-2], $$[$0-1], $$[$0] ? $$[$0] : { op: FuncName.ebv, r: null });
+this.$ = makeFunction($$[$0-2], $$[$0-1], $$[$0] ? $$[$0] : undefined);
 break;
 case 41:
-this.$ = new Filter($$[$0], FuncName.index, '@@');
+this.$ = new Filter(FuncName.index, [$$[$0]]);
 break;
 case 42:
 this.$ = false;
@@ -126,10 +130,10 @@ case 43:
 this.$ = true;
 break;
 case 46:
-this.$ = new Filter('@@', FuncName.index, '@@');
+this.$ = new Filter(FuncName.index, []);
 break;
 case 47: case 48: case 49:
-this.$ = new Filter('@@', FuncName.count, '@@');
+this.$ = new Filter(FuncName.count, []);
 break;
 case 50:
 this.$ = [$$[$0-1], $$[$0]];
