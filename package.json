@@ -2,20 +2,18 @@
   "name": "ShapePath.js",
   "version": "0.0.1",
   "description": "A typescript library for executing ShapePaths",
-  "main": "ShapePathJison.js",
+  "dist": "dist/ShapePathParser.js",
   "type": "package",
   "scripts": {
     "all": "npm run parser && npm run test",
-    "parser": "./node_modules/@ts-jison/parser-generator/lib/cli.js -n ShapePath -t typescript -o ShapePathJison.ts ShapePathJison.jison",
-    "compile": "tsc --noEmit ShapePathJison.ts",
-    "run": "ts-node run.ts txt",
-    "test": "ts-node ShapePathJison.ts txt",
+    "parser": "./node_modules/@ts-jison/parser-generator/lib/cli.js -n ShapePath -t typescript -o ./src/ShapePathParser.ts ./src/ShapePathParser.jison",
+    "compile": "tsc .src/ShapePathParser.ts",
+    "parse": "ts-node ./src/parseAndPrint.ts ./__tests__/spz/shortcuts.sp",
     "compile2": "tsc",
-    "test2": "jest",
+    "test": "jest",
     "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand ./__tests__/static-test.ts",
     "test3999": "npm run parser && npm run compile && npm run test2",
-    "test3": "npm run test2",
-    "tyson": "tyson ./ShapePathJison.jison ./ShapePath.typedict.ts --out ./ShapePath.typecheck.ts && ./fixupNames ./ShapePath.typecheck.ts && tsc --noEmit ./ShapePath.typecheck.ts"
+    "tyson": "tyson ./src/ShapePathParser.jison ./src/ShapePathParser.typedict.ts --out ./src/ShapePathParser.typecheck.ts && ./fixupNames ./src/ShapePathParser.typecheck.ts && tsc --noEmit ./src/ShapePathParser.typecheck.ts"
   },
   "repository": {
     "type": "git",

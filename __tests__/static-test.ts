@@ -1,6 +1,6 @@
 const Fs = require('fs')
 const Path = require('path')
-import { ShapePathParser } from '../ShapePathJison'
+import { ShapePathParser } from '../src/ShapePathParser'
 const Base = 'http://a.example/some/path/' // 'file://'+__dirname
 
 describe("ShapePathParser", () => {
@@ -12,7 +12,7 @@ describe("ShapePathParser", () => {
         bar: 'http://a.example/bar',
       }
     }
-    const txt = Fs.readFileSync(Path.join(__dirname, '../txt'), "utf8")
+    const txt = Fs.readFileSync(Path.join(__dirname, 'spz/shortcuts.sp'), "utf8")
     const parsed = new ShapePathParser(yy).parse(txt)
     const stripped = JSON.parse(JSON.stringify(parsed))
     expect(stripped).toEqual(Ref1)

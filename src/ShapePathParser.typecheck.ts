@@ -1,4 +1,4 @@
-import { TysonTypeDictionary, yy } from "./ShapePath.typedict";
+import { TysonTypeDictionary, yy } from "./ShapePathParser.typedict";
 
 import {
   Union,
@@ -30,7 +30,7 @@ import {
   t_annotationAttr,
 } from "./ShapePathAst";
 
-import { comparison, rvalue } from "./ShapePathJisonInternals";
+import { comparison, rvalue } from "./ShapePathParserInternals";
 
 function makeFunction(
   assertionP: boolean,

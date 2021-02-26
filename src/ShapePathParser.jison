@@ -11,7 +11,7 @@ import {Union, Intersection, Path, Step, Axis, t_Selector, Assertion, Filter,
         t_tripleConstraintAttr, t_semActAttr, t_annotationAttr
        } from './ShapePathAst'
 
-import {comparison, rvalue} from './ShapePathJisonInternals'
+import {comparison, rvalue} from './ShapePathParserInternals'
 
 function makeFunction (assertionP: boolean, firstArg: FuncArg, comp: comparison = { op: FuncName.ebv, r: null }): Func {
   const { op, r } = comp

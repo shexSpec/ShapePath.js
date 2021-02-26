@@ -19,7 +19,7 @@ import {
   annotationAttr,
   FuncArg,
 } from './ShapePathAst'
-import { comparison, rvalue } from './ShapePathJisonInternals'
+import { comparison, rvalue } from './ShapePathParserInternals'
 
 export interface TysonTypeDictionary {
   top: unknown;
