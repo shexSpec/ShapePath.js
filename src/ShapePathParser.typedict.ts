@@ -113,4 +113,4 @@ export interface TysonTypeDictionary {
   PNAME_NS: string;
 }
 
-export type yy = any
+export declare const yy: any
