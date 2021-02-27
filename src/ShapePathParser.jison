@@ -78,7 +78,10 @@ COMMENT                 '#' [^\u000a\u000d]* | "<--" ([^-] | '-' [^-] | '--' [^>
 IRIREF                  '<' ([^\u0000-\u0020<>\"{}|^`\\] | {UCHAR})* '>' /* #x00=NULL #01-#x1F=control codes #x20=space */
 PNAME_NS                {PN_PREFIX}? ':'
 PNAME_LN                {PNAME_NS} {PN_LOCAL}
-BLANK_NODE_LABEL        '_:' ({PN_CHARS_U} | [0-9]) (({PN_CHARS} | '.')* {PN_CHARS})?
+PN_LOCAL_ESC            '\\' ('_' | '~' | '.' | '-' | '!' | '$' | '&' | "'" | '(' | ')' | '*' | '+' | ',' | ';' | '=' | '/' | '?' | '#' | '@' | '%')
+PLX                     {PERCENT} | {PN_LOCAL_ESC}
+PN_LOCAL                ({PN_CHARS_U} | ':' | [0-9] | {PLX}) ({PN_CHARS} | '.' | ':' | {PLX})*
+LANK_NODE_LABEL        '_:' ({PN_CHARS_U} | [0-9]) (({PN_CHARS} | '.')* {PN_CHARS})?
 INTEGER                 ([+-])?([0-9])+
 STRING_LITERAL1         "'" ([^\u0027\u005c\u000a\u000d] | {ECHAR} | {UCHAR})* "'" /* #x27=' #x5C=\ #xA=new line #xD=carriage return */
 STRING_LITERAL2         '"' ([^\u0022\u005c\u000a\u000d] | {ECHAR} | {UCHAR})* '"' /* #x22=" #x5C=\ #xA=new line #xD=carriage return */
@@ -174,8 +177,8 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 "object"                return 'IT_object';
 
 {IRIREF}                return 'IRIREF';
-{PNAME_NS}              return 'PNAME_NS';
 {PNAME_LN}              return 'PNAME_LN';
+{PNAME_NS}              return 'PNAME_NS';
 // {BLANK_NODE_LABEL}      return 'BLANK_NODE_LABEL';
 {INTEGER}               return 'INTEGER';
 //{STRING_LITERAL1}       return 'STRING_LITERAL1';
@@ -223,7 +226,7 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 
 %% /* language grammar */
 
-top: shapePath EOF { return $1 };
+top: shapePath EOF { return $1; };
 
 shapePath:
     unionStep _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star	-> $2.length ? new Union([$1].concat($2)) : $1

@@ -1,0 +1,1 @@
+perl -pi -e 'BEGIN{undef $/;} s/(case [0-9]+:\s*return .*?; *)\n *break;/$1/gsm' $1

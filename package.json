@@ -6,14 +6,14 @@
   "type": "package",
   "scripts": {
     "all": "npm run parser && npm run test",
-    "parser": "./node_modules/@ts-jison/parser-generator/lib/cli.js -n ShapePath -t typescript -o ./src/ShapePathParser.ts ./src/ShapePathParser.jison",
+    "parser": "./node_modules/@ts-jison/parser-generator/lib/cli.js -n ShapePath -t typescript -o ./src/ShapePathParser.ts ./src/ShapePathParser.jison && ./scripts/redundantBreaks ./src/ShapePathParser.ts",
     "compile": "tsc .src/ShapePathParser.ts",
     "parse": "ts-node ./src/parseAndPrint.ts ./__tests__/spz/shortcuts.sp",
     "compile2": "tsc",
     "test": "jest",
     "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand ./__tests__/static-test.ts",
     "test3999": "npm run parser && npm run compile && npm run test2",
-    "tyson": "tyson ./src/ShapePathParser.jison ./src/ShapePathParser.typedict.ts --out ./src/ShapePathParser.typecheck.ts && ./fixupNames ./src/ShapePathParser.typecheck.ts && tsc --noEmit ./src/ShapePathParser.typecheck.ts"
+    "tyson": "tyson ./src/ShapePathParser.jison ./src/ShapePathParser.typedict.ts --out ./src/ShapePathParser.typecheck.ts && ./scripts/fixupNames ./src/ShapePathParser.typecheck.ts && tsc --noEmit ./src/ShapePathParser.typecheck.ts"
   },
   "repository": {
     "type": "git",
