@@ -4,7 +4,7 @@
 
 %{
 import {Union, Intersection, Path, UnitStep, PathExprStep, Axis, t_Selector,
-        Assertion, Filter, Func, FuncArg, FuncName,
+        Assertion, Filter, Function, FuncArg, FuncName,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
         t_numericFacetAttr, t_valueSetValueAttr, t_shapeAttr, t_tripleExprAttr,
@@ -13,7 +13,7 @@ import {Union, Intersection, Path, UnitStep, PathExprStep, Axis, t_Selector,
 
 import {comparison, rvalue} from './ShapePathParserInternals'
 
-function makeFunction (assertionP: boolean, firstArg: FuncArg, comp: comparison = { op: FuncName.ebv, r: null }): Func {
+function makeFunction (assertionP: boolean, firstArg: FuncArg, comp: comparison = { op: FuncName.ebv, r: null }): Function {
   const { op, r } = comp
   const args = [firstArg]
   if (r) args.push(r)

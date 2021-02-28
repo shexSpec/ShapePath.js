@@ -10,7 +10,7 @@ import {
   t_Selector,
   Assertion,
   Filter,
-  Func,
+  Function,
   FuncArg,
   FuncName,
   t_termType,
@@ -37,7 +37,7 @@ function makeFunction(
   assertionP: boolean,
   firstArg: FuncArg,
   comp: comparison = { op: FuncName.ebv, r: null }
-): Func {
+): Function {
   const { op, r } = comp;
   const args = [firstArg];
   if (r) args.push(r);

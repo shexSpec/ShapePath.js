@@ -6,12 +6,12 @@ Serializable
       Union
       Intersection
     Path
-  Func
-    Filter
-    Assertion
   Step
     UnitStep
     PathExprStep
+  Function
+    Filter
+    Assertion
  */
 
 export abstract class Serializable {
@@ -42,6 +42,26 @@ export class Path extends PathExpr {
   }
 }
 
+export abstract class Step extends Serializable {
+}
+
+export class UnitStep {
+  t = 'UnitStep'
+  constructor(
+    public selector: Selector,
+    public axis?: Axis,
+    public filters?: Function[]
+  ) { }
+}
+
+export class PathExprStep {
+  t = 'PathExprStep'
+  constructor(
+    public pathExpr: PathExpr,
+    public filters?: Function[]
+  ) { }
+}
+
 export enum Axis {
   child = 'child::',
   thisShapeExpr = 'thisShapeExpr::',
@@ -51,8 +71,7 @@ export enum Axis {
   ancestor = 'ancestor::',
 }
 
-export enum t_Selector {
-  Any = '*',
+export abstract class Function extends Serializable {
 }
 
 export enum FuncName {
@@ -66,12 +85,9 @@ export enum FuncName {
   greaterThan = 'greaterThan',
 }
 
-export type FuncArg = Func | PathExpr | URL | number
+export type FuncArg = Function | PathExpr | URL | number
 
-export abstract class Func extends Serializable {
-}
-
-export class Filter extends Func {
+export class Filter extends Function {
   t = 'Filter'
   constructor(
     public op: string,
@@ -79,31 +95,15 @@ export class Filter extends Func {
   ) { super() }
 }
 
-export class Assertion extends Func {
+export class Assertion extends Function {
   t = 'Assertion'
   constructor(
-    public expect: Func,
+    public expect: Function,
   ) { super() }
 }
 
-export abstract class Step extends Serializable {
-}
-
-export class UnitStep {
-  t = 'UnitStep'
-  constructor(
-    public selector: Selector,
-    public axis?: Axis,
-    public filters?: Func[]
-  ) { }
-}
-
-export class PathExprStep {
-  t = 'PathExprStep'
-  constructor(
-    public pathExpr: PathExpr,
-    public filters?: Func[]
-  ) { }
+export enum t_Selector {
+  Any = '*',
 }
 
 export type Selector = t_Selector | termType | attribute // | shapeExprAttr | valueSetValueAttr | tripleExprAttr | semActAttr | annotationAttr

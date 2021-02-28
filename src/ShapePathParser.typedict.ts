@@ -1,5 +1,5 @@
 import {
-  PathExpr, Intersection, Path, Step, Axis, Selector, Func, FuncName,
+  PathExpr, Intersection, Path, Step, Axis, Selector, Function, FuncName,
   termType,
   shapeExprType,
   tripleExprType,
@@ -39,14 +39,14 @@ export interface TysonTypeDictionary {
   _O_QGT_AT_E_Or_QGT_DOT_E_C: string;
   step: Step;
   _Qaxis_E_Opt: Axis | null;
-  _Qfilter_E_Star: Array<Func>;
+  _Qfilter_E_Star: Array<Function>;
   axis: Axis;
   selector: Selector;
-  filter: Func;
-  filterExpr: Func
+  filter: Function;
+  filterExpr: Function
   _QIT_ASSERT_E_Opt: boolean;
   _Qcomparison_E_Opt: comparison | null;
-  function: Func;
+  function: Function;
   fooArg: Array<FuncArg>;
   comparison: comparison;
   comparitor: FuncName;
