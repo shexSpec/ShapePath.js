@@ -4,7 +4,8 @@ import {
   Union,
   Intersection,
   Path,
-  Step,
+  UnitStep,
+  PathExprStep,
   Axis,
   t_Selector,
   Assertion,
@@ -55,9 +56,12 @@ function pnameToUrl(pname: string, yy: any): URL {
 
 export function shapeLabelShortCut(label: URL) {
   return [
-    new Step(t_schemaAttr.shapes),
-    new Step(t_Selector.Any, undefined, [
-      new Filter(FuncName.equal, [new Path([new Step(t_attribute.id)]), label]),
+    new UnitStep(t_schemaAttr.shapes),
+    new UnitStep(t_Selector.Any, undefined, [
+      new Filter(FuncName.equal, [
+        new Path([new UnitStep(t_attribute.id)]),
+        label,
+      ]),
       new Assertion(
         new Filter(FuncName.equal, [new Filter(FuncName.count, []), 1])
       ),
@@ -67,11 +71,11 @@ export function shapeLabelShortCut(label: URL) {
 
 export function predicateShortCut(label: URL) {
   return [
-    new Step(t_shapeExprType.Shape, Axis.thisShapeExpr),
-    new Step(t_shapeAttr.expression),
-    new Step(t_tripleExprType.TripleConstraint, Axis.thisTripleExpr, [
+    new UnitStep(t_shapeExprType.Shape, Axis.thisShapeExpr),
+    new UnitStep(t_shapeAttr.expression),
+    new UnitStep(t_tripleExprType.TripleConstraint, Axis.thisTripleExpr, [
       new Filter(FuncName.equal, [
-        new Path([new Step(t_attribute.predicate)]),
+        new Path([new UnitStep(t_attribute.predicate)]),
         label,
       ]),
     ]),
@@ -190,16 +194,16 @@ const semanticActions = {
     return $$;
   },
 
-  "_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C -> IT_DIVIDE"(
-    $1: TysonTypeDictionary["IT_DIVIDE"]
+  "_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C -> GT_DIVIDE"(
+    $1: TysonTypeDictionary["GT_DIVIDE"]
   ): TysonTypeDictionary["_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C"] {
     let $$: TysonTypeDictionary["_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C"];
     $$ = $1;
     return $$;
   },
 
-  "_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C -> IT_DIVIDEDIVIDE"(
-    $1: TysonTypeDictionary["IT_DIVIDEDIVIDE"]
+  "_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C -> GT_DIVIDEDIVIDE"(
+    $1: TysonTypeDictionary["GT_DIVIDEDIVIDE"]
   ): TysonTypeDictionary["_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C"] {
     let $$: TysonTypeDictionary["_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C"];
     $$ = $1;
@@ -245,16 +249,16 @@ const semanticActions = {
     return $$;
   },
 
-  "_O_QGT_AT_E_Or_QGT_DOT_E_C -> IT_AT"(
-    $1: TysonTypeDictionary["IT_AT"]
+  "_O_QGT_AT_E_Or_QGT_DOT_E_C -> GT_AT"(
+    $1: TysonTypeDictionary["GT_AT"]
   ): TysonTypeDictionary["_O_QGT_AT_E_Or_QGT_DOT_E_C"] {
     let $$: TysonTypeDictionary["_O_QGT_AT_E_Or_QGT_DOT_E_C"];
     $$ = $1;
     return $$;
   },
 
-  "_O_QGT_AT_E_Or_QGT_DOT_E_C -> IT_DOT"(
-    $1: TysonTypeDictionary["IT_DOT"]
+  "_O_QGT_AT_E_Or_QGT_DOT_E_C -> GT_DOT"(
+    $1: TysonTypeDictionary["GT_DOT"]
   ): TysonTypeDictionary["_O_QGT_AT_E_Or_QGT_DOT_E_C"] {
     let $$: TysonTypeDictionary["_O_QGT_AT_E_Or_QGT_DOT_E_C"];
     $$ = $1;
@@ -267,7 +271,16 @@ const semanticActions = {
     $3: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
     let $$: TysonTypeDictionary["step"];
-    $$ = new Step($2, $1 ? $1 : undefined, $3.length > 0 ? $3 : undefined);
+    $$ = new UnitStep($2, $1 ? $1 : undefined, $3.length > 0 ? $3 : undefined);
+    return $$;
+  },
+
+  "step -> GT_LPAREN shapePath GT_RPAREN _Qfilter_E_Star"(
+    $2: TysonTypeDictionary["shapePath"],
+    $4: TysonTypeDictionary["_Qfilter_E_Star"]
+  ): TysonTypeDictionary["step"] {
+    let $$: TysonTypeDictionary["step"];
+    $$ = new PathExprStep($2, $4.length > 0 ? $4 : undefined);
     return $$;
   },
 
@@ -336,7 +349,7 @@ const semanticActions = {
     return $$;
   },
 
-  "selector -> IT_STAR"(): TysonTypeDictionary["selector"] {
+  "selector -> GT_STAR"(): TysonTypeDictionary["selector"] {
     let $$: TysonTypeDictionary["selector"];
     $$ = t_Selector.Any;
     return $$;
@@ -358,7 +371,7 @@ const semanticActions = {
     return $$;
   },
 
-  "filter -> IT_LBRACKET filterExpr IT_RBRACKET"(
+  "filter -> GT_LBRACKET filterExpr GT_RBRACKET"(
     $2: TysonTypeDictionary["filterExpr"]
   ): TysonTypeDictionary["filter"] {
     let $$: TysonTypeDictionary["filter"];
@@ -478,19 +491,19 @@ const semanticActions = {
     return $$;
   },
 
-  "comparitor -> IT_EQUAL"(): TysonTypeDictionary["comparitor"] {
+  "comparitor -> GT_EQUAL"(): TysonTypeDictionary["comparitor"] {
     let $$: TysonTypeDictionary["comparitor"];
     $$ = FuncName.equal;
     return $$;
   },
 
-  "comparitor -> IT_LT"(): TysonTypeDictionary["comparitor"] {
+  "comparitor -> GT_LT"(): TysonTypeDictionary["comparitor"] {
     let $$: TysonTypeDictionary["comparitor"];
     $$ = FuncName.lessThan;
     return $$;
   },
 
-  "comparitor -> IT_GT"(): TysonTypeDictionary["comparitor"] {
+  "comparitor -> GT_GT"(): TysonTypeDictionary["comparitor"] {
     let $$: TysonTypeDictionary["comparitor"];
     $$ = FuncName.greaterThan;
     return $$;

@@ -94,6 +94,9 @@ describe('parser coverage', () => {
   test('values', () => {
     parse('*[self::* = <i>] union *[self::* = 123]')
   })
+  // test('PathExprStep', () => {
+  //   parse('(* union *)[self::* = 123]')
+  // })
 
   test('lexer', () => {
     const l = new ShapePathLexer()

@@ -3,8 +3,8 @@
  */
 
 %{
-import {Union, Intersection, Path, Step, Axis, t_Selector, Assertion, Filter,
-        Func, FuncArg, FuncName,
+import {Union, Intersection, Path, UnitStep/*, PathExprStep*/, Axis, t_Selector,
+        Assertion, Filter, Func, FuncArg, FuncName,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
         t_numericFacetAttr, t_valueSetValueAttr, t_shapeAttr, t_tripleExprAttr,
@@ -35,10 +35,10 @@ function pnameToUrl (pname: string, yy: any): URL {
 
 export function shapeLabelShortCut(label: URL) {
   return [
-    new Step(t_schemaAttr.shapes),
-    new Step(t_Selector.Any, undefined, [
+    new UnitStep(t_schemaAttr.shapes),
+    new UnitStep(t_Selector.Any, undefined, [
       new Filter(FuncName.equal, [
-        new Path([new Step(t_attribute.id)]),
+        new Path([new UnitStep(t_attribute.id)]),
         label
       ]),
       new Assertion(
@@ -54,14 +54,14 @@ export function shapeLabelShortCut(label: URL) {
 
 export function predicateShortCut(label: URL) {
   return [
-    new Step(t_shapeExprType.Shape, Axis.thisShapeExpr),
-    new Step(t_shapeAttr.expression),
-    new Step(
+    new UnitStep(t_shapeExprType.Shape, Axis.thisShapeExpr),
+    new UnitStep(t_shapeAttr.expression),
+    new UnitStep(
       t_tripleExprType.TripleConstraint,
       Axis.thisTripleExpr,
       [
         new Filter(FuncName.equal, [
-          new Path([new Step(t_attribute.predicate)]),
+          new Path([new UnitStep(t_attribute.predicate)]),
           label
         ])
       ]
@@ -195,18 +195,18 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 //{HEX}                 return 'HEX';
 //{PERCENT}             return 'PERCENT';
 
-"@"                     return 'IT_AT';
-"."                     return 'IT_DOT';
-"*"                     return 'IT_STAR';
+"@"                     return 'GT_AT';
+"."                     return 'GT_DOT';
+"*"                     return 'GT_STAR';
 "("                     return 'GT_LPAREN';
 ")"                     return 'GT_RPAREN';
-"["                     return 'IT_LBRACKET';
-"]"                     return 'IT_RBRACKET';
-"//"                    return 'IT_DIVIDEDIVIDE';
-"/"                     return 'IT_DIVIDE';
-"="                     return 'IT_EQUAL';
-"<"                     return 'IT_LT';
-">"                     return 'IT_GT';
+"["                     return 'GT_LBRACKET';
+"]"                     return 'GT_RBRACKET';
+"//"                    return 'GT_DIVIDEDIVIDE';
+"/"                     return 'GT_DIVIDE';
+"="                     return 'GT_EQUAL';
+"<"                     return 'GT_LT';
+">"                     return 'GT_GT';
 
 [a-zA-Z0-9_-]+          return 'unexpected word "'+yytext+'"';
 .                       return 'invalid character '+yytext;
@@ -269,8 +269,8 @@ startStep:
 ;
 
 _O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C:
-    IT_DIVIDE
-  | IT_DIVIDEDIVIDE	
+    GT_DIVIDE
+  | GT_DIVIDEDIVIDE	
 ;
 
 _Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt:
@@ -288,13 +288,13 @@ shortcut:
 ;
 
 _O_QGT_AT_E_Or_QGT_DOT_E_C:
-    IT_AT	
-  | IT_DOT	
+    GT_AT	
+  | GT_DOT	
 ;
 
 step:
-    _Qaxis_E_Opt selector _Qfilter_E_Star	-> new Step($2, $1 ? $1 : undefined, $3.length > 0 ? $3 : undefined)
-//  | GT_LPAREN shapePath GT_RPAREN	-> $2
+    _Qaxis_E_Opt selector _Qfilter_E_Star	-> new UnitStep($2, $1 ? $1 : undefined, $3.length > 0 ? $3 : undefined)
+  // | GT_LPAREN shapePath GT_RPAREN _Qfilter_E_Star	-> new PathExprStep($2, $4.length > 0 ? $4 : undefined)
 ;
 
 _Qaxis_E_Opt:
@@ -317,13 +317,13 @@ axis:
 ;
 
 selector:
-    IT_STAR	-> t_Selector.Any
+    GT_STAR	-> t_Selector.Any
   | termType	
   | attribute	
 ;
 
 filter:
-    IT_LBRACKET filterExpr IT_RBRACKET	-> $2
+    GT_LBRACKET filterExpr GT_RBRACKET	-> $2
 ;
 
 filterExpr:
@@ -360,9 +360,9 @@ comparison:
 ;
 
 comparitor:
-    IT_EQUAL	-> FuncName.equal
-  | IT_LT	-> FuncName.lessThan
-  | IT_GT	-> FuncName.greaterThan
+    GT_EQUAL	-> FuncName.equal
+  | GT_LT	-> FuncName.lessThan
+  | GT_GT	-> FuncName.greaterThan
 ;
 
 rvalue:

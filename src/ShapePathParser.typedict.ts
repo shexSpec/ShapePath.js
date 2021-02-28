@@ -71,10 +71,10 @@ export interface TysonTypeDictionary {
   annotationAttr: annotationAttr;
   iri: URL;
   prefixedName: URL;
-  IT_DIVIDE: string;
-  IT_DIVIDEDIVIDE: string;
-  IT_AT: string;
-  IT_DOT: string;
+  GT_DIVIDE: string;
+  GT_DIVIDEDIVIDE: string;
+  GT_AT: string;
+  GT_DOT: string;
   INTEGER: string;
   IT_shapeExprs: string;
   IT_shapeExpr: string;

@@ -2,24 +2,29 @@
  *
  */
 
-export type PathExpr = Path | Intersection | Union
+export abstract class PathExpr {
+}
 
-export abstract class Junction {
+export abstract class Junction extends PathExpr {
   abstract t: string
   constructor(
     public exprs: Array<Path | Junction>
-  ) { }
+  ) {
+    super()
+  }
 }
 
 export class Union extends Junction { t = "Union" }
 
 export class Intersection extends Junction { t = "Intersection" }
 
-export class Path {
+export class Path extends PathExpr {
   t = 'Path'
   constructor(
     public steps: Step[]
-  ) { }
+  ) {
+    super()
+  }
 }
 
 export enum Axis {
@@ -36,16 +41,17 @@ export enum t_Selector {
 }
 
 export enum FuncName {
-  ebv = 'ebv',
   index = 'index',
   count = 'count',
+
   // operators
+  ebv = 'ebv', // implied by 
   equal = 'equal',
   lessThan = 'lessThan',
   greaterThan = 'greaterThan',
 }
 
-export type FuncArg = Func | Path | URL | number
+export type FuncArg = Func | PathExpr | URL | number
 
 export abstract class Func {
   abstract t: string
@@ -66,7 +72,11 @@ export class Assertion extends Func {
   ) { super() }
 }
 
-export class Step {
+export abstract class Step {
+  abstract t: string
+}
+
+export class UnitStep {
   t = 'Step'
   constructor(
     public selector: Selector,
@@ -74,6 +84,14 @@ export class Step {
     public filters?: Func[]
   ) { }
 }
+
+// export class PathExprStep {
+//   t = 'PathExprStep'
+//   constructor(
+//     public pathExpr: PathExpr,
+//     public filters?: Func[]
+//   ) { }
+// }
 
 export type Selector = t_Selector | termType | attribute // | shapeExprAttr | valueSetValueAttr | tripleExprAttr | semActAttr | annotationAttr
 
