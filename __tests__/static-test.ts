@@ -148,11 +148,11 @@ const Ref1 = {
       "t": "Path",
       "steps": [
         {
-          "t": "Step",
+          "t": "UnitStep",
           "selector": "shapes"
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "selector": "*",
           "filters": [
             {
@@ -163,7 +163,7 @@ const Ref1 = {
                   "t": "Path",
                   "steps": [
                     {
-                      "t": "Step",
+                      "t": "UnitStep",
                       "selector": "id"
                     }
                   ]
@@ -190,16 +190,16 @@ const Ref1 = {
           ]
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "axis": "thisShapeExpr::",
           "selector": "Shape"
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "selector": "expression"
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "axis": "thisTripleExpr::",
           "selector": "TripleConstraint",
           "filters": [
@@ -211,7 +211,7 @@ const Ref1 = {
                   "t": "Path",
                   "steps": [
                     {
-                      "t": "Step",
+                      "t": "UnitStep",
                       "selector": "predicate"
                     }
                   ]
@@ -222,11 +222,11 @@ const Ref1 = {
           ]
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "selector": "shapes"
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "selector": "*",
           "filters": [
             {
@@ -237,7 +237,7 @@ const Ref1 = {
                   "t": "Path",
                   "steps": [
                     {
-                      "t": "Step",
+                      "t": "UnitStep",
                       "selector": "id"
                     }
                   ]
@@ -269,11 +269,11 @@ const Ref1 = {
       "t": "Path",
       "steps": [
         {
-          "t": "Step",
+          "t": "UnitStep",
           "selector": "shapes"
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "selector": "*",
           "filters": [
             {
@@ -284,7 +284,7 @@ const Ref1 = {
                   "t": "Path",
                   "steps": [
                     {
-                      "t": "Step",
+                      "t": "UnitStep",
                       "selector": "id"
                     }
                   ]
@@ -311,16 +311,16 @@ const Ref1 = {
           ]
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "axis": "thisShapeExpr::",
           "selector": "Shape"
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "selector": "expression"
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "axis": "thisTripleExpr::",
           "selector": "TripleConstraint",
           "filters": [
@@ -332,7 +332,7 @@ const Ref1 = {
                   "t": "Path",
                   "steps": [
                     {
-                      "t": "Step",
+                      "t": "UnitStep",
                       "selector": "predicate"
                     }
                   ]
@@ -343,11 +343,11 @@ const Ref1 = {
           ]
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "selector": "shapes"
         },
         {
-          "t": "Step",
+          "t": "UnitStep",
           "selector": "*",
           "filters": [
             {
@@ -358,7 +358,7 @@ const Ref1 = {
                   "t": "Path",
                   "steps": [
                     {
-                      "t": "Step",
+                      "t": "UnitStep",
                       "selector": "id"
                     }
                   ]
@@ -393,11 +393,11 @@ const Ref1 = {
           "t": "Path",
           "steps": [
             {
-              "t": "Step",
+              "t": "UnitStep",
               "selector": "shapes"
             },
             {
-              "t": "Step",
+              "t": "UnitStep",
               "selector": "*",
               "filters": [
                 {
@@ -410,7 +410,7 @@ const Ref1 = {
               ]
             },
             {
-              "t": "Step",
+              "t": "UnitStep",
               "selector": "*",
               "filters": [
                 {
@@ -428,11 +428,11 @@ const Ref1 = {
           "t": "Path",
           "steps": [
             {
-              "t": "Step",
+              "t": "UnitStep",
               "selector": "shapes"
             },
             {
-              "t": "Step",
+              "t": "UnitStep",
               "selector": "ShapeAnd",
               "filters": [
                 {
@@ -450,7 +450,7 @@ const Ref1 = {
           "t": "Path",
           "steps": [
             {
-              "t": "Step",
+              "t": "UnitStep",
               "selector": "ShapeOr",
               "filters": [
                 {
@@ -463,7 +463,7 @@ const Ref1 = {
               ]
             },
             {
-              "t": "Step",
+              "t": "UnitStep",
               "selector": "*",
               "filters": [
                 {

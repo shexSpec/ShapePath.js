@@ -1,12 +1,27 @@
 /** ShapePath types
  *
+Serializable
+  PathExpr
+    Junction
+      Union
+      Intersection
+    Path
+  Func
+    Filter
+    Assertion
+  Step
+    UnitStep
+    PathExprStep
  */
 
-export abstract class PathExpr {
+export abstract class Serializable {
+  abstract t: string
+}
+
+export abstract class PathExpr extends Serializable {
 }
 
 export abstract class Junction extends PathExpr {
-  abstract t: string
   constructor(
     public exprs: Array<Path | Junction>
   ) {
@@ -53,8 +68,7 @@ export enum FuncName {
 
 export type FuncArg = Func | PathExpr | URL | number
 
-export abstract class Func {
-  abstract t: string
+export abstract class Func extends Serializable {
 }
 
 export class Filter extends Func {
@@ -72,12 +86,11 @@ export class Assertion extends Func {
   ) { super() }
 }
 
-export abstract class Step {
-  abstract t: string
+export abstract class Step extends Serializable {
 }
 
 export class UnitStep {
-  t = 'Step'
+  t = 'UnitStep'
   constructor(
     public selector: Selector,
     public axis?: Axis,
