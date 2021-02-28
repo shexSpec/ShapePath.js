@@ -3,7 +3,7 @@
  */
 
 %{
-import {Union, Intersection, Path, UnitStep/*, PathExprStep*/, Axis, t_Selector,
+import {Union, Intersection, Path, UnitStep, PathExprStep, Axis, t_Selector,
         Assertion, Filter, Func, FuncArg, FuncName,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
@@ -294,7 +294,7 @@ _O_QGT_AT_E_Or_QGT_DOT_E_C:
 
 step:
     _Qaxis_E_Opt selector _Qfilter_E_Star	-> new UnitStep($2, $1 ? $1 : undefined, $3.length > 0 ? $3 : undefined)
-  // | GT_LPAREN shapePath GT_RPAREN _Qfilter_E_Star	-> new PathExprStep($2, $4.length > 0 ? $4 : undefined)
+  | GT_LPAREN shapePath GT_RPAREN _Qfilter_E_Star	-> new PathExprStep($2, $4.length > 0 ? $4 : undefined)
 ;
 
 _Qaxis_E_Opt:

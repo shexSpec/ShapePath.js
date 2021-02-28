@@ -85,13 +85,13 @@ export class UnitStep {
   ) { }
 }
 
-// export class PathExprStep {
-//   t = 'PathExprStep'
-//   constructor(
-//     public pathExpr: PathExpr,
-//     public filters?: Func[]
-//   ) { }
-// }
+export class PathExprStep {
+  t = 'PathExprStep'
+  constructor(
+    public pathExpr: PathExpr,
+    public filters?: Func[]
+  ) { }
+}
 
 export type Selector = t_Selector | termType | attribute // | shapeExprAttr | valueSetValueAttr | tripleExprAttr | semActAttr | annotationAttr
 
