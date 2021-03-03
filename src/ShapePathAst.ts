@@ -14,11 +14,66 @@ Serializable
     Assertion
  */
 
+import * as ShExJ from 'shexj';
+
+export type SchemaNode = ShExJ.Schema
+  | ShExJ.shapeExpr
+  | ShExJ.ShapeOr
+  | ShExJ.ShapeAnd
+  | ShExJ.ShapeNot
+  | ShExJ.ShapeExternal
+  | ShExJ.shapeExprRef
+  | ShExJ.shapeExprLabel
+  | ShExJ.NodeConstraint
+  | ShExJ.xsFacet
+  | ShExJ.stringFacet
+  | ShExJ.numericFacet
+  | ShExJ.numericLiteral
+  | ShExJ.valueSetValue
+  | ShExJ.objectValue
+  | ShExJ.ObjectLiteral
+  | ShExJ.IriStem
+  | ShExJ.IriStemRange
+  | ShExJ.LiteralStem
+  | ShExJ.LiteralStemRange
+  | ShExJ.Language
+  | ShExJ.LanguageStem
+  | ShExJ.LanguageStemRange
+  | ShExJ.Wildcard
+  | ShExJ.Shape
+  | ShExJ.tripleExpr
+  | ShExJ.tripleExprBase
+  | ShExJ.EachOf
+  | ShExJ.OneOf
+  | ShExJ.TripleConstraint
+  | ShExJ.tripleExprRef
+  | ShExJ.tripleExprLabel
+  | ShExJ.SemAct
+  | ShExJ.Annotation
+  | ShExJ.IRIREF
+  | ShExJ.BNODE
+  | ShExJ.INTEGER
+  | ShExJ.STRING
+  | ShExJ.DECIMAL
+  | ShExJ.DOUBLE
+  | ShExJ.LANGTAG
+  | ShExJ.BOOL
+  | ShExJ.IRI
+
+export type NodeSet = Array<SchemaNode>
+
 export abstract class Serializable {
   abstract t: string
 }
 
+export class EvalContext {
+  constructor(
+    public schema: ShExJ.Schema,
+  ) { }
+}
+
 export abstract class PathExpr extends Serializable {
+  abstract evalPathExpr(nodes: NodeSet, ctx: EvalContext): NodeSet
 }
 
 export abstract class Junction extends PathExpr {
@@ -29,9 +84,19 @@ export abstract class Junction extends PathExpr {
   }
 }
 
-export class Union extends Junction { t = "Union" }
+export class Union extends Junction {
+  t = "Union"
+  evalPathExpr(nodes: NodeSet, ctx: EvalContext): NodeSet {
+    return nodes
+  }
+}
 
-export class Intersection extends Junction { t = "Intersection" }
+export class Intersection extends Junction {
+  t = "Intersection"
+  evalPathExpr(nodes: NodeSet, ctx: EvalContext): NodeSet {
+    return nodes
+  }
+}
 
 export class Path extends PathExpr {
   t = 'Path'
@@ -40,9 +105,15 @@ export class Path extends PathExpr {
   ) {
     super()
   }
+  evalPathExpr(nodes: NodeSet, ctx: EvalContext): NodeSet {
+    return this.steps.reduce((ret, step): NodeSet => {
+      return ret.concat(step.evalStep(nodes, ctx))
+    }, [] as NodeSet)
+  }
 }
 
 export abstract class Step extends Serializable {
+  abstract evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet
 }
 
 export class UnitStep {
@@ -52,6 +123,25 @@ export class UnitStep {
     public axis?: Axis,
     public filters?: Function[]
   ) { }
+  evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet {
+    const axisNodes = nodes // @@
+    const selectedNodes = axisNodes.reduce((ret, node) => {
+      if (!(node instanceof Object))
+        return ret
+      if (!(this.selector in node))
+        return ret
+      const toAdd = this.selector === t_Selector.Any
+        ? Object.values(node)
+        : (<any>node)[this.selector.toString()]
+      if (toAdd instanceof Array)
+        ret.push.apply(ret, toAdd)
+      else
+        ret.push(toAdd)
+      return ret
+    }, [] as NodeSet)
+    const filteredNodes = (this.filters || []).reduce((ret, filter) => filter.evalFunction(ret, ctx), selectedNodes)
+    return filteredNodes
+  }
 }
 
 export class PathExprStep {
@@ -60,6 +150,9 @@ export class PathExprStep {
     public pathExpr: PathExpr,
     public filters?: Function[]
   ) { }
+  evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet {
+    throw Error('PatheExprStep.evalStep not yet implemented')
+  }
 }
 
 export enum Axis {
@@ -72,6 +165,7 @@ export enum Axis {
 }
 
 export abstract class Function extends Serializable {
+  abstract evalFunction(nodes: NodeSet, ctx: EvalContext): NodeSet;
 }
 
 export enum FuncName {
@@ -93,6 +187,29 @@ export class Filter extends Function {
     public op: string,
     public args: FuncArg[],
   ) { super() }
+  evalFunction(nodes: NodeSet, ctx: EvalContext): NodeSet {
+    return nodes.reduce((ret, node) => {
+      const args = this.args.map((arg) => {
+        if (arg instanceof URL || typeof arg === 'number')
+          return arg
+        if (arg instanceof Function)
+          return arg.evalFunction([node], ctx)[0]
+        if (arg instanceof PathExpr)
+          return arg.evalPathExpr([node], ctx)[0]
+      }, [])
+      switch (this.op) {
+        case FuncName.equal:
+          const [l, r] = args
+          console.warn(`${l} === ${r}`)
+          if (l === r) // (number, numper), (URL, URL), (Object, Object)
+            return ret.concat(node)
+          return ret.concat(node)
+        default:
+          throw Error(`Not Implemented: Filter ${this.op} ${this.args}`)
+      }
+      return ret
+    }, nodes)
+  }
 }
 
 export class Assertion extends Function {
@@ -100,6 +217,9 @@ export class Assertion extends Function {
   constructor(
     public expect: Function,
   ) { super() }
+  evalFunction(nodes: NodeSet, ctx: EvalContext): NodeSet {
+    return nodes
+  }
 }
 
 export enum t_Selector {

@@ -1,0 +1,7 @@
+{
+  "base": "http://a.example/some/path/",
+  "prefixes": {
+    "": "http://a.example/default",
+    "bar": "http://a.example/bar"
+  }
+}
