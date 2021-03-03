@@ -1,17 +1,17 @@
 /** ShapePath types
- *
-Serializable
-  PathExpr
-    Junction
-      Union
-      Intersection
-    Path
-  Step
-    UnitStep
-    PathExprStep
-  Function
-    Filter
-    Assertion
+ * class hierarchy:
+ *   Serializable
+ *     PathExpr
+ *       Junction
+ *         Union
+ *         Intersection
+ *       Path
+ *     Step
+ *       UnitStep
+ *       PathExprStep
+ *     Function
+ *       Filter
+ *       Assertion
  */
 
 import * as ShExJ from 'shexj';
@@ -125,6 +125,7 @@ export class UnitStep {
   ) { }
   evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet {
     const axisNodes = nodes // @@
+
     const selectedNodes = axisNodes.reduce((ret, node) => {
       if (!(node instanceof Object))
         return ret
@@ -139,8 +140,15 @@ export class UnitStep {
         ret.push(toAdd)
       return ret
     }, [] as NodeSet)
-    const filteredNodes = (this.filters || []).reduce((ret, filter) => filter.evalFunction(ret, ctx), selectedNodes)
-    return filteredNodes
+
+    return (this.filters || []).reduce( // For each filter,
+      (filteredNodes, f) =>
+        filteredNodes.filter( // trim NodeSet to nodes passing filter.
+          (node, idx) => // (Aggregates need access to current node list.)
+            ebv(f.evalFunction(node, filteredNodes, idx, ctx)) === Pass
+        )
+      , selectedNodes // Start filter walk from selected nodes.
+    )
   }
 }
 
@@ -165,15 +173,15 @@ export enum Axis {
 }
 
 export abstract class Function extends Serializable {
-  abstract evalFunction(nodes: NodeSet, ctx: EvalContext): NodeSet;
+  abstract evalFunction(node: SchemaNode, allNodes: NodeSet, idx: number, ctx: EvalContext): NodeSet;
 }
 
 export enum FuncName {
   index = 'index',
   count = 'count',
+  ebv = 'ebv', // implied by 
 
   // operators
-  ebv = 'ebv', // implied by 
   equal = 'equal',
   lessThan = 'lessThan',
   greaterThan = 'greaterThan',
@@ -184,41 +192,83 @@ export type FuncArg = Function | PathExpr | URL | number
 export class Filter extends Function {
   t = 'Filter'
   constructor(
-    public op: string,
+    public op: FuncName,
     public args: FuncArg[],
   ) { super() }
-  evalFunction(nodes: NodeSet, ctx: EvalContext): NodeSet {
-    return nodes.reduce((ret, node) => {
-      const args = this.args.map((arg) => {
-        if (arg instanceof URL || typeof arg === 'number')
-          return arg
-        if (arg instanceof Function)
-          return arg.evalFunction([node], ctx)[0]
-        if (arg instanceof PathExpr)
-          return arg.evalPathExpr([node], ctx)[0]
-      }, [])
+
+  isAggregate() { return [FuncName.index, FuncName.count, FuncName.ebv].indexOf(this.op) !== -1 }
+  evalFunction(node: SchemaNode, allNodes: NodeSet, idx: number, ctx: EvalContext): NodeSet {
+    // !! separate aggregates in the grammar
+    if (this.isAggregate()) {
       switch (this.op) {
-        case FuncName.equal:
-          const [l, r] = args
-          console.warn(`${l} === ${r}`)
-          if (l === r) // (number, numper), (URL, URL), (Object, Object)
-            return ret.concat(node)
-          return ret.concat(node)
+        case FuncName.index:
+          return [idx]
+        case FuncName.count:
+          return [allNodes.length]
+        case FuncName.ebv:
+          return ebv(allNodes)
         default:
           throw Error(`Not Implemented: Filter ${this.op} ${this.args}`)
       }
-      return ret
-    }, nodes)
+    } else {
+      const args = evalArgs(this.args, node, allNodes)
+      switch (this.op) {
+        case FuncName.equal:
+          const [l, r] = args
+          if (l === r) // (number, numper), (URL, URL), (Object, Object)
+            return [node]
+          if (l instanceof URL && r instanceof URL && l.href === r.href) // (number, numper), (URL, URL), (Object, Object)
+            return [node]
+          break
+        case FuncName.lessThan:
+        case FuncName.greaterThan:
+          break
+        default:
+          throw Error(`Not Implemented: Filter ${this.op} ${this.args}`)
+      }
+      return []
+    }
+
+    function evalArgs(args: FuncArg[], node: SchemaNode, allNodes: NodeSet) {
+      return args.map((arg, idx) => {
+        if (arg instanceof URL || typeof arg === 'number')
+          return arg
+        if (arg instanceof Function)
+          return arg.evalFunction(node, allNodes, idx, ctx)[0]
+        if (arg instanceof PathExpr)
+          return arg.evalPathExpr([node], ctx)[0]
+      }, [])
+    }
+
   }
+}
+
+
+const Pass = [true]
+const Fail = [false]
+
+function ebv(nodes: NodeSet): NodeSet {
+  if (nodes.length > 1)
+    return Pass
+  if (nodes.length === 0)
+    return Fail
+  if (typeof nodes[0] === 'number')
+    return nodes[0] === 0 ? Fail : Pass
+  if (typeof nodes[0] === 'string')
+    return nodes[0].length === 0 ? Fail : Pass
+  return Pass
 }
 
 export class Assertion extends Function {
   t = 'Assertion'
   constructor(
-    public expect: Function,
+    public expect: Filter,
   ) { super() }
-  evalFunction(nodes: NodeSet, ctx: EvalContext): NodeSet {
-    return nodes
+  evalFunction(node: SchemaNode, allNodes: NodeSet, idx: number, ctx: EvalContext): NodeSet {
+    const val = this.expect.evalFunction(node, allNodes, idx, ctx)
+    if (ebv(val) !== Pass)
+      throw Error(`failed assertion: ebv(${JSON.stringify(val)}) !== ${JSON.stringify(Pass)} in ${JSON.stringify(this)} on ${JSON.stringify(node)} /  ${JSON.stringify(allNodes)}`)
+    return Pass
   }
 }
 

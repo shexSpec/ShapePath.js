@@ -28,10 +28,11 @@ program
       yy = readJson(command.resolve)
       log('Loaded URI resolution spec from %s', command.resolve)
     }
+    const pathExpr = new ShapePathParser(yy).parse(pathStr)
+    log('%s compiles to %s', pathStr, JSON.stringify(pathExpr))
     files.forEach(filePath => {
-      const pathExpr = new ShapePathParser(yy).parse(pathStr)
       const schema: Schema = readJson(filePath)
-      const inp: NodeSet = [schema]
+      const inp: NodeSet = [urlify(schema)]
       log('Executing %s on %s', pathStr, filePath)
       const leader = command['with-filename'] ? filePath + ': ' : ''
 
@@ -44,4 +45,14 @@ program.parse()
 
 function readJson(filePath: string): any {
   return JSON.parse(Fs.readFileSync(filePath, 'utf8'))
+}
+
+function urlify(s: any): Schema {
+  for (let k in s) {
+    if (k === 'id')
+      s[k] = new URL(s[k])
+    else if (s[k] instanceof Object)
+      urlify(s[k]);
+  }
+  return <Schema>s
 }

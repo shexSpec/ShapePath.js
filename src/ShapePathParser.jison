@@ -35,8 +35,7 @@ function pnameToUrl (pname: string, yy: any): URL {
 
 export function shapeLabelShortCut(label: URL) {
   return [
-    new UnitStep(t_schemaAttr.shapes),
-    new UnitStep(t_Selector.Any, undefined, [
+    new UnitStep(t_schemaAttr.shapes, undefined, [
       new Filter(FuncName.equal, [
         new Path([new UnitStep(t_attribute.id)]),
         label
