@@ -50,7 +50,7 @@ function readJson(filePath: string): any {
 
 function urlify(s: any): Schema {
   for (let k in s) {
-    if (k === 'id')
+    if (['id', 'predicate'].indexOf(k) !== -1)
       s[k] = s[k].startsWith('_:') ? new BNode(s[k]) : new Iri(s[k])
     else if (s[k] instanceof Object)
       urlify(s[k]);

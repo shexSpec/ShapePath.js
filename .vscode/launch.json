@@ -9,7 +9,13 @@
       "request": "launch",
       "runtimeExecutable": "node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
-      "args": ["src/spgrep.ts", "--debug", "-H", "/shapes/*[id=<http://a.example/S1>][assert count() = 1]", "--resolve", "src/resolve.json", "schema.json"],
+      "args": [
+        "src/spgrep.ts",
+        "--debug",
+        "-H",
+        "/shapes/*[id=<http://a.example/S1>][assert count() = 1]/thisShapeExpr::Shape/expression/thisTripleExpr::TripleConstraint[predicate=<p1>]",
+        "--resolve", "src/resolve.json",
+        "schema.json"],
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
       "skipFiles": [

@@ -165,6 +165,12 @@ export class UnitStep {
             }
           }
           break
+        case Axis.thisShapeExpr:
+          match = walkShapeExpr(node)
+          break
+        case Axis.thisTripleExpr:
+          match = walkTripleExpr(node)
+          break
       }
       return ret.concat(match)
     }, [] as NodeSet)
@@ -177,6 +183,39 @@ export class UnitStep {
         )
       , selectedNodes // Start filter walk from selected nodes.
     )
+
+    function walkShapeExpr(node: SchemaNode): NodeSet {
+      if (node instanceof Array)
+        return node.reduce((ret, n2) => ret.concat(walkShapeExpr(n2)), [])
+      if (!(node instanceof Object))
+        return []
+      switch ((<any>node).type) {
+        case "ShapeAnd":
+        case "ShapeOr":
+          return [node].concat(walkShapeExpr((<any>node).shapeExprs))
+        case "ShapeNot":
+          return [node].concat(walkShapeExpr((<any>node).shapeExpr))
+        case "Shape":
+        case "NodeConstraint":
+          return [node]
+        default: return []
+      }
+    }
+
+    function walkTripleExpr(node: SchemaNode): NodeSet {
+      if (node instanceof Array)
+        return node.reduce((ret, n2) => ret.concat(walkTripleExpr(n2)), [])
+      if (!(node instanceof Object))
+        return []
+      switch ((<any>node).type) {
+        case "EachOf":
+        case "OneOf":
+          return [node].concat(walkTripleExpr((<any>node).expressions))
+        case "TripleConstraint":
+          return [node]
+        default: return []
+      }
+    }
   }
 }
 
