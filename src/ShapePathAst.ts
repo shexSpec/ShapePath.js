@@ -62,6 +62,30 @@ export type SchemaNode = ShExJ.Schema
 
 export type NodeSet = Array<SchemaNode>
 
+export abstract class RdfTerm {
+  constructor(
+    protected value: string
+  ) { }
+  abstract equals(other: RdfTerm): boolean
+  toJSON(): string {
+    return this.value
+  }
+}
+export class Iri extends RdfTerm {
+  equals(other: RdfTerm): boolean {
+    return (other instanceof Iri)
+      ? other.value === this.value
+      : false
+  }
+}
+export class BNode extends RdfTerm {
+  equals(other: RdfTerm): boolean {
+    return (other instanceof BNode)
+      ? other.value === this.value
+      : false
+  }
+}
+
 export abstract class Serializable {
   abstract t: string
 }
@@ -191,7 +215,7 @@ export enum FuncName {
   greaterThan = 'greaterThan',
 }
 
-export type FuncArg = Function | PathExpr | URL | number
+export type FuncArg = Function | PathExpr | Iri | number
 
 export class Filter extends Function {
   t = 'Filter'
@@ -219,9 +243,9 @@ export class Filter extends Function {
       switch (this.op) {
         case FuncName.equal:
           const [l, r] = args
-          if (l === r) // (number, numper), (URL, URL), (Object, Object)
+          if (l === r) // (number, numper), (Iri, Iri), (Object, Object)
             return [node]
-          if (l instanceof URL && r instanceof URL && l.href === r.href) // (number, numper), (URL, URL), (Object, Object)
+          if (l instanceof Iri && r instanceof Iri && l.toJSON() === r.toJSON()) // (number, numper), (Iri, Iri), (Object, Object)
             return [node]
           break
         case FuncName.lessThan:
@@ -235,7 +259,7 @@ export class Filter extends Function {
 
     function evalArgs(args: FuncArg[], node: SchemaNode, allNodes: NodeSet) {
       return args.map((arg, idx) => {
-        if (arg instanceof URL || typeof arg === 'number')
+        if (arg instanceof Iri || typeof arg === 'number')
           return arg
         if (arg instanceof Function)
           return arg.evalFunction(node, allNodes, idx, ctx)[0]

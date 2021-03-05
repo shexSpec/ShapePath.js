@@ -1,5 +1,5 @@
 import {
-  PathExpr, Intersection, Path, Step, Axis, Selector, Function, FuncName,
+  PathExpr, Intersection, Path, Step, Axis, Selector, Function, FuncName, Iri, BNode,
   termType,
   shapeExprType,
   tripleExprType,
@@ -69,8 +69,8 @@ export interface TysonTypeDictionary {
   tripleConstraintAttr: tripleConstraintAttr;
   semActAttr: semActAttr;
   annotationAttr: annotationAttr;
-  iri: URL;
-  prefixedName: URL;
+  iri: Iri;
+  prefixedName: Iri;
   GT_DIVIDE: string;
   GT_DIVIDEDIVIDE: string;
   GT_AT: string;

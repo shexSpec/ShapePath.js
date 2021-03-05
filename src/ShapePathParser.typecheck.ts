@@ -13,6 +13,8 @@ import {
   Function,
   FuncArg,
   FuncName,
+  Iri,
+  BNode,
   t_termType,
   t_shapeExprType,
   t_tripleExprType,
@@ -45,16 +47,16 @@ function makeFunction(
   return assertionP ? new Assertion(ret) : ret;
 }
 
-function pnameToUrl(pname: string, yy: any): URL {
+function pnameToUrl(pname: string, yy: any): Iri {
   const idx = pname.indexOf(":");
   const pre = pname.substr(0, idx);
   const lname = pname.substr(idx + 1);
   if (!(pre in yy.prefixes)) throw Error(`unknown prefix in ${pname}`);
   const ns = yy.prefixes[pre];
-  return new URL(ns + lname, yy.base);
+  return new Iri(new URL(ns + lname, yy.base).href);
 }
 
-export function shapeLabelShortCut(label: URL) {
+export function shapeLabelShortCut(label: Iri) {
   return [
     new UnitStep(t_schemaAttr.shapes, undefined, [
       new Filter(FuncName.equal, [
@@ -68,7 +70,7 @@ export function shapeLabelShortCut(label: URL) {
   ];
 }
 
-export function predicateShortCut(label: URL) {
+export function predicateShortCut(label: Iri) {
   return [
     new UnitStep(t_shapeExprType.Shape, Axis.thisShapeExpr),
     new UnitStep(t_shapeAttr.expression),
@@ -1028,7 +1030,7 @@ const semanticActions = {
     $1: TysonTypeDictionary["IRIREF"]
   ): TysonTypeDictionary["iri"] {
     let $$: TysonTypeDictionary["iri"];
-    $$ = new URL($1.substr(1, $1.length - 2), yy.base);
+    $$ = new Iri(new URL($1.substr(1, $1.length - 2), yy.base).href);
     return $$;
   },
 

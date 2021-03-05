@@ -2,9 +2,9 @@
  *
  */
 
-import { FuncName } from './ShapePathAst'
+import { FuncName, Iri } from './ShapePathAst'
 
-export type rvalue = number | URL
+export type rvalue = number | Iri
 export interface comparison {
   op: FuncName;
   r: rvalue | null

@@ -4,7 +4,7 @@
 
 %{
 import {Union, Intersection, Path, UnitStep, PathExprStep, Axis, t_Selector,
-        Assertion, Filter, Function, FuncArg, FuncName,
+        Assertion, Filter, Function, FuncArg, FuncName, Iri, BNode,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
         t_numericFacetAttr, t_valueSetValueAttr, t_shapeAttr, t_tripleExprAttr,
@@ -23,19 +23,20 @@ function makeFunction (assertionP: boolean, firstArg: FuncArg, comp: comparison 
     : ret
 }
 
-function pnameToUrl (pname: string, yy: any): URL {
+function pnameToUrl (pname: string, yy: any): Iri {
   const idx = pname.indexOf(':')
   const pre = pname.substr(0, idx)
   const lname = pname.substr(idx+1)
   if (!(pre in yy.prefixes))
     throw Error(`unknown prefix in ${pname}`)
   const ns = yy.prefixes[pre]
-  return new URL(ns + lname, yy.base)
+  return new Iri(new URL(ns + lname, yy.base).href)
 }
 
-export function shapeLabelShortCut(label: URL) {
+export function shapeLabelShortCut(label: Iri) {
   return [
-    new UnitStep(t_schemaAttr.shapes, undefined, [
+    new UnitStep(t_schemaAttr.shapes),
+    new UnitStep(t_Selector.Any, undefined, [
       new Filter(FuncName.equal, [
         new Path([new UnitStep(t_attribute.id)]),
         label
@@ -51,7 +52,7 @@ export function shapeLabelShortCut(label: URL) {
 }
 
 
-export function predicateShortCut(label: URL) {
+export function predicateShortCut(label: Iri) {
   return [
     new UnitStep(t_shapeExprType.Shape, Axis.thisShapeExpr),
     new UnitStep(t_shapeAttr.expression),
@@ -502,7 +503,7 @@ annotationAttr:
 ;
 
 iri:
-    IRIREF	-> new URL($1.substr(1, $1.length - 2), yy.base)
+    IRIREF	-> new Iri(new URL($1.substr(1, $1.length - 2), yy.base).href)
   | prefixedName	
 ;
 

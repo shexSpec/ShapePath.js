@@ -2,7 +2,8 @@
 const Fs = require('fs')
 import { Schema } from 'shexj'
 import { ShapePathParser } from './ShapePathParser'
-import { EvalContext, NodeSet } from './ShapePathAst'
+import { EvalContext, NodeSet, Iri, BNode } from './ShapePathAst'
+
 const Base = 'file://' + __dirname
 
 const { Command } = require('commander') // include commander in git clone of commander repo
@@ -31,9 +32,9 @@ program
     const pathExpr = new ShapePathParser(yy).parse(pathStr)
     log('%s compiles to %s', pathStr, JSON.stringify(pathExpr))
     files.forEach(filePath => {
+      log('Executing %s on %s', pathStr, filePath)
       const schema: Schema = readJson(filePath)
       const inp: NodeSet = [urlify(schema)]
-      log('Executing %s on %s', pathStr, filePath)
       const leader = command['with-filename'] ? filePath + ': ' : ''
 
       const res: NodeSet = pathExpr.evalPathExpr(inp, new EvalContext(schema))
@@ -50,7 +51,7 @@ function readJson(filePath: string): any {
 function urlify(s: any): Schema {
   for (let k in s) {
     if (k === 'id')
-      s[k] = new URL(s[k])
+      s[k] = s[k].startsWith('_:') ? new BNode(s[k]) : new Iri(s[k])
     else if (s[k] instanceof Object)
       urlify(s[k]);
   }
