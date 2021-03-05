@@ -107,8 +107,8 @@ export class Path extends PathExpr {
   }
   evalPathExpr(nodes: NodeSet, ctx: EvalContext): NodeSet {
     return this.steps.reduce((ret, step): NodeSet => {
-      return ret.concat(step.evalStep(nodes, ctx))
-    }, [] as NodeSet)
+      return step.evalStep(ret, ctx)
+    }, nodes as NodeSet)
   }
 }
 
@@ -124,21 +124,25 @@ export class UnitStep {
     public filters?: Function[]
   ) { }
   evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet {
-    const axisNodes = nodes // @@
-
-    const selectedNodes = axisNodes.reduce((ret, node) => {
-      if (!(node instanceof Object))
-        return ret
-      if (!(this.selector in node))
-        return ret
-      const toAdd = this.selector === t_Selector.Any
-        ? Object.values(node)
-        : (<any>node)[this.selector.toString()]
-      if (toAdd instanceof Array)
-        ret.push.apply(ret, toAdd)
-      else
-        ret.push(toAdd)
-      return ret
+    const selectedNodes = nodes.reduce((ret, node) => {
+      let match: NodeSet = []
+      switch (this.axis) {
+        case undefined:
+        case Axis.child:
+          if (node instanceof Array && this.selector === t_Selector.Any) {
+            match = node
+          } else if (node instanceof Object) {
+            if (this.selector === t_Selector.Any) {
+              match = Object.values(node)
+            } else {
+              const key = this.selector.toString()
+              if (key in node)
+                match = [(<any>node)[key]]
+            }
+          }
+          break
+      }
+      return ret.concat(match)
     }, [] as NodeSet)
 
     return (this.filters || []).reduce( // For each filter,
