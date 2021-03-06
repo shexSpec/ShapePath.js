@@ -4,7 +4,7 @@ import {
   Union,
   Intersection,
   Path,
-  AttributeStep,
+  ChildStep,
   AxisStep,
   PathExprStep,
   Axis,
@@ -55,7 +55,7 @@ function makeFilters(
   if (type)
     filters.unshift(
       new Filter(FuncName.equal, [
-        new Path([new AttributeStep(t_attribute.type)]),
+        new Path([new ChildStep(t_attribute.type)]),
         type,
       ])
     );
@@ -73,10 +73,10 @@ function pnameToUrl(pname: string, yy: any): Iri {
 
 export function shapeLabelShortCut(label: Iri) {
   return [
-    new AttributeStep(t_schemaAttr.shapes),
-    new AttributeStep(t_attribute.Any, [
+    new ChildStep(t_schemaAttr.shapes),
+    new ChildStep(t_attribute.Any, [
       new Filter(FuncName.equal, [
-        new Path([new AttributeStep(t_attribute.id)]),
+        new Path([new ChildStep(t_attribute.id)]),
         label,
       ]),
       new Assertion(
@@ -89,12 +89,12 @@ export function shapeLabelShortCut(label: Iri) {
 export function predicateShortCut(label: Iri) {
   return [
     new AxisStep(Axis.thisShapeExpr, makeFilters(t_shapeExprType.Shape, [])),
-    new AttributeStep(t_shapeAttr.expression),
+    new ChildStep(t_shapeAttr.expression),
     new AxisStep(
       Axis.thisTripleExpr,
       makeFilters(t_tripleExprType.TripleConstraint, [
         new Filter(FuncName.equal, [
-          new Path([new AttributeStep(t_attribute.predicate)]),
+          new Path([new ChildStep(t_attribute.predicate)]),
           label,
         ]),
       ])
@@ -285,13 +285,22 @@ const semanticActions = {
     return $$;
   },
 
+  "step -> _QIT_child_E_Opt termType _Qfilter_E_Star"(
+    $2: TysonTypeDictionary["termType"],
+    $3: TysonTypeDictionary["_Qfilter_E_Star"]
+  ): TysonTypeDictionary["step"] {
+    let $$: TysonTypeDictionary["step"];
+    $$ = new ChildStep(t_attribute.Any, makeFilters($2, $3));
+    return $$;
+  },
+
   "step -> _QIT_child_E_Opt attributeOrAny _QtermType_E_Opt _Qfilter_E_Star"(
     $2: TysonTypeDictionary["attributeOrAny"],
     $3: TysonTypeDictionary["_QtermType_E_Opt"],
     $4: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
     let $$: TysonTypeDictionary["step"];
-    $$ = new AttributeStep($2, makeFilters($3, $4));
+    $$ = new ChildStep($2, makeFilters($3, $4));
     return $$;
   },
 
@@ -317,13 +326,13 @@ const semanticActions = {
 
   "_QIT_child_E_Opt -> "(): TysonTypeDictionary["_QIT_child_E_Opt"] {
     let $$: TysonTypeDictionary["_QIT_child_E_Opt"];
-    $$ = Axis.child;
+    $$ = null;
     return $$;
   },
 
   "_QIT_child_E_Opt -> IT_child"(): TysonTypeDictionary["_QIT_child_E_Opt"] {
     let $$: TysonTypeDictionary["_QIT_child_E_Opt"];
-    $$ = Axis.child;
+    $$ = null;
     return $$;
   },
 

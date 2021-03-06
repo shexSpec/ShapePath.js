@@ -3,7 +3,7 @@
  * Returns a Parser implementing JisonParserApi and a Lexer implementing JisonLexerApi.
  */
 
-import {Union, Intersection, Path, AttributeStep, AxisStep, PathExprStep, Axis,
+import {Union, Intersection, Path, ChildStep, AxisStep, PathExprStep, Axis,
         Assertion, Filter, Function, FuncArg, FuncName, Iri, BNode, termType,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
@@ -28,7 +28,7 @@ function makeFilters(type: termType | null, filters: Array<Function>): Array<Fun
   if (type)
     filters.unshift(
       new Filter(FuncName.equal, [
-        new Path([new AttributeStep(t_attribute.type)]),
+        new Path([new ChildStep(t_attribute.type)]),
         type
       ]),
     )
@@ -47,10 +47,10 @@ function pnameToUrl (pname: string, yy: any): Iri {
 
 export function shapeLabelShortCut(label: Iri) {
   return [
-    new AttributeStep(t_schemaAttr.shapes),
-    new AttributeStep(t_attribute.Any, [
+    new ChildStep(t_schemaAttr.shapes),
+    new ChildStep(t_attribute.Any, [
       new Filter(FuncName.equal, [
-        new Path([new AttributeStep(t_attribute.id)]),
+        new Path([new ChildStep(t_attribute.id)]),
         label
       ]),
       new Assertion(
@@ -67,14 +67,14 @@ export function shapeLabelShortCut(label: Iri) {
 export function predicateShortCut(label: Iri) {
   return [
     new AxisStep(Axis.thisShapeExpr, makeFilters(t_shapeExprType.Shape, [])),
-    new AttributeStep(t_shapeAttr.expression),
+    new ChildStep(t_shapeAttr.expression),
     new AxisStep(
       Axis.thisTripleExpr,
       makeFilters(
         t_tripleExprType.TripleConstraint,
         [
           new Filter(FuncName.equal, [
-            new Path([new AttributeStep(t_attribute.predicate)]),
+            new Path([new ChildStep(t_attribute.predicate)]),
             label
           ])
         ]
@@ -87,7 +87,7 @@ export function predicateShortCut(label: Iri) {
 import { JisonParser, JisonParserApi, StateType, SymbolsType, TerminalsType, ProductionsType, o } from '@ts-jison/parser';
 import { JisonLexer, JisonLexerApi } from '@ts-jison/lexer';
 
-const $V0=[32,34,37,38,39,40,41,42,87,88,89,90,91,98,99,100,101,102,103,104,107,108,110,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,136,137,138,139,140],$V1=[2,17],$V2=[1,10],$V3=[1,11],$V4=[1,12],$V5=[1,13],$V6=[5,9,33,46,61,62,63],$V7=[5,9,13,33,46,61,62,63],$V8=[5,9,13,21,22,25,26,33,46,61,62,63],$V9=[42,87,88,89,90,91,98,99,100,101,102,103,104,107,108,110,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,136,137,138,139,140],$Va=[2,27],$Vb=[1,21],$Vc=[1,22],$Vd=[1,23],$Ve=[1,24],$Vf=[1,25],$Vg=[1,26],$Vh=[1,27],$Vi=[1,29],$Vj=[1,31],$Vk=[1,32],$Vl=[141,143,144],$Vm=[5,9,13,21,22,25,26,33,44,46,61,62,63],$Vn=[2,29],$Vo=[1,102],$Vp=[1,103],$Vq=[1,104],$Vr=[1,105],$Vs=[1,106],$Vt=[1,107],$Vu=[1,108],$Vv=[1,109],$Vw=[1,110],$Vx=[1,111],$Vy=[1,112],$Vz=[1,113],$VA=[1,114],$VB=[1,115],$VC=[1,116],$VD=[1,117],$VE=[1,118],$VF=[1,119],$VG=[1,120],$VH=[1,121],$VI=[5,9,13,21,22,25,26,33,44,46,61,62,63,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86],$VJ=[2,31],$VK=[1,131],$VL=[21,22,25,26,32,34,37,38,39,40,41,42,53,54,55,56,87,88,89,90,91,98,99,100,101,102,103,104,107,108,110,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,136,137,138,139,140],$VM=[2,46],$VN=[1,149],$VO=[1,150],$VP=[1,151],$VQ=[58,141,143,144],$VR=[46,61,62,63];
+const $V0=[33,35,37,38,39,40,41,42,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,98,99,100,101,102,103,104,107,108,110,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,136,137,138,139,140],$V1=[2,17],$V2=[1,10],$V3=[1,11],$V4=[1,12],$V5=[1,13],$V6=[5,9,34,46,61,62,63],$V7=[5,9,13,34,46,61,62,63],$V8=[5,9,13,21,22,25,26,34,46,61,62,63],$V9=[42,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,98,99,100,101,102,103,104,107,108,110,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,136,137,138,139,140],$Va=[2,28],$Vb=[1,21],$Vc=[1,22],$Vd=[1,23],$Ve=[1,24],$Vf=[1,25],$Vg=[1,26],$Vh=[1,27],$Vi=[1,29],$Vj=[1,31],$Vk=[1,32],$Vl=[141,143,144],$Vm=[1,45],$Vn=[1,46],$Vo=[1,47],$Vp=[1,50],$Vq=[1,51],$Vr=[1,52],$Vs=[1,53],$Vt=[1,54],$Vu=[1,55],$Vv=[1,56],$Vw=[1,57],$Vx=[1,58],$Vy=[1,59],$Vz=[1,60],$VA=[1,61],$VB=[1,62],$VC=[1,63],$VD=[1,64],$VE=[1,65],$VF=[1,66],$VG=[5,9,13,21,22,25,26,34,44,46,61,62,63],$VH=[2,30],$VI=[5,9,13,21,22,25,26,34,44,46,61,62,63,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86],$VJ=[2,32],$VK=[1,132],$VL=[21,22,25,26,33,35,37,38,39,40,41,42,53,54,55,56,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,98,99,100,101,102,103,104,107,108,110,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,136,137,138,139,140],$VM=[2,47],$VN=[1,151],$VO=[1,152],$VP=[1,153],$VQ=[58,141,143,144],$VR=[46,61,62,63];
 
 export class ShapePathParser extends JisonParser implements JisonParserApi {
   public Parser?: ShapePathParser;
@@ -97,11 +97,11 @@ export class ShapePathParser extends JisonParser implements JisonParserApi {
     super(yy, lexer);
   }
 
-  symbols_: SymbolsType = {"error":2,"top":3,"shapePath":4,"EOF":5,"unionStep":6,"Q_O_QIT_union_E_S_QunionStep_E_C_E_Star":7,"O_QIT_union_E_S_QunionStep_E_C":8,"IT_UNION":9,"intersectionStep":10,"Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star":11,"O_QIT_intersection_E_S_QintersectionStep_E_C":12,"IT_INTERSECTION":13,"startStep":14,"QnextStep_E_Star":15,"nextStep":16,"Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt":17,"step":18,"shortcut":19,"O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C":20,"GT_DIVIDE":21,"GT_DIVIDEDIVIDE":22,"O_QGT_AT_E_Or_QGT_DOT_E_C":23,"iri":24,"GT_AT":25,"GT_DOT":26,"QIT_child_E_Opt":27,"attributeOrAny":28,"QtermType_E_Opt":29,"Qfilter_E_Star":30,"nonChildAxis":31,"GT_LPAREN":32,"GT_RPAREN":33,"IT_child":34,"termType":35,"filter":36,"IT_thisShapeExpr":37,"IT_thisTripleExpr":38,"IT_self":39,"IT_parent":40,"IT_ancestor":41,"GT_STAR":42,"attribute":43,"GT_LBRACKET":44,"filterExpr":45,"GT_RBRACKET":46,"QIT_ASSERT_E_Opt":47,"Qcomparison_E_Opt":48,"function":49,"numericExpr":50,"IT_ASSERT":51,"comparison":52,"IT_index":53,"IT_count":54,"IT_foo1":55,"IT_foo2":56,"fooArg":57,"INTEGER":58,"comparitor":59,"rvalue":60,"GT_EQUAL":61,"GT_LT":62,"GT_GT":63,"shapeExprType":64,"tripleExprType":65,"valueType":66,"IT_Schema":67,"IT_SemAct":68,"IT_Annotation":69,"IT_ShapeAnd":70,"IT_ShapeOr":71,"IT_ShapeNot":72,"IT_NodeConstraint":73,"IT_Shape":74,"IT_ShapeExternal":75,"IT_EachOf":76,"IT_OneOf":77,"IT_TripleConstraint":78,"IT_IriStem":79,"IT_IriStemRange":80,"IT_LiteralStem":81,"IT_LiteralStemRange":82,"IT_Language":83,"IT_LanguageStem":84,"IT_LanguageStemRange":85,"IT_Wildcard":86,"IT_type":87,"IT_id":88,"IT_semActs":89,"IT_annotations":90,"IT_predicate":91,"schemaAttr":92,"shapeExprAttr":93,"tripleExprAttr":94,"valueSetValueAttr":95,"semActAttr":96,"annotationAttr":97,"GT_atContext":98,"IT_startActs":99,"IT_start":100,"IT_imports":101,"IT_shapes":102,"IT_shapeExprs":103,"IT_shapeExpr":104,"nodeConstraintAttr":105,"shapeAttr":106,"IT_nodeKind":107,"IT_datatype":108,"xsFacetAttr":109,"IT_values":110,"stringFacetAttr":111,"numericFacetAttr":112,"IT_length":113,"IT_minlength":114,"IT_maxlength":115,"IT_pattern":116,"IT_flags":117,"IT_mininclusive":118,"IT_minexclusive":119,"IT_maxinclusive":120,"IT_maxexclusive":121,"IT_totaldigits":122,"IT_fractiondigits":123,"IT_value":124,"IT_language":125,"IT_stem":126,"IT_exclusions":127,"IT_languageTag":128,"IT_closed":129,"IT_extra":130,"IT_expression":131,"IT_expressions":132,"IT_min":133,"IT_max":134,"tripleConstraintAttr":135,"IT_inverse":136,"IT_valueExpr":137,"IT_name":138,"IT_code":139,"IT_object":140,"IRIREF":141,"prefixedName":142,"PNAME_LN":143,"PNAME_NS":144,"$accept":0,"$end":1};
-  terminals_: TerminalsType = {2:"error",5:"EOF",9:"IT_UNION",13:"IT_INTERSECTION",21:"GT_DIVIDE",22:"GT_DIVIDEDIVIDE",25:"GT_AT",26:"GT_DOT",32:"GT_LPAREN",33:"GT_RPAREN",34:"IT_child",37:"IT_thisShapeExpr",38:"IT_thisTripleExpr",39:"IT_self",40:"IT_parent",41:"IT_ancestor",42:"GT_STAR",44:"GT_LBRACKET",46:"GT_RBRACKET",51:"IT_ASSERT",53:"IT_index",54:"IT_count",55:"IT_foo1",56:"IT_foo2",58:"INTEGER",61:"GT_EQUAL",62:"GT_LT",63:"GT_GT",67:"IT_Schema",68:"IT_SemAct",69:"IT_Annotation",70:"IT_ShapeAnd",71:"IT_ShapeOr",72:"IT_ShapeNot",73:"IT_NodeConstraint",74:"IT_Shape",75:"IT_ShapeExternal",76:"IT_EachOf",77:"IT_OneOf",78:"IT_TripleConstraint",79:"IT_IriStem",80:"IT_IriStemRange",81:"IT_LiteralStem",82:"IT_LiteralStemRange",83:"IT_Language",84:"IT_LanguageStem",85:"IT_LanguageStemRange",86:"IT_Wildcard",87:"IT_type",88:"IT_id",89:"IT_semActs",90:"IT_annotations",91:"IT_predicate",98:"GT_atContext",99:"IT_startActs",100:"IT_start",101:"IT_imports",102:"IT_shapes",103:"IT_shapeExprs",104:"IT_shapeExpr",107:"IT_nodeKind",108:"IT_datatype",110:"IT_values",113:"IT_length",114:"IT_minlength",115:"IT_maxlength",116:"IT_pattern",117:"IT_flags",118:"IT_mininclusive",119:"IT_minexclusive",120:"IT_maxinclusive",121:"IT_maxexclusive",122:"IT_totaldigits",123:"IT_fractiondigits",124:"IT_value",125:"IT_language",126:"IT_stem",127:"IT_exclusions",128:"IT_languageTag",129:"IT_closed",130:"IT_extra",131:"IT_expression",132:"IT_expressions",133:"IT_min",134:"IT_max",136:"IT_inverse",137:"IT_valueExpr",138:"IT_name",139:"IT_code",140:"IT_object",141:"IRIREF",143:"PNAME_LN",144:"PNAME_NS"};
-  productions_: ProductionsType = [0,[3,2],[4,2],[8,2],[7,0],[7,2],[6,2],[12,2],[11,0],[11,2],[10,2],[15,0],[15,2],[14,2],[14,1],[20,1],[20,1],[17,0],[17,1],[16,2],[16,1],[19,2],[23,1],[23,1],[18,4],[18,3],[18,5],[27,0],[27,1],[29,0],[29,1],[30,0],[30,2],[31,1],[31,1],[31,1],[31,1],[31,1],[28,1],[28,1],[36,3],[45,3],[45,3],[45,1],[47,0],[47,1],[48,0],[48,1],[49,3],[49,3],[49,4],[49,4],[57,2],[57,1],[57,1],[52,2],[59,1],[59,1],[59,1],[60,1],[60,1],[50,1],[35,1],[35,1],[35,1],[35,1],[35,1],[35,1],[64,1],[64,1],[64,1],[64,1],[64,1],[64,1],[65,1],[65,1],[65,1],[66,1],[66,1],[66,1],[66,1],[66,1],[66,1],[66,1],[66,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[92,1],[92,1],[92,1],[92,1],[92,1],[93,1],[93,1],[93,1],[93,1],[105,1],[105,1],[105,1],[105,1],[109,1],[109,1],[111,1],[111,1],[111,1],[111,1],[111,1],[112,1],[112,1],[112,1],[112,1],[112,1],[112,1],[95,1],[95,1],[95,1],[95,1],[95,1],[106,1],[106,1],[106,1],[94,1],[94,1],[94,1],[94,1],[135,1],[135,1],[96,1],[96,1],[97,1],[24,1],[24,1],[142,1],[142,1]];
-  table: Array<StateType> = [o($V0,$V1,{3:1,4:2,6:3,10:4,14:5,17:6,19:7,20:8,23:9,21:$V2,22:$V3,25:$V4,26:$V5}),{1:[3]},{5:[1,14]},o($V6,[2,4],{7:15}),o($V7,[2,8],{11:16}),o($V8,[2,11],{15:17}),o($V9,$Va,{18:18,27:19,31:20,32:$Vb,34:$Vc,37:$Vd,38:$Ve,39:$Vf,40:$Vg,41:$Vh}),o($V8,[2,14]),o($V0,[2,18]),{24:28,141:$Vi,142:30,143:$Vj,144:$Vk},o($V0,[2,15]),o($V0,[2,16]),o($Vl,[2,22]),o($Vl,[2,23]),{1:[2,1]},o([5,33,46,61,62,63],[2,2],{8:33,9:[1,34]}),o($V6,[2,6],{12:35,13:[1,36]}),o($V7,[2,10],{23:9,16:37,20:38,19:39,21:$V2,22:$V3,25:$V4,26:$V5}),o($V8,[2,13]),{28:40,42:[1,41],43:42,87:[1,43],88:[1,44],89:[1,45],90:[1,46],91:[1,47],92:48,93:49,94:50,95:51,96:52,97:53,98:[1,54],99:[1,55],100:[1,56],101:[1,57],102:[1,58],103:[1,59],104:[1,60],105:61,106:62,107:[1,75],108:[1,76],109:77,110:[1,78],111:84,112:85,113:[1,86],114:[1,87],115:[1,88],116:[1,89],117:[1,90],118:[1,91],119:[1,92],120:[1,93],121:[1,94],122:[1,95],123:[1,96],124:[1,67],125:[1,68],126:[1,69],127:[1,70],128:[1,71],129:[1,79],130:[1,80],131:[1,81],132:[1,63],133:[1,64],134:[1,65],135:66,136:[1,82],137:[1,83],138:[1,72],139:[1,73],140:[1,74]},o($Vm,$Vn,{29:97,35:98,64:99,65:100,66:101,67:$Vo,68:$Vp,69:$Vq,70:$Vr,71:$Vs,72:$Vt,73:$Vu,74:$Vv,75:$Vw,76:$Vx,77:$Vy,78:$Vz,79:$VA,80:$VB,81:$VC,82:$VD,83:$VE,84:$VF,85:$VG,86:$VH}),o($V0,$V1,{6:3,10:4,14:5,17:6,19:7,20:8,23:9,4:122,21:$V2,22:$V3,25:$V4,26:$V5}),o($V9,[2,28]),o($VI,[2,33]),o($VI,[2,34]),o($VI,[2,35]),o($VI,[2,36]),o($VI,[2,37]),o($V8,[2,21]),o($V8,[2,139]),o($V8,[2,140]),o($V8,[2,141]),o($V8,[2,142]),o($V6,[2,5]),o($V0,$V1,{10:4,14:5,17:6,19:7,20:8,23:9,6:123,21:$V2,22:$V3,25:$V4,26:$V5}),o($V7,[2,9]),o($V0,$V1,{14:5,17:6,19:7,20:8,23:9,10:124,21:$V2,22:$V3,25:$V4,26:$V5}),o($V8,[2,12]),o($V9,$Va,{27:19,31:20,18:125,32:$Vb,34:$Vc,37:$Vd,38:$Ve,39:$Vf,40:$Vg,41:$Vh}),o($V8,[2,20]),o($Vm,$Vn,{35:98,64:99,65:100,66:101,29:126,67:$Vo,68:$Vp,69:$Vq,70:$Vr,71:$Vs,72:$Vt,73:$Vu,74:$Vv,75:$Vw,76:$Vx,77:$Vy,78:$Vz,79:$VA,80:$VB,81:$VC,82:$VD,83:$VE,84:$VF,85:$VG,86:$VH}),o($VI,[2,38]),o($VI,[2,39]),o($VI,[2,85]),o($VI,[2,86]),o($VI,[2,87]),o($VI,[2,88]),o($VI,[2,89]),o($VI,[2,90]),o($VI,[2,91]),o($VI,[2,92]),o($VI,[2,93]),o($VI,[2,94]),o($VI,[2,95]),o($VI,[2,96]),o($VI,[2,97]),o($VI,[2,98]),o($VI,[2,99]),o($VI,[2,100]),o($VI,[2,101]),o($VI,[2,102]),o($VI,[2,103]),o($VI,[2,104]),o($VI,[2,130]),o($VI,[2,131]),o($VI,[2,132]),o($VI,[2,133]),o($VI,[2,122]),o($VI,[2,123]),o($VI,[2,124]),o($VI,[2,125]),o($VI,[2,126]),o($VI,[2,136]),o($VI,[2,137]),o($VI,[2,138]),o($VI,[2,105]),o($VI,[2,106]),o($VI,[2,107]),o($VI,[2,108]),o($VI,[2,127]),o($VI,[2,128]),o($VI,[2,129]),o($VI,[2,134]),o($VI,[2,135]),o($VI,[2,109]),o($VI,[2,110]),o($VI,[2,111]),o($VI,[2,112]),o($VI,[2,113]),o($VI,[2,114]),o($VI,[2,115]),o($VI,[2,116]),o($VI,[2,117]),o($VI,[2,118]),o($VI,[2,119]),o($VI,[2,120]),o($VI,[2,121]),o($Vm,$VJ,{30:127}),o($Vm,[2,30]),o($Vm,[2,62]),o($Vm,[2,63]),o($Vm,[2,64]),o($Vm,[2,65]),o($Vm,[2,66]),o($Vm,[2,67]),o($Vm,[2,68]),o($Vm,[2,69]),o($Vm,[2,70]),o($Vm,[2,71]),o($Vm,[2,72]),o($Vm,[2,73]),o($Vm,[2,74]),o($Vm,[2,75]),o($Vm,[2,76]),o($Vm,[2,77]),o($Vm,[2,78]),o($Vm,[2,79]),o($Vm,[2,80]),o($Vm,[2,81]),o($Vm,[2,82]),o($Vm,[2,83]),o($Vm,[2,84]),{33:[1,128]},o($V6,[2,3]),o($V7,[2,7]),o($V8,[2,19]),o($Vm,$VJ,{30:129}),o($V8,[2,25],{36:130,44:$VK}),o($Vm,$Vn,{35:98,64:99,65:100,66:101,29:132,67:$Vo,68:$Vp,69:$Vq,70:$Vr,71:$Vs,72:$Vt,73:$Vu,74:$Vv,75:$Vw,76:$Vx,77:$Vy,78:$Vz,79:$VA,80:$VB,81:$VC,82:$VD,83:$VE,84:$VF,85:$VG,86:$VH}),o($V8,[2,24],{36:130,44:$VK}),o($Vm,[2,32]),o($VL,[2,44],{45:133,47:134,50:135,51:[1,136],58:[1,137]}),o($Vm,$VJ,{30:138}),{46:[1,139]},o($V0,$V1,{6:3,10:4,14:5,17:6,19:7,20:8,23:9,4:140,49:141,21:$V2,22:$V3,25:$V4,26:$V5,53:[1,142],54:[1,143],55:[1,144],56:[1,145]}),{46:[2,43]},o($VL,[2,45]),{46:[2,61]},o($V8,[2,26],{36:130,44:$VK}),o($Vm,[2,40]),{46:$VM,48:146,52:147,59:148,61:$VN,62:$VO,63:$VP},{46:$VM,48:152,52:147,59:148,61:$VN,62:$VO,63:$VP},{32:[1,153]},{32:[1,154]},{32:[1,155]},{32:[1,156]},{46:[2,41]},{46:[2,47]},{24:159,58:[1,158],60:157,141:$Vi,142:30,143:$Vj,144:$Vk},o($VQ,[2,56]),o($VQ,[2,57]),o($VQ,[2,58]),{46:[2,42]},{33:[1,160]},{33:[1,161]},{24:162,141:$Vi,142:30,143:$Vj,144:$Vk},{24:165,57:163,58:[1,164],141:$Vi,142:30,143:$Vj,144:$Vk},{46:[2,55]},{46:[2,59]},{46:[2,60]},o($VR,[2,48]),o($VR,[2,49]),{33:[1,166]},{33:[1,167]},{24:168,33:[2,53],141:$Vi,142:30,143:$Vj,144:$Vk},{33:[2,54]},o($VR,[2,50]),o($VR,[2,51]),{33:[2,52]}];
-  defaultActions: {[key:number]: any} = {14:[2,1],135:[2,43],137:[2,61],146:[2,41],147:[2,47],152:[2,42],157:[2,55],158:[2,59],159:[2,60],165:[2,54],168:[2,52]};
+  symbols_: SymbolsType = {"error":2,"top":3,"shapePath":4,"EOF":5,"unionStep":6,"Q_O_QIT_union_E_S_QunionStep_E_C_E_Star":7,"O_QIT_union_E_S_QunionStep_E_C":8,"IT_UNION":9,"intersectionStep":10,"Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star":11,"O_QIT_intersection_E_S_QintersectionStep_E_C":12,"IT_INTERSECTION":13,"startStep":14,"QnextStep_E_Star":15,"nextStep":16,"Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt":17,"step":18,"shortcut":19,"O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C":20,"GT_DIVIDE":21,"GT_DIVIDEDIVIDE":22,"O_QGT_AT_E_Or_QGT_DOT_E_C":23,"iri":24,"GT_AT":25,"GT_DOT":26,"QIT_child_E_Opt":27,"termType":28,"Qfilter_E_Star":29,"attributeOrAny":30,"QtermType_E_Opt":31,"nonChildAxis":32,"GT_LPAREN":33,"GT_RPAREN":34,"IT_child":35,"filter":36,"IT_thisShapeExpr":37,"IT_thisTripleExpr":38,"IT_self":39,"IT_parent":40,"IT_ancestor":41,"GT_STAR":42,"attribute":43,"GT_LBRACKET":44,"filterExpr":45,"GT_RBRACKET":46,"QIT_ASSERT_E_Opt":47,"Qcomparison_E_Opt":48,"function":49,"numericExpr":50,"IT_ASSERT":51,"comparison":52,"IT_index":53,"IT_count":54,"IT_foo1":55,"IT_foo2":56,"fooArg":57,"INTEGER":58,"comparitor":59,"rvalue":60,"GT_EQUAL":61,"GT_LT":62,"GT_GT":63,"shapeExprType":64,"tripleExprType":65,"valueType":66,"IT_Schema":67,"IT_SemAct":68,"IT_Annotation":69,"IT_ShapeAnd":70,"IT_ShapeOr":71,"IT_ShapeNot":72,"IT_NodeConstraint":73,"IT_Shape":74,"IT_ShapeExternal":75,"IT_EachOf":76,"IT_OneOf":77,"IT_TripleConstraint":78,"IT_IriStem":79,"IT_IriStemRange":80,"IT_LiteralStem":81,"IT_LiteralStemRange":82,"IT_Language":83,"IT_LanguageStem":84,"IT_LanguageStemRange":85,"IT_Wildcard":86,"IT_type":87,"IT_id":88,"IT_semActs":89,"IT_annotations":90,"IT_predicate":91,"schemaAttr":92,"shapeExprAttr":93,"tripleExprAttr":94,"valueSetValueAttr":95,"semActAttr":96,"annotationAttr":97,"GT_atContext":98,"IT_startActs":99,"IT_start":100,"IT_imports":101,"IT_shapes":102,"IT_shapeExprs":103,"IT_shapeExpr":104,"nodeConstraintAttr":105,"shapeAttr":106,"IT_nodeKind":107,"IT_datatype":108,"xsFacetAttr":109,"IT_values":110,"stringFacetAttr":111,"numericFacetAttr":112,"IT_length":113,"IT_minlength":114,"IT_maxlength":115,"IT_pattern":116,"IT_flags":117,"IT_mininclusive":118,"IT_minexclusive":119,"IT_maxinclusive":120,"IT_maxexclusive":121,"IT_totaldigits":122,"IT_fractiondigits":123,"IT_value":124,"IT_language":125,"IT_stem":126,"IT_exclusions":127,"IT_languageTag":128,"IT_closed":129,"IT_extra":130,"IT_expression":131,"IT_expressions":132,"IT_min":133,"IT_max":134,"tripleConstraintAttr":135,"IT_inverse":136,"IT_valueExpr":137,"IT_name":138,"IT_code":139,"IT_object":140,"IRIREF":141,"prefixedName":142,"PNAME_LN":143,"PNAME_NS":144,"$accept":0,"$end":1};
+  terminals_: TerminalsType = {2:"error",5:"EOF",9:"IT_UNION",13:"IT_INTERSECTION",21:"GT_DIVIDE",22:"GT_DIVIDEDIVIDE",25:"GT_AT",26:"GT_DOT",33:"GT_LPAREN",34:"GT_RPAREN",35:"IT_child",37:"IT_thisShapeExpr",38:"IT_thisTripleExpr",39:"IT_self",40:"IT_parent",41:"IT_ancestor",42:"GT_STAR",44:"GT_LBRACKET",46:"GT_RBRACKET",51:"IT_ASSERT",53:"IT_index",54:"IT_count",55:"IT_foo1",56:"IT_foo2",58:"INTEGER",61:"GT_EQUAL",62:"GT_LT",63:"GT_GT",67:"IT_Schema",68:"IT_SemAct",69:"IT_Annotation",70:"IT_ShapeAnd",71:"IT_ShapeOr",72:"IT_ShapeNot",73:"IT_NodeConstraint",74:"IT_Shape",75:"IT_ShapeExternal",76:"IT_EachOf",77:"IT_OneOf",78:"IT_TripleConstraint",79:"IT_IriStem",80:"IT_IriStemRange",81:"IT_LiteralStem",82:"IT_LiteralStemRange",83:"IT_Language",84:"IT_LanguageStem",85:"IT_LanguageStemRange",86:"IT_Wildcard",87:"IT_type",88:"IT_id",89:"IT_semActs",90:"IT_annotations",91:"IT_predicate",98:"GT_atContext",99:"IT_startActs",100:"IT_start",101:"IT_imports",102:"IT_shapes",103:"IT_shapeExprs",104:"IT_shapeExpr",107:"IT_nodeKind",108:"IT_datatype",110:"IT_values",113:"IT_length",114:"IT_minlength",115:"IT_maxlength",116:"IT_pattern",117:"IT_flags",118:"IT_mininclusive",119:"IT_minexclusive",120:"IT_maxinclusive",121:"IT_maxexclusive",122:"IT_totaldigits",123:"IT_fractiondigits",124:"IT_value",125:"IT_language",126:"IT_stem",127:"IT_exclusions",128:"IT_languageTag",129:"IT_closed",130:"IT_extra",131:"IT_expression",132:"IT_expressions",133:"IT_min",134:"IT_max",136:"IT_inverse",137:"IT_valueExpr",138:"IT_name",139:"IT_code",140:"IT_object",141:"IRIREF",143:"PNAME_LN",144:"PNAME_NS"};
+  productions_: ProductionsType = [0,[3,2],[4,2],[8,2],[7,0],[7,2],[6,2],[12,2],[11,0],[11,2],[10,2],[15,0],[15,2],[14,2],[14,1],[20,1],[20,1],[17,0],[17,1],[16,2],[16,1],[19,2],[23,1],[23,1],[18,3],[18,4],[18,3],[18,5],[27,0],[27,1],[31,0],[31,1],[29,0],[29,2],[32,1],[32,1],[32,1],[32,1],[32,1],[30,1],[30,1],[36,3],[45,3],[45,3],[45,1],[47,0],[47,1],[48,0],[48,1],[49,3],[49,3],[49,4],[49,4],[57,2],[57,1],[57,1],[52,2],[59,1],[59,1],[59,1],[60,1],[60,1],[50,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[64,1],[64,1],[64,1],[64,1],[64,1],[64,1],[65,1],[65,1],[65,1],[66,1],[66,1],[66,1],[66,1],[66,1],[66,1],[66,1],[66,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[92,1],[92,1],[92,1],[92,1],[92,1],[93,1],[93,1],[93,1],[93,1],[105,1],[105,1],[105,1],[105,1],[109,1],[109,1],[111,1],[111,1],[111,1],[111,1],[111,1],[112,1],[112,1],[112,1],[112,1],[112,1],[112,1],[95,1],[95,1],[95,1],[95,1],[95,1],[106,1],[106,1],[106,1],[94,1],[94,1],[94,1],[94,1],[135,1],[135,1],[96,1],[96,1],[97,1],[24,1],[24,1],[142,1],[142,1]];
+  table: Array<StateType> = [o($V0,$V1,{3:1,4:2,6:3,10:4,14:5,17:6,19:7,20:8,23:9,21:$V2,22:$V3,25:$V4,26:$V5}),{1:[3]},{5:[1,14]},o($V6,[2,4],{7:15}),o($V7,[2,8],{11:16}),o($V8,[2,11],{15:17}),o($V9,$Va,{18:18,27:19,32:20,33:$Vb,35:$Vc,37:$Vd,38:$Ve,39:$Vf,40:$Vg,41:$Vh}),o($V8,[2,14]),o($V0,[2,18]),{24:28,141:$Vi,142:30,143:$Vj,144:$Vk},o($V0,[2,15]),o($V0,[2,16]),o($Vl,[2,22]),o($Vl,[2,23]),{1:[2,1]},o([5,34,46,61,62,63],[2,2],{8:33,9:[1,34]}),o($V6,[2,6],{12:35,13:[1,36]}),o($V7,[2,10],{23:9,16:37,20:38,19:39,21:$V2,22:$V3,25:$V4,26:$V5}),o($V8,[2,13]),{28:40,30:41,42:[1,48],43:49,64:42,65:43,66:44,67:$Vm,68:$Vn,69:$Vo,70:$Vp,71:$Vq,72:$Vr,73:$Vs,74:$Vt,75:$Vu,76:$Vv,77:$Vw,78:$Vx,79:$Vy,80:$Vz,81:$VA,82:$VB,83:$VC,84:$VD,85:$VE,86:$VF,87:[1,67],88:[1,68],89:[1,69],90:[1,70],91:[1,71],92:72,93:73,94:74,95:75,96:76,97:77,98:[1,78],99:[1,79],100:[1,80],101:[1,81],102:[1,82],103:[1,83],104:[1,84],105:85,106:86,107:[1,99],108:[1,100],109:101,110:[1,102],111:108,112:109,113:[1,110],114:[1,111],115:[1,112],116:[1,113],117:[1,114],118:[1,115],119:[1,116],120:[1,117],121:[1,118],122:[1,119],123:[1,120],124:[1,91],125:[1,92],126:[1,93],127:[1,94],128:[1,95],129:[1,103],130:[1,104],131:[1,105],132:[1,87],133:[1,88],134:[1,89],135:90,136:[1,106],137:[1,107],138:[1,96],139:[1,97],140:[1,98]},o($VG,$VH,{64:42,65:43,66:44,31:121,28:122,67:$Vm,68:$Vn,69:$Vo,70:$Vp,71:$Vq,72:$Vr,73:$Vs,74:$Vt,75:$Vu,76:$Vv,77:$Vw,78:$Vx,79:$Vy,80:$Vz,81:$VA,82:$VB,83:$VC,84:$VD,85:$VE,86:$VF}),o($V0,$V1,{6:3,10:4,14:5,17:6,19:7,20:8,23:9,4:123,21:$V2,22:$V3,25:$V4,26:$V5}),o($V9,[2,29]),o($VI,[2,34]),o($VI,[2,35]),o($VI,[2,36]),o($VI,[2,37]),o($VI,[2,38]),o($V8,[2,21]),o($V8,[2,140]),o($V8,[2,141]),o($V8,[2,142]),o($V8,[2,143]),o($V6,[2,5]),o($V0,$V1,{10:4,14:5,17:6,19:7,20:8,23:9,6:124,21:$V2,22:$V3,25:$V4,26:$V5}),o($V7,[2,9]),o($V0,$V1,{14:5,17:6,19:7,20:8,23:9,10:125,21:$V2,22:$V3,25:$V4,26:$V5}),o($V8,[2,12]),o($V9,$Va,{27:19,32:20,18:126,33:$Vb,35:$Vc,37:$Vd,38:$Ve,39:$Vf,40:$Vg,41:$Vh}),o($V8,[2,20]),o($VG,$VJ,{29:127}),o($VG,$VH,{64:42,65:43,66:44,28:122,31:128,67:$Vm,68:$Vn,69:$Vo,70:$Vp,71:$Vq,72:$Vr,73:$Vs,74:$Vt,75:$Vu,76:$Vv,77:$Vw,78:$Vx,79:$Vy,80:$Vz,81:$VA,82:$VB,83:$VC,84:$VD,85:$VE,86:$VF}),o($VG,[2,63]),o($VG,[2,64]),o($VG,[2,65]),o($VG,[2,66]),o($VG,[2,67]),o($VG,[2,68]),o($VI,[2,39]),o($VI,[2,40]),o($VG,[2,69]),o($VG,[2,70]),o($VG,[2,71]),o($VG,[2,72]),o($VG,[2,73]),o($VG,[2,74]),o($VG,[2,75]),o($VG,[2,76]),o($VG,[2,77]),o($VG,[2,78]),o($VG,[2,79]),o($VG,[2,80]),o($VG,[2,81]),o($VG,[2,82]),o($VG,[2,83]),o($VG,[2,84]),o($VG,[2,85]),o($VI,[2,86]),o($VI,[2,87]),o($VI,[2,88]),o($VI,[2,89]),o($VI,[2,90]),o($VI,[2,91]),o($VI,[2,92]),o($VI,[2,93]),o($VI,[2,94]),o($VI,[2,95]),o($VI,[2,96]),o($VI,[2,97]),o($VI,[2,98]),o($VI,[2,99]),o($VI,[2,100]),o($VI,[2,101]),o($VI,[2,102]),o($VI,[2,103]),o($VI,[2,104]),o($VI,[2,105]),o($VI,[2,131]),o($VI,[2,132]),o($VI,[2,133]),o($VI,[2,134]),o($VI,[2,123]),o($VI,[2,124]),o($VI,[2,125]),o($VI,[2,126]),o($VI,[2,127]),o($VI,[2,137]),o($VI,[2,138]),o($VI,[2,139]),o($VI,[2,106]),o($VI,[2,107]),o($VI,[2,108]),o($VI,[2,109]),o($VI,[2,128]),o($VI,[2,129]),o($VI,[2,130]),o($VI,[2,135]),o($VI,[2,136]),o($VI,[2,110]),o($VI,[2,111]),o($VI,[2,112]),o($VI,[2,113]),o($VI,[2,114]),o($VI,[2,115]),o($VI,[2,116]),o($VI,[2,117]),o($VI,[2,118]),o($VI,[2,119]),o($VI,[2,120]),o($VI,[2,121]),o($VI,[2,122]),o($VG,$VJ,{29:129}),o($VG,[2,31]),{34:[1,130]},o($V6,[2,3]),o($V7,[2,7]),o($V8,[2,19]),o($V8,[2,24],{36:131,44:$VK}),o($VG,$VJ,{29:133}),o($V8,[2,26],{36:131,44:$VK}),o($VG,$VH,{64:42,65:43,66:44,28:122,31:134,67:$Vm,68:$Vn,69:$Vo,70:$Vp,71:$Vq,72:$Vr,73:$Vs,74:$Vt,75:$Vu,76:$Vv,77:$Vw,78:$Vx,79:$Vy,80:$Vz,81:$VA,82:$VB,83:$VC,84:$VD,85:$VE,86:$VF}),o($VG,[2,33]),o($VL,[2,45],{45:135,47:136,50:137,51:[1,138],58:[1,139]}),o($V8,[2,25],{36:131,44:$VK}),o($VG,$VJ,{29:140}),{46:[1,141]},o($V0,$V1,{6:3,10:4,14:5,17:6,19:7,20:8,23:9,4:142,49:143,21:$V2,22:$V3,25:$V4,26:$V5,53:[1,144],54:[1,145],55:[1,146],56:[1,147]}),{46:[2,44]},o($VL,[2,46]),{46:[2,62]},o($V8,[2,27],{36:131,44:$VK}),o($VG,[2,41]),{46:$VM,48:148,52:149,59:150,61:$VN,62:$VO,63:$VP},{46:$VM,48:154,52:149,59:150,61:$VN,62:$VO,63:$VP},{33:[1,155]},{33:[1,156]},{33:[1,157]},{33:[1,158]},{46:[2,42]},{46:[2,48]},{24:161,58:[1,160],60:159,141:$Vi,142:30,143:$Vj,144:$Vk},o($VQ,[2,57]),o($VQ,[2,58]),o($VQ,[2,59]),{46:[2,43]},{34:[1,162]},{34:[1,163]},{24:164,141:$Vi,142:30,143:$Vj,144:$Vk},{24:167,57:165,58:[1,166],141:$Vi,142:30,143:$Vj,144:$Vk},{46:[2,56]},{46:[2,60]},{46:[2,61]},o($VR,[2,49]),o($VR,[2,50]),{34:[1,168]},{34:[1,169]},{24:170,34:[2,54],141:$Vi,142:30,143:$Vj,144:$Vk},{34:[2,55]},o($VR,[2,51]),o($VR,[2,52]),{34:[2,53]}];
+  defaultActions: {[key:number]: any} = {14:[2,1],137:[2,44],139:[2,62],148:[2,42],149:[2,48],154:[2,43],159:[2,56],160:[2,60],161:[2,61],167:[2,55],170:[2,53]};
 
   performAction (yytext:string, yyleng:number, yylineno:number, yy:any, yystate:number /* action[1] */, $$:any /* vstack */, _$:any /* lstack */): any {
 /* this == yyval */
@@ -115,10 +115,10 @@ break;
 case 3: case 7:
 this.$ = $$[$0];
 break;
-case 4: case 8: case 11: case 31:
+case 4: case 8: case 11: case 32:
 this.$ = [];
 break;
-case 5: case 9: case 32:
+case 5: case 9: case 33:
 this.$ = $$[$0-1].concat([$$[$0]]);
 break;
 case 6:
@@ -130,277 +130,277 @@ break;
 case 12:
 this.$ = $$[$0-1].concat($$[$0]);
 break;
-case 13: case 19: case 54:
+case 13: case 19: case 55:
 this.$ = [$$[$0]];
 break;
-case 17: case 29: case 46:
+case 17: case 28: case 29: case 30: case 47:
 this.$ = null;
 break;
 case 21:
 this.$ = $$[$0-1] === '@' ? shapeLabelShortCut($$[$0]) : predicateShortCut($$[$0]);
 break;
 case 24:
-this.$ = new AttributeStep($$[$0-2], makeFilters($$[$0-1], $$[$0]));
+this.$ = new ChildStep(t_attribute.Any, makeFilters($$[$0-1], $$[$0]));
 break;
 case 25:
-this.$ = new AxisStep($$[$0-2], makeFilters($$[$0-1], $$[$0]));
+this.$ = new ChildStep($$[$0-2], makeFilters($$[$0-1], $$[$0]));
 break;
 case 26:
+this.$ = new AxisStep($$[$0-2], makeFilters($$[$0-1], $$[$0]));
+break;
+case 27:
 this.$ = new PathExprStep($$[$0-3], makeFilters($$[$0-1], $$[$0]));
 break;
-case 27: case 28:
-this.$ = Axis.child;
-break;
-case 33:
+case 34:
 this.$ = Axis.thisShapeExpr;
 break;
-case 34:
+case 35:
 this.$ = Axis.thisTripleExpr;
 break;
-case 35:
+case 36:
 this.$ = Axis.self;
 break;
-case 36:
+case 37:
 this.$ = Axis.parent;
 break;
-case 37:
+case 38:
 this.$ = Axis.ancestor;
 break;
-case 38:
+case 39:
 this.$ = t_attribute.Any;
 break;
-case 40:
+case 41:
 this.$ = $$[$0-1];
 break;
-case 41: case 42:
+case 42: case 43:
 this.$ = makeFunction($$[$0-2], $$[$0-1], $$[$0] ? $$[$0] : undefined);
 break;
-case 43:
+case 44:
 this.$ = new Filter(FuncName.index, [$$[$0]]);
 break;
-case 44:
+case 45:
 this.$ = false;
 break;
-case 45:
+case 46:
 this.$ = true;
 break;
-case 48:
+case 49:
 this.$ = new Filter(FuncName.index, []);
 break;
-case 49: case 50: case 51:
+case 50: case 51: case 52:
 this.$ = new Filter(FuncName.count, []);
 break;
-case 52:
+case 53:
 this.$ = [parseInt($$[$0-1]), $$[$0]];
 break;
-case 53:
+case 54:
 this.$ = [parseInt($$[$0])];
 break;
-case 55:
+case 56:
 this.$ = { op: $$[$0-1], r: $$[$0] };
 break;
-case 56:
+case 57:
 this.$ = FuncName.equal;
 break;
-case 57:
+case 58:
 this.$ = FuncName.lessThan;
 break;
-case 58:
+case 59:
 this.$ = FuncName.greaterThan;
 break;
-case 59: case 61:
+case 60: case 62:
 this.$ = parseInt($$[$0]);
 break;
-case 65:
+case 66:
 this.$ = t_termType.Schema;
 break;
-case 66:
+case 67:
 this.$ = t_termType.SemAct;
 break;
-case 67:
+case 68:
 this.$ = t_termType.Annotation;
 break;
-case 68:
+case 69:
 this.$ = t_shapeExprType.ShapeAnd;
 break;
-case 69:
+case 70:
 this.$ = t_shapeExprType.ShapeOr;
 break;
-case 70:
+case 71:
 this.$ = t_shapeExprType.ShapeNot;
 break;
-case 71:
+case 72:
 this.$ = t_shapeExprType.NodeConstraint;
 break;
-case 72:
+case 73:
 this.$ = t_shapeExprType.Shape;
 break;
-case 73:
+case 74:
 this.$ = t_shapeExprType.ShapeExternal;
 break;
-case 74:
+case 75:
 this.$ = t_tripleExprType.EachOf;
 break;
-case 75:
+case 76:
 this.$ = t_tripleExprType.OneOf;
 break;
-case 76:
+case 77:
 this.$ = t_tripleExprType.TripleConstraint;
 break;
-case 77:
+case 78:
 this.$ = t_valueType.IriStem;
 break;
-case 78:
+case 79:
 this.$ = t_valueType.IriStemRange;
 break;
-case 79:
+case 80:
 this.$ = t_valueType.LiteralStem;
 break;
-case 80:
+case 81:
 this.$ = t_valueType.LiteralStemRange;
 break;
-case 81:
+case 82:
 this.$ = t_valueType.Language;
 break;
-case 82:
+case 83:
 this.$ = t_valueType.LanguageStem;
 break;
-case 83:
+case 84:
 this.$ = t_valueType.LanguageStemRange;
 break;
-case 84:
+case 85:
 this.$ = t_valueType.Wildcard;
 break;
-case 85:
+case 86:
 this.$ = t_attribute.type;
 break;
-case 86:
+case 87:
 this.$ = t_attribute.id;
 break;
-case 87:
+case 88:
 this.$ = t_attribute.semActs;
 break;
-case 88:
+case 89:
 this.$ = t_attribute.annotations;
 break;
-case 89:
+case 90:
 this.$ = t_attribute.predicate;
 break;
-case 96:
+case 97:
 this.$ = t_schemaAttr.atContext;
 break;
-case 97:
+case 98:
 this.$ = t_schemaAttr.startActs;
 break;
-case 98:
+case 99:
 this.$ = t_schemaAttr.start;
 break;
-case 99:
+case 100:
 this.$ = t_schemaAttr.imports;
 break;
-case 100:
+case 101:
 this.$ = t_schemaAttr.shapes;
 break;
-case 101:
+case 102:
 this.$ = t_shapeExprAttr.shapeExprs;
 break;
-case 102:
+case 103:
 this.$ = t_shapeExprAttr.shapeExpr;
 break;
-case 105:
+case 106:
 this.$ = t_nodeConstraintAttr.nodeKind;
 break;
-case 106:
+case 107:
 this.$ = t_nodeConstraintAttr.datatype;
 break;
-case 108:
+case 109:
 this.$ = t_nodeConstraintAttr.values;
 break;
-case 111:
+case 112:
 this.$ = t_stringFacetAttr.length;
 break;
-case 112:
+case 113:
 this.$ = t_stringFacetAttr.minlength;
 break;
-case 113:
+case 114:
 this.$ = t_stringFacetAttr.maxlength;
 break;
-case 114:
+case 115:
 this.$ = t_stringFacetAttr.pattern;
 break;
-case 115:
+case 116:
 this.$ = t_stringFacetAttr.flags;
 break;
-case 116:
+case 117:
 this.$ = t_numericFacetAttr.mininclusive;
 break;
-case 117:
+case 118:
 this.$ = t_numericFacetAttr.minexclusive;
 break;
-case 118:
+case 119:
 this.$ = t_numericFacetAttr.maxinclusive;
 break;
-case 119:
+case 120:
 this.$ = t_numericFacetAttr.maxexclusive;
 break;
-case 120:
+case 121:
 this.$ = t_numericFacetAttr.totaldigits;
 break;
-case 121:
+case 122:
 this.$ = t_numericFacetAttr.fractiondigits;
 break;
-case 122:
+case 123:
 this.$ = t_valueSetValueAttr.value;
 break;
-case 123:
+case 124:
 this.$ = t_valueSetValueAttr.language;
 break;
-case 124:
+case 125:
 this.$ = t_valueSetValueAttr.stem;
 break;
-case 125:
+case 126:
 this.$ = t_valueSetValueAttr.exclusions;
 break;
-case 126:
+case 127:
 this.$ = t_valueSetValueAttr.languageTag;
 break;
-case 127:
+case 128:
 this.$ = t_shapeAttr.closed;
 break;
-case 128:
+case 129:
 this.$ = t_shapeAttr.extra;
 break;
-case 129:
+case 130:
 this.$ = t_shapeAttr.expression;
 break;
-case 130:
+case 131:
 this.$ = t_tripleExprAttr.expressions;
 break;
-case 131:
+case 132:
 this.$ = t_tripleExprAttr.min;
 break;
-case 132:
+case 133:
 this.$ = t_tripleExprAttr.max;
 break;
-case 134:
+case 135:
 this.$ = t_tripleConstraintAttr.inverse;
 break;
-case 135:
+case 136:
 this.$ = t_tripleConstraintAttr.valueExpr;
 break;
-case 136:
+case 137:
 this.$ = t_semActAttr.name;
 break;
-case 137:
+case 138:
 this.$ = t_semActAttr.code;
 break;
-case 138:
+case 139:
 this.$ = t_annotationAttr.object;
 break;
-case 139:
+case 140:
 this.$ = new Iri(new URL($$[$0].substr(1, $$[$0].length - 2), yy.base).href);
 break;
-case 141: case 142:
+case 142: case 143:
 this.$ = pnameToUrl($$[$0], yy);
 break;
     }
@@ -424,7 +424,7 @@ export class ShapePathLexer extends JisonLexer implements JisonLexerApi {
     case 1:return 9;
     case 2:return 13;
     case 3:return 51;
-    case 4:return 34;
+    case 4:return 35;
     case 5:return 37;
     case 6:return 38;
     case 7:return 39;
@@ -503,8 +503,8 @@ export class ShapePathLexer extends JisonLexer implements JisonLexerApi {
     case 80:return 25;
     case 81:return 26;
     case 82:return 42;
-    case 83:return 32;
-    case 84:return 33;
+    case 83:return 33;
+    case 84:return 34;
     case 85:return 44;
     case 86:return 46;
     case 87:return 22;

@@ -37,7 +37,7 @@ export interface TysonTypeDictionary {
   shortcut: Array<Step>;
   _O_QGT_AT_E_Or_QGT_DOT_E_C: string;
   step: Step;
-  _QIT_child_E_Opt: Axis.child | null;
+  _QIT_child_E_Opt: null;
   _QtermType_E_Opt: termType | null;
   _Qfilter_E_Star: Array<Function>;
   nonChildAxis: Axis;

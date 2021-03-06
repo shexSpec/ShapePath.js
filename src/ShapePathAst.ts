@@ -140,8 +140,8 @@ export abstract class Step extends Serializable {
   abstract evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet
 }
 
-export class AttributeStep extends Step {
-  t = 'AttributeStep'
+export class ChildStep extends Step {
+  t = 'ChildStep'
   constructor(
     public attribute: Attribute,
     public filters?: Function[]

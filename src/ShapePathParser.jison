@@ -3,7 +3,7 @@
  */
 
 %{
-import {Union, Intersection, Path, AttributeStep, AxisStep, PathExprStep, Axis,
+import {Union, Intersection, Path, ChildStep, AxisStep, PathExprStep, Axis,
         Assertion, Filter, Function, FuncArg, FuncName, Iri, BNode, termType,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
@@ -28,7 +28,7 @@ function makeFilters(type: termType | null, filters: Array<Function>): Array<Fun
   if (type)
     filters.unshift(
       new Filter(FuncName.equal, [
-        new Path([new AttributeStep(t_attribute.type)]),
+        new Path([new ChildStep(t_attribute.type)]),
         type
       ]),
     )
@@ -47,10 +47,10 @@ function pnameToUrl (pname: string, yy: any): Iri {
 
 export function shapeLabelShortCut(label: Iri) {
   return [
-    new AttributeStep(t_schemaAttr.shapes),
-    new AttributeStep(t_attribute.Any, [
+    new ChildStep(t_schemaAttr.shapes),
+    new ChildStep(t_attribute.Any, [
       new Filter(FuncName.equal, [
-        new Path([new AttributeStep(t_attribute.id)]),
+        new Path([new ChildStep(t_attribute.id)]),
         label
       ]),
       new Assertion(
@@ -67,14 +67,14 @@ export function shapeLabelShortCut(label: Iri) {
 export function predicateShortCut(label: Iri) {
   return [
     new AxisStep(Axis.thisShapeExpr, makeFilters(t_shapeExprType.Shape, [])),
-    new AttributeStep(t_shapeAttr.expression),
+    new ChildStep(t_shapeAttr.expression),
     new AxisStep(
       Axis.thisTripleExpr,
       makeFilters(
         t_tripleExprType.TripleConstraint,
         [
           new Filter(FuncName.equal, [
-            new Path([new AttributeStep(t_attribute.predicate)]),
+            new Path([new ChildStep(t_attribute.predicate)]),
             label
           ])
         ]
@@ -307,14 +307,15 @@ _O_QGT_AT_E_Or_QGT_DOT_E_C:
 ;
 
 step:
-    _QIT_child_E_Opt attributeOrAny _QtermType_E_Opt _Qfilter_E_Star	-> new AttributeStep($2, makeFilters($3, $4))
+    _QIT_child_E_Opt termType _Qfilter_E_Star	-> new ChildStep(t_attribute.Any, makeFilters($2, $3))
+  | _QIT_child_E_Opt attributeOrAny _QtermType_E_Opt _Qfilter_E_Star	-> new ChildStep($2, makeFilters($3, $4))
   | nonChildAxis _QtermType_E_Opt _Qfilter_E_Star	-> new AxisStep($1, makeFilters($2, $3))
   | GT_LPAREN shapePath GT_RPAREN _QtermType_E_Opt _Qfilter_E_Star	-> new PathExprStep($2, makeFilters($4, $5))
 ;
 
 _QIT_child_E_Opt:
-    	-> Axis.child
-  | IT_child	-> Axis.child
+    	-> null
+  | IT_child	-> null
 ;
 
 _QtermType_E_Opt:
