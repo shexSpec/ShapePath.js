@@ -145,6 +145,7 @@ export class UnitStep {
   constructor(
     public selector: Selector,
     public axis?: Axis,
+    public termType?: termType,
     public filters?: Function[]
   ) { }
   evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet {
@@ -343,7 +344,7 @@ export enum t_Selector {
   Any = '*',
 }
 
-export type Selector = t_Selector | termType | attribute // | shapeExprAttr | valueSetValueAttr | tripleExprAttr | semActAttr | annotationAttr
+export type Selector = t_Selector | attribute // | shapeExprAttr | valueSetValueAttr | tripleExprAttr | semActAttr | annotationAttr
 
 export enum t_termType {
   Schema = 'Schema',

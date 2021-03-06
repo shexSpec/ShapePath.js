@@ -58,7 +58,8 @@ function pnameToUrl(pname: string, yy: any): Iri {
 
 export function shapeLabelShortCut(label: Iri) {
   return [
-    new UnitStep(t_schemaAttr.shapes, undefined, [
+    new UnitStep(t_schemaAttr.shapes),
+    new UnitStep(t_Selector.Any, undefined, undefined, [
       new Filter(FuncName.equal, [
         new Path([new UnitStep(t_attribute.id)]),
         label,
@@ -72,14 +73,19 @@ export function shapeLabelShortCut(label: Iri) {
 
 export function predicateShortCut(label: Iri) {
   return [
-    new UnitStep(t_shapeExprType.Shape, Axis.thisShapeExpr),
+    new UnitStep(t_Selector.Any, Axis.thisShapeExpr, t_shapeExprType.Shape),
     new UnitStep(t_shapeAttr.expression),
-    new UnitStep(t_tripleExprType.TripleConstraint, Axis.thisTripleExpr, [
-      new Filter(FuncName.equal, [
-        new Path([new UnitStep(t_attribute.predicate)]),
-        label,
-      ]),
-    ]),
+    new UnitStep(
+      t_Selector.Any,
+      Axis.thisTripleExpr,
+      t_tripleExprType.TripleConstraint,
+      [
+        new Filter(FuncName.equal, [
+          new Path([new UnitStep(t_attribute.predicate)]),
+          label,
+        ]),
+      ]
+    ),
   ];
 }
 
@@ -266,35 +272,64 @@ const semanticActions = {
     return $$;
   },
 
-  "step -> _Qaxis_E_Opt selector _Qfilter_E_Star"(
-    $1: TysonTypeDictionary["_Qaxis_E_Opt"],
+  "step -> _QIT_child_E_Opt selector _QtermType_E_Opt _Qfilter_E_Star"(
+    $1: TysonTypeDictionary["_QIT_child_E_Opt"],
     $2: TysonTypeDictionary["selector"],
-    $3: TysonTypeDictionary["_Qfilter_E_Star"]
-  ): TysonTypeDictionary["step"] {
-    let $$: TysonTypeDictionary["step"];
-    $$ = new UnitStep($2, $1 ? $1 : undefined, $3.length > 0 ? $3 : undefined);
-    return $$;
-  },
-
-  "step -> GT_LPAREN shapePath GT_RPAREN _Qfilter_E_Star"(
-    $2: TysonTypeDictionary["shapePath"],
+    $3: TysonTypeDictionary["_QtermType_E_Opt"],
     $4: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
     let $$: TysonTypeDictionary["step"];
-    $$ = new PathExprStep($2, $4.length > 0 ? $4 : undefined);
+    $$ = new UnitStep(
+      $2,
+      $1 ? $1 : undefined,
+      $3,
+      $4.length > 0 ? $4 : undefined
+    );
     return $$;
   },
 
-  "_Qaxis_E_Opt -> "(): TysonTypeDictionary["_Qaxis_E_Opt"] {
-    let $$: TysonTypeDictionary["_Qaxis_E_Opt"];
+  "step -> nonChildAxis selector _QtermType_E_Opt _Qfilter_E_Star"(
+    $1: TysonTypeDictionary["nonChildAxis"],
+    $2: TysonTypeDictionary["selector"],
+    $3: TysonTypeDictionary["_QtermType_E_Opt"],
+    $4: TysonTypeDictionary["_Qfilter_E_Star"]
+  ): TysonTypeDictionary["step"] {
+    let $$: TysonTypeDictionary["step"];
+    $$ = new UnitStep($2, $1, $3, $4.length > 0 ? $4 : undefined);
+    return $$;
+  },
+
+  "step -> GT_LPAREN shapePath GT_RPAREN _QtermType_E_Opt _Qfilter_E_Star"(
+    $2: TysonTypeDictionary["shapePath"],
+    $5: TysonTypeDictionary["_Qfilter_E_Star"]
+  ): TysonTypeDictionary["step"] {
+    let $$: TysonTypeDictionary["step"];
+    $$ = new PathExprStep($2, $5.length > 0 ? $5 : undefined);
+    return $$;
+  },
+
+  "_QIT_child_E_Opt -> "(): TysonTypeDictionary["_QIT_child_E_Opt"] {
+    let $$: TysonTypeDictionary["_QIT_child_E_Opt"];
+    $$ = Axis.child;
+    return $$;
+  },
+
+  "_QIT_child_E_Opt -> IT_child"(): TysonTypeDictionary["_QIT_child_E_Opt"] {
+    let $$: TysonTypeDictionary["_QIT_child_E_Opt"];
+    $$ = Axis.child;
+    return $$;
+  },
+
+  "_QtermType_E_Opt -> "(): TysonTypeDictionary["_QtermType_E_Opt"] {
+    let $$: TysonTypeDictionary["_QtermType_E_Opt"];
     $$ = null;
     return $$;
   },
 
-  "_Qaxis_E_Opt -> axis"(
-    $1: TysonTypeDictionary["axis"]
-  ): TysonTypeDictionary["_Qaxis_E_Opt"] {
-    let $$: TysonTypeDictionary["_Qaxis_E_Opt"];
+  "_QtermType_E_Opt -> termType"(
+    $1: TysonTypeDictionary["termType"]
+  ): TysonTypeDictionary["_QtermType_E_Opt"] {
+    let $$: TysonTypeDictionary["_QtermType_E_Opt"];
     $$ = $1;
     return $$;
   },
@@ -314,38 +349,32 @@ const semanticActions = {
     return $$;
   },
 
-  "axis -> IT_child"(): TysonTypeDictionary["axis"] {
-    let $$: TysonTypeDictionary["axis"];
-    $$ = Axis.child;
-    return $$;
-  },
-
-  "axis -> IT_thisShapeExpr"(): TysonTypeDictionary["axis"] {
-    let $$: TysonTypeDictionary["axis"];
+  "nonChildAxis -> IT_thisShapeExpr"(): TysonTypeDictionary["nonChildAxis"] {
+    let $$: TysonTypeDictionary["nonChildAxis"];
     $$ = Axis.thisShapeExpr;
     return $$;
   },
 
-  "axis -> IT_thisTripleExpr"(): TysonTypeDictionary["axis"] {
-    let $$: TysonTypeDictionary["axis"];
+  "nonChildAxis -> IT_thisTripleExpr"(): TysonTypeDictionary["nonChildAxis"] {
+    let $$: TysonTypeDictionary["nonChildAxis"];
     $$ = Axis.thisTripleExpr;
     return $$;
   },
 
-  "axis -> IT_self"(): TysonTypeDictionary["axis"] {
-    let $$: TysonTypeDictionary["axis"];
+  "nonChildAxis -> IT_self"(): TysonTypeDictionary["nonChildAxis"] {
+    let $$: TysonTypeDictionary["nonChildAxis"];
     $$ = Axis.self;
     return $$;
   },
 
-  "axis -> IT_parent"(): TysonTypeDictionary["axis"] {
-    let $$: TysonTypeDictionary["axis"];
+  "nonChildAxis -> IT_parent"(): TysonTypeDictionary["nonChildAxis"] {
+    let $$: TysonTypeDictionary["nonChildAxis"];
     $$ = Axis.parent;
     return $$;
   },
 
-  "axis -> IT_ancestor"(): TysonTypeDictionary["axis"] {
-    let $$: TysonTypeDictionary["axis"];
+  "nonChildAxis -> IT_ancestor"(): TysonTypeDictionary["nonChildAxis"] {
+    let $$: TysonTypeDictionary["nonChildAxis"];
     $$ = Axis.ancestor;
     return $$;
   },
@@ -353,14 +382,6 @@ const semanticActions = {
   "selector -> GT_STAR"(): TysonTypeDictionary["selector"] {
     let $$: TysonTypeDictionary["selector"];
     $$ = t_Selector.Any;
-    return $$;
-  },
-
-  "selector -> termType"(
-    $1: TysonTypeDictionary["termType"]
-  ): TysonTypeDictionary["selector"] {
-    let $$: TysonTypeDictionary["selector"];
-    $$ = $1;
     return $$;
   },
 

@@ -36,7 +36,7 @@ function pnameToUrl (pname: string, yy: any): Iri {
 export function shapeLabelShortCut(label: Iri) {
   return [
     new UnitStep(t_schemaAttr.shapes),
-    new UnitStep(t_Selector.Any, undefined, [
+    new UnitStep(t_Selector.Any, undefined, undefined, [
       new Filter(FuncName.equal, [
         new Path([new UnitStep(t_attribute.id)]),
         label
@@ -54,11 +54,12 @@ export function shapeLabelShortCut(label: Iri) {
 
 export function predicateShortCut(label: Iri) {
   return [
-    new UnitStep(t_shapeExprType.Shape, Axis.thisShapeExpr),
+    new UnitStep(t_Selector.Any, Axis.thisShapeExpr, t_shapeExprType.Shape),
     new UnitStep(t_shapeAttr.expression),
     new UnitStep(
-      t_tripleExprType.TripleConstraint,
+      t_Selector.Any,
       Axis.thisTripleExpr,
+      t_tripleExprType.TripleConstraint,
       [
         new Filter(FuncName.equal, [
           new Path([new UnitStep(t_attribute.predicate)]),
@@ -293,13 +294,19 @@ _O_QGT_AT_E_Or_QGT_DOT_E_C:
 ;
 
 step:
-    _Qaxis_E_Opt selector _Qfilter_E_Star	-> new UnitStep($2, $1 ? $1 : undefined, $3.length > 0 ? $3 : undefined)
-  | GT_LPAREN shapePath GT_RPAREN _Qfilter_E_Star	-> new PathExprStep($2, $4.length > 0 ? $4 : undefined)
+    _QIT_child_E_Opt selector _QtermType_E_Opt _Qfilter_E_Star	-> new UnitStep($2, $1 ? $1 : undefined, $3, $4.length > 0 ? $4 : undefined)
+  | nonChildAxis selector _QtermType_E_Opt _Qfilter_E_Star	-> new UnitStep($2, $1, $3, $4.length > 0 ? $4 : undefined)
+  | GT_LPAREN shapePath GT_RPAREN _QtermType_E_Opt _Qfilter_E_Star	-> new PathExprStep($2, $5.length > 0 ? $5 : undefined)
 ;
 
-_Qaxis_E_Opt:
+_QIT_child_E_Opt:
+    	-> Axis.child
+  | IT_child	-> Axis.child
+;
+
+_QtermType_E_Opt:
     	-> null
-  | axis	
+  | termType	
 ;
 
 _Qfilter_E_Star:
@@ -307,9 +314,8 @@ _Qfilter_E_Star:
   | _Qfilter_E_Star filter	-> $1.concat([$2])
 ;
 
-axis:
-    IT_child	-> Axis.child
-  | IT_thisShapeExpr	-> Axis.thisShapeExpr
+nonChildAxis:
+    IT_thisShapeExpr	-> Axis.thisShapeExpr
   | IT_thisTripleExpr	-> Axis.thisTripleExpr
   | IT_self	-> Axis.self
   | IT_parent	-> Axis.parent
@@ -318,7 +324,6 @@ axis:
 
 selector:
     GT_STAR	-> t_Selector.Any
-  | termType	
   | attribute	
 ;
 
