@@ -4,7 +4,8 @@ import {
   Union,
   Intersection,
   Path,
-  UnitStep,
+  AttributeStep,
+  AxisStep,
   PathExprStep,
   Axis,
   t_Selector,
@@ -15,6 +16,7 @@ import {
   FuncName,
   Iri,
   BNode,
+  termType,
   t_termType,
   t_shapeExprType,
   t_tripleExprType,
@@ -47,6 +49,20 @@ function makeFunction(
   return assertionP ? new Assertion(ret) : ret;
 }
 
+function makeFilters(
+  type: termType | null,
+  filters: Array<Function>
+): Array<Function> | undefined {
+  if (type)
+    filters.unshift(
+      new Filter(FuncName.equal, [
+        new Path([new AttributeStep(t_attribute.type)]),
+        type,
+      ])
+    );
+  return filters.length > 0 ? filters : undefined;
+}
+
 function pnameToUrl(pname: string, yy: any): Iri {
   const idx = pname.indexOf(":");
   const pre = pname.substr(0, idx);
@@ -58,10 +74,10 @@ function pnameToUrl(pname: string, yy: any): Iri {
 
 export function shapeLabelShortCut(label: Iri) {
   return [
-    new UnitStep(t_schemaAttr.shapes),
-    new UnitStep(t_Selector.Any, undefined, undefined, [
+    new AttributeStep(t_schemaAttr.shapes),
+    new AttributeStep(t_Selector.Any, [
       new Filter(FuncName.equal, [
-        new Path([new UnitStep(t_attribute.id)]),
+        new Path([new AttributeStep(t_attribute.id)]),
         label,
       ]),
       new Assertion(
@@ -73,18 +89,16 @@ export function shapeLabelShortCut(label: Iri) {
 
 export function predicateShortCut(label: Iri) {
   return [
-    new UnitStep(t_Selector.Any, Axis.thisShapeExpr, t_shapeExprType.Shape),
-    new UnitStep(t_shapeAttr.expression),
-    new UnitStep(
-      t_Selector.Any,
+    new AxisStep(Axis.thisShapeExpr, makeFilters(t_shapeExprType.Shape, [])),
+    new AttributeStep(t_shapeAttr.expression),
+    new AxisStep(
       Axis.thisTripleExpr,
-      t_tripleExprType.TripleConstraint,
-      [
+      makeFilters(t_tripleExprType.TripleConstraint, [
         new Filter(FuncName.equal, [
-          new Path([new UnitStep(t_attribute.predicate)]),
+          new Path([new AttributeStep(t_attribute.predicate)]),
           label,
         ]),
-      ]
+      ])
     ),
   ];
 }
@@ -273,38 +287,32 @@ const semanticActions = {
   },
 
   "step -> _QIT_child_E_Opt selector _QtermType_E_Opt _Qfilter_E_Star"(
-    $1: TysonTypeDictionary["_QIT_child_E_Opt"],
     $2: TysonTypeDictionary["selector"],
     $3: TysonTypeDictionary["_QtermType_E_Opt"],
     $4: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
     let $$: TysonTypeDictionary["step"];
-    $$ = new UnitStep(
-      $2,
-      $1 ? $1 : undefined,
-      $3,
-      $4.length > 0 ? $4 : undefined
-    );
+    $$ = new AttributeStep($2, makeFilters($3, $4));
     return $$;
   },
 
-  "step -> nonChildAxis selector _QtermType_E_Opt _Qfilter_E_Star"(
+  "step -> nonChildAxis _QtermType_E_Opt _Qfilter_E_Star"(
     $1: TysonTypeDictionary["nonChildAxis"],
-    $2: TysonTypeDictionary["selector"],
-    $3: TysonTypeDictionary["_QtermType_E_Opt"],
-    $4: TysonTypeDictionary["_Qfilter_E_Star"]
+    $2: TysonTypeDictionary["_QtermType_E_Opt"],
+    $3: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
     let $$: TysonTypeDictionary["step"];
-    $$ = new UnitStep($2, $1, $3, $4.length > 0 ? $4 : undefined);
+    $$ = new AxisStep($1, makeFilters($2, $3));
     return $$;
   },
 
   "step -> GT_LPAREN shapePath GT_RPAREN _QtermType_E_Opt _Qfilter_E_Star"(
     $2: TysonTypeDictionary["shapePath"],
+    $4: TysonTypeDictionary["_QtermType_E_Opt"],
     $5: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
     let $$: TysonTypeDictionary["step"];
-    $$ = new PathExprStep($2, $5.length > 0 ? $5 : undefined);
+    $$ = new PathExprStep($2, makeFilters($4, $5));
     return $$;
   },
 

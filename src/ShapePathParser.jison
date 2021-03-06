@@ -3,8 +3,8 @@
  */
 
 %{
-import {Union, Intersection, Path, UnitStep, PathExprStep, Axis, t_Selector,
-        Assertion, Filter, Function, FuncArg, FuncName, Iri, BNode,
+import {Union, Intersection, Path, AttributeStep, AxisStep, PathExprStep, Axis, t_Selector,
+        Assertion, Filter, Function, FuncArg, FuncName, Iri, BNode, termType,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
         t_numericFacetAttr, t_valueSetValueAttr, t_shapeAttr, t_tripleExprAttr,
@@ -23,6 +23,18 @@ function makeFunction (assertionP: boolean, firstArg: FuncArg, comp: comparison 
     : ret
 }
 
+
+function makeFilters(type: termType | null, filters: Array<Function>): Array<Function> | undefined {
+  if (type)
+    filters.unshift(
+      new Filter(FuncName.equal, [
+        new Path([new AttributeStep(t_attribute.type)]),
+        type
+      ]),
+    )
+  return filters.length > 0 ? filters : undefined
+}
+
 function pnameToUrl (pname: string, yy: any): Iri {
   const idx = pname.indexOf(':')
   const pre = pname.substr(0, idx)
@@ -35,10 +47,10 @@ function pnameToUrl (pname: string, yy: any): Iri {
 
 export function shapeLabelShortCut(label: Iri) {
   return [
-    new UnitStep(t_schemaAttr.shapes),
-    new UnitStep(t_Selector.Any, undefined, undefined, [
+    new AttributeStep(t_schemaAttr.shapes),
+    new AttributeStep(t_Selector.Any, [
       new Filter(FuncName.equal, [
-        new Path([new UnitStep(t_attribute.id)]),
+        new Path([new AttributeStep(t_attribute.id)]),
         label
       ]),
       new Assertion(
@@ -54,18 +66,19 @@ export function shapeLabelShortCut(label: Iri) {
 
 export function predicateShortCut(label: Iri) {
   return [
-    new UnitStep(t_Selector.Any, Axis.thisShapeExpr, t_shapeExprType.Shape),
-    new UnitStep(t_shapeAttr.expression),
-    new UnitStep(
-      t_Selector.Any,
+    new AxisStep(Axis.thisShapeExpr, makeFilters(t_shapeExprType.Shape, [])),
+    new AttributeStep(t_shapeAttr.expression),
+    new AxisStep(
       Axis.thisTripleExpr,
-      t_tripleExprType.TripleConstraint,
-      [
-        new Filter(FuncName.equal, [
-          new Path([new UnitStep(t_attribute.predicate)]),
-          label
-        ])
-      ]
+      makeFilters(
+        t_tripleExprType.TripleConstraint,
+        [
+          new Filter(FuncName.equal, [
+            new Path([new AttributeStep(t_attribute.predicate)]),
+            label
+          ])
+        ]
+      )
     )
   ];
 }
@@ -294,9 +307,9 @@ _O_QGT_AT_E_Or_QGT_DOT_E_C:
 ;
 
 step:
-    _QIT_child_E_Opt selector _QtermType_E_Opt _Qfilter_E_Star	-> new UnitStep($2, $1 ? $1 : undefined, $3, $4.length > 0 ? $4 : undefined)
-  | nonChildAxis selector _QtermType_E_Opt _Qfilter_E_Star	-> new UnitStep($2, $1, $3, $4.length > 0 ? $4 : undefined)
-  | GT_LPAREN shapePath GT_RPAREN _QtermType_E_Opt _Qfilter_E_Star	-> new PathExprStep($2, $5.length > 0 ? $5 : undefined)
+    _QIT_child_E_Opt selector _QtermType_E_Opt _Qfilter_E_Star	-> new AttributeStep($2, makeFilters($3, $4))
+  | nonChildAxis _QtermType_E_Opt _Qfilter_E_Star	-> new AxisStep($1, makeFilters($2, $3))
+  | GT_LPAREN shapePath GT_RPAREN _QtermType_E_Opt _Qfilter_E_Star	-> new PathExprStep($2, makeFilters($4, $5))
 ;
 
 _QIT_child_E_Opt:

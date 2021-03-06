@@ -140,32 +140,50 @@ export abstract class Step extends Serializable {
   abstract evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet
 }
 
-export class UnitStep {
-  t = 'UnitStep'
+export class AttributeStep extends Step {
+  t = 'AttributeStep'
   constructor(
     public selector: Selector,
-    public axis?: Axis,
-    public termType?: termType,
     public filters?: Function[]
-  ) { }
+  ) { super() }
+  evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet {
+    const selectedNodes = nodes.reduce((ret, node) => {
+      let match: NodeSet = []
+      if (node instanceof Array && this.selector === t_Selector.Any) {
+        match = node
+      } else if (node instanceof Object) {
+        if (this.selector === t_Selector.Any) {
+          match = Object.values(node)
+        } else {
+          const key = this.selector.toString()
+          if (key in node)
+            match = [(<any>node)[key]]
+        }
+      }
+      return ret.concat(match)
+    }, [] as NodeSet)
+
+    return (this.filters || []).reduce( // For each filter,
+      (filteredNodes, f) =>
+        filteredNodes.filter( // trim NodeSet to nodes passing filter.
+          (node, idx) => // (Aggregates need access to current node list.)
+            ebv(f.evalFunction(node, filteredNodes, idx, ctx)) === Pass
+        )
+      , selectedNodes // Start filter walk from selected nodes.
+    )
+  }
+}
+
+export class AxisStep extends Step {
+  t = 'AxisStep'
+  constructor(
+    public axis: Axis,
+    public filters?: Function[]
+  ) { super() }
   evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet {
     const selectedNodes = nodes.reduce((ret, node) => {
       let match: NodeSet = []
       switch (this.axis) {
-        case undefined:
-        case Axis.child:
-          if (node instanceof Array && this.selector === t_Selector.Any) {
-            match = node
-          } else if (node instanceof Object) {
-            if (this.selector === t_Selector.Any) {
-              match = Object.values(node)
-            } else {
-              const key = this.selector.toString()
-              if (key in node)
-                match = [(<any>node)[key]]
-            }
-          }
-          break
         case Axis.thisShapeExpr:
           match = walkShapeExpr(node)
           break
@@ -220,12 +238,12 @@ export class UnitStep {
   }
 }
 
-export class PathExprStep {
+export class PathExprStep extends Step {
   t = 'PathExprStep'
   constructor(
     public pathExpr: PathExpr,
     public filters?: Function[]
-  ) { }
+  ) { super() }
   evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet {
     throw Error('PatheExprStep.evalStep not yet implemented')
   }
@@ -255,7 +273,7 @@ export enum FuncName {
   greaterThan = 'greaterThan',
 }
 
-export type FuncArg = Function | PathExpr | Iri | number
+export type FuncArg = Function | PathExpr | termType | Iri | number
 
 export class Filter extends Function {
   t = 'Filter'
@@ -299,7 +317,7 @@ export class Filter extends Function {
 
     function evalArgs(args: FuncArg[], node: SchemaNode, allNodes: NodeSet) {
       return args.map((arg, idx) => {
-        if (arg instanceof Iri || typeof arg === 'number')
+        if (typeof arg === 'number' || typeof arg === 'string' || arg instanceof Iri)
           return arg
         if (arg instanceof Function)
           return arg.evalFunction(node, allNodes, idx, ctx)[0]
