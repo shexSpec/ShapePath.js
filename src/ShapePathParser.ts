@@ -3,7 +3,7 @@
  * Returns a Parser implementing JisonParserApi and a Lexer implementing JisonLexerApi.
  */
 
-import {Union, Intersection, Path, ChildStep, AxisStep, PathExprStep, Axis,
+import {Sequence, Union, Intersection, Path, ChildStep, AxisStep, PathExprStep, Axis,
         Assertion, Filter, Function, FuncArg, FuncName, Iri, BNode, termType,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
@@ -87,7 +87,7 @@ export function predicateShortCut(label: Iri) {
 import { JisonParser, JisonParserApi, StateType, SymbolsType, TerminalsType, ProductionsType, o } from '@ts-jison/parser';
 import { JisonLexer, JisonLexerApi } from '@ts-jison/lexer';
 
-const $V0=[33,35,37,38,39,40,41,42,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,98,99,100,101,102,103,104,107,108,110,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,136,137,138,139,140],$V1=[2,17],$V2=[1,10],$V3=[1,11],$V4=[1,12],$V5=[1,13],$V6=[5,9,34,46,61,62,63],$V7=[5,9,13,34,46,61,62,63],$V8=[5,9,13,21,22,25,26,34,46,61,62,63],$V9=[42,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,98,99,100,101,102,103,104,107,108,110,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,136,137,138,139,140],$Va=[2,28],$Vb=[1,21],$Vc=[1,22],$Vd=[1,23],$Ve=[1,24],$Vf=[1,25],$Vg=[1,26],$Vh=[1,27],$Vi=[1,29],$Vj=[1,31],$Vk=[1,32],$Vl=[141,143,144],$Vm=[1,45],$Vn=[1,46],$Vo=[1,47],$Vp=[1,50],$Vq=[1,51],$Vr=[1,52],$Vs=[1,53],$Vt=[1,54],$Vu=[1,55],$Vv=[1,56],$Vw=[1,57],$Vx=[1,58],$Vy=[1,59],$Vz=[1,60],$VA=[1,61],$VB=[1,62],$VC=[1,63],$VD=[1,64],$VE=[1,65],$VF=[1,66],$VG=[5,9,13,21,22,25,26,34,44,46,61,62,63],$VH=[2,32],$VI=[5,9,13,21,22,25,26,34,44,46,61,62,63,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86],$VJ=[2,30],$VK=[1,132],$VL=[21,22,25,26,33,35,37,38,39,40,41,42,53,54,55,56,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,98,99,100,101,102,103,104,107,108,110,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,136,137,138,139,140],$VM=[2,47],$VN=[1,151],$VO=[1,152],$VP=[1,153],$VQ=[58,141,143,144],$VR=[46,61,62,63];
+const $V0=[37,39,41,42,43,44,45,46,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,102,103,104,105,106,107,108,111,112,114,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,140,141,142,143,144],$V1=[2,21],$V2=[1,11],$V3=[1,12],$V4=[1,13],$V5=[1,14],$V6=[5,9,38,50,65,66,67],$V7=[5,9,13,38,50,65,66,67],$V8=[5,9,13,17,38,50,65,66,67],$V9=[5,9,13,17,25,26,29,30,38,50,65,66,67],$Va=[46,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,102,103,104,105,106,107,108,111,112,114,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,140,141,142,143,144],$Vb=[2,32],$Vc=[1,23],$Vd=[1,24],$Ve=[1,25],$Vf=[1,26],$Vg=[1,27],$Vh=[1,28],$Vi=[1,29],$Vj=[1,31],$Vk=[1,33],$Vl=[1,34],$Vm=[145,147,148],$Vn=[1,49],$Vo=[1,50],$Vp=[1,51],$Vq=[1,54],$Vr=[1,55],$Vs=[1,56],$Vt=[1,57],$Vu=[1,58],$Vv=[1,59],$Vw=[1,60],$Vx=[1,61],$Vy=[1,62],$Vz=[1,63],$VA=[1,64],$VB=[1,65],$VC=[1,66],$VD=[1,67],$VE=[1,68],$VF=[1,69],$VG=[1,70],$VH=[5,9,13,17,25,26,29,30,38,48,50,65,66,67],$VI=[2,36],$VJ=[5,9,13,17,25,26,29,30,38,48,50,65,66,67,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90],$VK=[2,34],$VL=[1,137],$VM=[25,26,29,30,37,39,41,42,43,44,45,46,57,58,59,60,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,102,103,104,105,106,107,108,111,112,114,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,140,141,142,143,144],$VN=[2,51],$VO=[1,156],$VP=[1,157],$VQ=[1,158],$VR=[62,145,147,148],$VS=[50,65,66,67];
 
 export class ShapePathParser extends JisonParser implements JisonParserApi {
   public Parser?: ShapePathParser;
@@ -97,11 +97,11 @@ export class ShapePathParser extends JisonParser implements JisonParserApi {
     super(yy, lexer);
   }
 
-  symbols_: SymbolsType = {"error":2,"top":3,"shapePath":4,"EOF":5,"unionStep":6,"Q_O_QIT_union_E_S_QunionStep_E_C_E_Star":7,"O_QIT_union_E_S_QunionStep_E_C":8,"IT_UNION":9,"intersectionStep":10,"Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star":11,"O_QIT_intersection_E_S_QintersectionStep_E_C":12,"IT_INTERSECTION":13,"startStep":14,"QnextStep_E_Star":15,"nextStep":16,"Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt":17,"step":18,"shortcut":19,"O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C":20,"GT_DIVIDE":21,"GT_DIVIDEDIVIDE":22,"O_QGT_AT_E_Or_QGT_DOT_E_C":23,"iri":24,"GT_AT":25,"GT_DOT":26,"QIT_child_E_Opt":27,"termType":28,"Qfilter_E_Star":29,"attributeOrAny":30,"QtermType_E_Opt":31,"nonChildAxis":32,"GT_LPAREN":33,"GT_RPAREN":34,"IT_child":35,"filter":36,"IT_thisShapeExpr":37,"IT_thisTripleExpr":38,"IT_self":39,"IT_parent":40,"IT_ancestor":41,"GT_STAR":42,"attribute":43,"GT_LBRACKET":44,"filterExpr":45,"GT_RBRACKET":46,"QIT_ASSERT_E_Opt":47,"Qcomparison_E_Opt":48,"function":49,"numericExpr":50,"IT_ASSERT":51,"comparison":52,"IT_index":53,"IT_count":54,"IT_foo1":55,"IT_foo2":56,"fooArg":57,"INTEGER":58,"comparitor":59,"rvalue":60,"GT_EQUAL":61,"GT_LT":62,"GT_GT":63,"shapeExprType":64,"tripleExprType":65,"valueType":66,"IT_Schema":67,"IT_SemAct":68,"IT_Annotation":69,"IT_ShapeAnd":70,"IT_ShapeOr":71,"IT_ShapeNot":72,"IT_NodeConstraint":73,"IT_Shape":74,"IT_ShapeExternal":75,"IT_EachOf":76,"IT_OneOf":77,"IT_TripleConstraint":78,"IT_IriStem":79,"IT_IriStemRange":80,"IT_LiteralStem":81,"IT_LiteralStemRange":82,"IT_Language":83,"IT_LanguageStem":84,"IT_LanguageStemRange":85,"IT_Wildcard":86,"IT_type":87,"IT_id":88,"IT_semActs":89,"IT_annotations":90,"IT_predicate":91,"schemaAttr":92,"shapeExprAttr":93,"tripleExprAttr":94,"valueSetValueAttr":95,"semActAttr":96,"annotationAttr":97,"GT_atContext":98,"IT_startActs":99,"IT_start":100,"IT_imports":101,"IT_shapes":102,"IT_shapeExprs":103,"IT_shapeExpr":104,"nodeConstraintAttr":105,"shapeAttr":106,"IT_nodeKind":107,"IT_datatype":108,"xsFacetAttr":109,"IT_values":110,"stringFacetAttr":111,"numericFacetAttr":112,"IT_length":113,"IT_minlength":114,"IT_maxlength":115,"IT_pattern":116,"IT_flags":117,"IT_mininclusive":118,"IT_minexclusive":119,"IT_maxinclusive":120,"IT_maxexclusive":121,"IT_totaldigits":122,"IT_fractiondigits":123,"IT_value":124,"IT_language":125,"IT_stem":126,"IT_exclusions":127,"IT_languageTag":128,"IT_closed":129,"IT_extra":130,"IT_expression":131,"IT_expressions":132,"IT_min":133,"IT_max":134,"tripleConstraintAttr":135,"IT_inverse":136,"IT_valueExpr":137,"IT_name":138,"IT_code":139,"IT_object":140,"IRIREF":141,"prefixedName":142,"PNAME_LN":143,"PNAME_NS":144,"$accept":0,"$end":1};
-  terminals_: TerminalsType = {2:"error",5:"EOF",9:"IT_UNION",13:"IT_INTERSECTION",21:"GT_DIVIDE",22:"GT_DIVIDEDIVIDE",25:"GT_AT",26:"GT_DOT",33:"GT_LPAREN",34:"GT_RPAREN",35:"IT_child",37:"IT_thisShapeExpr",38:"IT_thisTripleExpr",39:"IT_self",40:"IT_parent",41:"IT_ancestor",42:"GT_STAR",44:"GT_LBRACKET",46:"GT_RBRACKET",51:"IT_ASSERT",53:"IT_index",54:"IT_count",55:"IT_foo1",56:"IT_foo2",58:"INTEGER",61:"GT_EQUAL",62:"GT_LT",63:"GT_GT",67:"IT_Schema",68:"IT_SemAct",69:"IT_Annotation",70:"IT_ShapeAnd",71:"IT_ShapeOr",72:"IT_ShapeNot",73:"IT_NodeConstraint",74:"IT_Shape",75:"IT_ShapeExternal",76:"IT_EachOf",77:"IT_OneOf",78:"IT_TripleConstraint",79:"IT_IriStem",80:"IT_IriStemRange",81:"IT_LiteralStem",82:"IT_LiteralStemRange",83:"IT_Language",84:"IT_LanguageStem",85:"IT_LanguageStemRange",86:"IT_Wildcard",87:"IT_type",88:"IT_id",89:"IT_semActs",90:"IT_annotations",91:"IT_predicate",98:"GT_atContext",99:"IT_startActs",100:"IT_start",101:"IT_imports",102:"IT_shapes",103:"IT_shapeExprs",104:"IT_shapeExpr",107:"IT_nodeKind",108:"IT_datatype",110:"IT_values",113:"IT_length",114:"IT_minlength",115:"IT_maxlength",116:"IT_pattern",117:"IT_flags",118:"IT_mininclusive",119:"IT_minexclusive",120:"IT_maxinclusive",121:"IT_maxexclusive",122:"IT_totaldigits",123:"IT_fractiondigits",124:"IT_value",125:"IT_language",126:"IT_stem",127:"IT_exclusions",128:"IT_languageTag",129:"IT_closed",130:"IT_extra",131:"IT_expression",132:"IT_expressions",133:"IT_min",134:"IT_max",136:"IT_inverse",137:"IT_valueExpr",138:"IT_name",139:"IT_code",140:"IT_object",141:"IRIREF",143:"PNAME_LN",144:"PNAME_NS"};
-  productions_: ProductionsType = [0,[3,2],[4,2],[8,2],[7,0],[7,2],[6,2],[12,2],[11,0],[11,2],[10,2],[15,0],[15,2],[14,2],[14,1],[20,1],[20,1],[17,0],[17,1],[16,2],[16,1],[19,2],[23,1],[23,1],[18,3],[18,4],[18,3],[18,5],[27,0],[27,1],[29,0],[29,2],[31,0],[31,1],[32,1],[32,1],[32,1],[32,1],[32,1],[30,1],[30,1],[36,3],[45,3],[45,3],[45,1],[47,0],[47,1],[48,0],[48,1],[49,3],[49,3],[49,4],[49,4],[57,2],[57,1],[57,1],[52,2],[59,1],[59,1],[59,1],[60,1],[60,1],[50,1],[28,1],[28,1],[28,1],[28,1],[28,1],[28,1],[64,1],[64,1],[64,1],[64,1],[64,1],[64,1],[65,1],[65,1],[65,1],[66,1],[66,1],[66,1],[66,1],[66,1],[66,1],[66,1],[66,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[43,1],[92,1],[92,1],[92,1],[92,1],[92,1],[93,1],[93,1],[93,1],[93,1],[105,1],[105,1],[105,1],[105,1],[109,1],[109,1],[111,1],[111,1],[111,1],[111,1],[111,1],[112,1],[112,1],[112,1],[112,1],[112,1],[112,1],[95,1],[95,1],[95,1],[95,1],[95,1],[106,1],[106,1],[106,1],[94,1],[94,1],[94,1],[94,1],[135,1],[135,1],[96,1],[96,1],[97,1],[24,1],[24,1],[142,1],[142,1]];
-  table: Array<StateType> = [o($V0,$V1,{3:1,4:2,6:3,10:4,14:5,17:6,19:7,20:8,23:9,21:$V2,22:$V3,25:$V4,26:$V5}),{1:[3]},{5:[1,14]},o($V6,[2,4],{7:15}),o($V7,[2,8],{11:16}),o($V8,[2,11],{15:17}),o($V9,$Va,{18:18,27:19,32:20,33:$Vb,35:$Vc,37:$Vd,38:$Ve,39:$Vf,40:$Vg,41:$Vh}),o($V8,[2,14]),o($V0,[2,18]),{24:28,141:$Vi,142:30,143:$Vj,144:$Vk},o($V0,[2,15]),o($V0,[2,16]),o($Vl,[2,22]),o($Vl,[2,23]),{1:[2,1]},o([5,34,46,61,62,63],[2,2],{8:33,9:[1,34]}),o($V6,[2,6],{12:35,13:[1,36]}),o($V7,[2,10],{23:9,16:37,20:38,19:39,21:$V2,22:$V3,25:$V4,26:$V5}),o($V8,[2,13]),{28:40,30:41,42:[1,48],43:49,64:42,65:43,66:44,67:$Vm,68:$Vn,69:$Vo,70:$Vp,71:$Vq,72:$Vr,73:$Vs,74:$Vt,75:$Vu,76:$Vv,77:$Vw,78:$Vx,79:$Vy,80:$Vz,81:$VA,82:$VB,83:$VC,84:$VD,85:$VE,86:$VF,87:[1,67],88:[1,68],89:[1,69],90:[1,70],91:[1,71],92:72,93:73,94:74,95:75,96:76,97:77,98:[1,78],99:[1,79],100:[1,80],101:[1,81],102:[1,82],103:[1,83],104:[1,84],105:85,106:86,107:[1,99],108:[1,100],109:101,110:[1,102],111:108,112:109,113:[1,110],114:[1,111],115:[1,112],116:[1,113],117:[1,114],118:[1,115],119:[1,116],120:[1,117],121:[1,118],122:[1,119],123:[1,120],124:[1,91],125:[1,92],126:[1,93],127:[1,94],128:[1,95],129:[1,103],130:[1,104],131:[1,105],132:[1,87],133:[1,88],134:[1,89],135:90,136:[1,106],137:[1,107],138:[1,96],139:[1,97],140:[1,98]},o($VG,$VH,{64:42,65:43,66:44,31:121,28:122,67:$Vm,68:$Vn,69:$Vo,70:$Vp,71:$Vq,72:$Vr,73:$Vs,74:$Vt,75:$Vu,76:$Vv,77:$Vw,78:$Vx,79:$Vy,80:$Vz,81:$VA,82:$VB,83:$VC,84:$VD,85:$VE,86:$VF}),o($V0,$V1,{6:3,10:4,14:5,17:6,19:7,20:8,23:9,4:123,21:$V2,22:$V3,25:$V4,26:$V5}),o($V9,[2,29]),o($VI,[2,34]),o($VI,[2,35]),o($VI,[2,36]),o($VI,[2,37]),o($VI,[2,38]),o($V8,[2,21]),o($V8,[2,140]),o($V8,[2,141]),o($V8,[2,142]),o($V8,[2,143]),o($V6,[2,5]),o($V0,$V1,{10:4,14:5,17:6,19:7,20:8,23:9,6:124,21:$V2,22:$V3,25:$V4,26:$V5}),o($V7,[2,9]),o($V0,$V1,{14:5,17:6,19:7,20:8,23:9,10:125,21:$V2,22:$V3,25:$V4,26:$V5}),o($V8,[2,12]),o($V9,$Va,{27:19,32:20,18:126,33:$Vb,35:$Vc,37:$Vd,38:$Ve,39:$Vf,40:$Vg,41:$Vh}),o($V8,[2,20]),o($VG,$VJ,{29:127}),o($VG,$VH,{64:42,65:43,66:44,28:122,31:128,67:$Vm,68:$Vn,69:$Vo,70:$Vp,71:$Vq,72:$Vr,73:$Vs,74:$Vt,75:$Vu,76:$Vv,77:$Vw,78:$Vx,79:$Vy,80:$Vz,81:$VA,82:$VB,83:$VC,84:$VD,85:$VE,86:$VF}),o($VG,[2,63]),o($VG,[2,64]),o($VG,[2,65]),o($VG,[2,66]),o($VG,[2,67]),o($VG,[2,68]),o($VI,[2,39]),o($VI,[2,40]),o($VG,[2,69]),o($VG,[2,70]),o($VG,[2,71]),o($VG,[2,72]),o($VG,[2,73]),o($VG,[2,74]),o($VG,[2,75]),o($VG,[2,76]),o($VG,[2,77]),o($VG,[2,78]),o($VG,[2,79]),o($VG,[2,80]),o($VG,[2,81]),o($VG,[2,82]),o($VG,[2,83]),o($VG,[2,84]),o($VG,[2,85]),o($VI,[2,86]),o($VI,[2,87]),o($VI,[2,88]),o($VI,[2,89]),o($VI,[2,90]),o($VI,[2,91]),o($VI,[2,92]),o($VI,[2,93]),o($VI,[2,94]),o($VI,[2,95]),o($VI,[2,96]),o($VI,[2,97]),o($VI,[2,98]),o($VI,[2,99]),o($VI,[2,100]),o($VI,[2,101]),o($VI,[2,102]),o($VI,[2,103]),o($VI,[2,104]),o($VI,[2,105]),o($VI,[2,131]),o($VI,[2,132]),o($VI,[2,133]),o($VI,[2,134]),o($VI,[2,123]),o($VI,[2,124]),o($VI,[2,125]),o($VI,[2,126]),o($VI,[2,127]),o($VI,[2,137]),o($VI,[2,138]),o($VI,[2,139]),o($VI,[2,106]),o($VI,[2,107]),o($VI,[2,108]),o($VI,[2,109]),o($VI,[2,128]),o($VI,[2,129]),o($VI,[2,130]),o($VI,[2,135]),o($VI,[2,136]),o($VI,[2,110]),o($VI,[2,111]),o($VI,[2,112]),o($VI,[2,113]),o($VI,[2,114]),o($VI,[2,115]),o($VI,[2,116]),o($VI,[2,117]),o($VI,[2,118]),o($VI,[2,119]),o($VI,[2,120]),o($VI,[2,121]),o($VI,[2,122]),o($VG,$VJ,{29:129}),o($VG,[2,33]),{34:[1,130]},o($V6,[2,3]),o($V7,[2,7]),o($V8,[2,19]),o($V8,[2,24],{36:131,44:$VK}),o($VG,$VJ,{29:133}),o($V8,[2,26],{36:131,44:$VK}),o($VG,$VH,{64:42,65:43,66:44,28:122,31:134,67:$Vm,68:$Vn,69:$Vo,70:$Vp,71:$Vq,72:$Vr,73:$Vs,74:$Vt,75:$Vu,76:$Vv,77:$Vw,78:$Vx,79:$Vy,80:$Vz,81:$VA,82:$VB,83:$VC,84:$VD,85:$VE,86:$VF}),o($VG,[2,31]),o($VL,[2,45],{45:135,47:136,50:137,51:[1,138],58:[1,139]}),o($V8,[2,25],{36:131,44:$VK}),o($VG,$VJ,{29:140}),{46:[1,141]},o($V0,$V1,{6:3,10:4,14:5,17:6,19:7,20:8,23:9,4:142,49:143,21:$V2,22:$V3,25:$V4,26:$V5,53:[1,144],54:[1,145],55:[1,146],56:[1,147]}),{46:[2,44]},o($VL,[2,46]),{46:[2,62]},o($V8,[2,27],{36:131,44:$VK}),o($VG,[2,41]),{46:$VM,48:148,52:149,59:150,61:$VN,62:$VO,63:$VP},{46:$VM,48:154,52:149,59:150,61:$VN,62:$VO,63:$VP},{33:[1,155]},{33:[1,156]},{33:[1,157]},{33:[1,158]},{46:[2,42]},{46:[2,48]},{24:161,58:[1,160],60:159,141:$Vi,142:30,143:$Vj,144:$Vk},o($VQ,[2,57]),o($VQ,[2,58]),o($VQ,[2,59]),{46:[2,43]},{34:[1,162]},{34:[1,163]},{24:164,141:$Vi,142:30,143:$Vj,144:$Vk},{24:167,57:165,58:[1,166],141:$Vi,142:30,143:$Vj,144:$Vk},{46:[2,56]},{46:[2,60]},{46:[2,61]},o($VR,[2,49]),o($VR,[2,50]),{34:[1,168]},{34:[1,169]},{24:170,34:[2,54],141:$Vi,142:30,143:$Vj,144:$Vk},{34:[2,55]},o($VR,[2,51]),o($VR,[2,52]),{34:[2,53]}];
-  defaultActions: {[key:number]: any} = {14:[2,1],137:[2,44],139:[2,62],148:[2,42],149:[2,48],154:[2,43],159:[2,56],160:[2,60],161:[2,61],167:[2,55],170:[2,53]};
+  symbols_: SymbolsType = {"error":2,"top":3,"shapePath":4,"EOF":5,"sequenceStep":6,"Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star":7,"O_QGT_COMMA_E_S_QsequenceStep_E_C":8,"GT_COMMA":9,"unionStep":10,"Q_O_QIT_union_E_S_QunionStep_E_C_E_Star":11,"O_QIT_union_E_S_QunionStep_E_C":12,"IT_UNION":13,"intersectionStep":14,"Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star":15,"O_QIT_intersection_E_S_QintersectionStep_E_C":16,"IT_INTERSECTION":17,"startStep":18,"QnextStep_E_Star":19,"nextStep":20,"Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt":21,"step":22,"shortcut":23,"O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C":24,"GT_DIVIDE":25,"GT_DIVIDEDIVIDE":26,"O_QGT_AT_E_Or_QGT_DOT_E_C":27,"iri":28,"GT_AT":29,"GT_DOT":30,"QIT_child_E_Opt":31,"termType":32,"Qfilter_E_Star":33,"attributeOrAny":34,"QtermType_E_Opt":35,"nonChildAxis":36,"GT_LPAREN":37,"GT_RPAREN":38,"IT_child":39,"filter":40,"IT_thisShapeExpr":41,"IT_thisTripleExpr":42,"IT_self":43,"IT_parent":44,"IT_ancestor":45,"GT_STAR":46,"attribute":47,"GT_LBRACKET":48,"filterExpr":49,"GT_RBRACKET":50,"QIT_ASSERT_E_Opt":51,"Qcomparison_E_Opt":52,"function":53,"numericExpr":54,"IT_ASSERT":55,"comparison":56,"IT_index":57,"IT_count":58,"IT_foo1":59,"IT_foo2":60,"fooArg":61,"INTEGER":62,"comparitor":63,"rvalue":64,"GT_EQUAL":65,"GT_LT":66,"GT_GT":67,"shapeExprType":68,"tripleExprType":69,"valueType":70,"IT_Schema":71,"IT_SemAct":72,"IT_Annotation":73,"IT_ShapeAnd":74,"IT_ShapeOr":75,"IT_ShapeNot":76,"IT_NodeConstraint":77,"IT_Shape":78,"IT_ShapeExternal":79,"IT_EachOf":80,"IT_OneOf":81,"IT_TripleConstraint":82,"IT_IriStem":83,"IT_IriStemRange":84,"IT_LiteralStem":85,"IT_LiteralStemRange":86,"IT_Language":87,"IT_LanguageStem":88,"IT_LanguageStemRange":89,"IT_Wildcard":90,"IT_type":91,"IT_id":92,"IT_semActs":93,"IT_annotations":94,"IT_predicate":95,"schemaAttr":96,"shapeExprAttr":97,"tripleExprAttr":98,"valueSetValueAttr":99,"semActAttr":100,"annotationAttr":101,"GT_atContext":102,"IT_startActs":103,"IT_start":104,"IT_imports":105,"IT_shapes":106,"IT_shapeExprs":107,"IT_shapeExpr":108,"nodeConstraintAttr":109,"shapeAttr":110,"IT_nodeKind":111,"IT_datatype":112,"xsFacetAttr":113,"IT_values":114,"stringFacetAttr":115,"numericFacetAttr":116,"IT_length":117,"IT_minlength":118,"IT_maxlength":119,"IT_pattern":120,"IT_flags":121,"IT_mininclusive":122,"IT_minexclusive":123,"IT_maxinclusive":124,"IT_maxexclusive":125,"IT_totaldigits":126,"IT_fractiondigits":127,"IT_value":128,"IT_language":129,"IT_stem":130,"IT_exclusions":131,"IT_languageTag":132,"IT_closed":133,"IT_extra":134,"IT_expression":135,"IT_expressions":136,"IT_min":137,"IT_max":138,"tripleConstraintAttr":139,"IT_inverse":140,"IT_valueExpr":141,"IT_name":142,"IT_code":143,"IT_object":144,"IRIREF":145,"prefixedName":146,"PNAME_LN":147,"PNAME_NS":148,"$accept":0,"$end":1};
+  terminals_: TerminalsType = {2:"error",5:"EOF",9:"GT_COMMA",13:"IT_UNION",17:"IT_INTERSECTION",25:"GT_DIVIDE",26:"GT_DIVIDEDIVIDE",29:"GT_AT",30:"GT_DOT",37:"GT_LPAREN",38:"GT_RPAREN",39:"IT_child",41:"IT_thisShapeExpr",42:"IT_thisTripleExpr",43:"IT_self",44:"IT_parent",45:"IT_ancestor",46:"GT_STAR",48:"GT_LBRACKET",50:"GT_RBRACKET",55:"IT_ASSERT",57:"IT_index",58:"IT_count",59:"IT_foo1",60:"IT_foo2",62:"INTEGER",65:"GT_EQUAL",66:"GT_LT",67:"GT_GT",71:"IT_Schema",72:"IT_SemAct",73:"IT_Annotation",74:"IT_ShapeAnd",75:"IT_ShapeOr",76:"IT_ShapeNot",77:"IT_NodeConstraint",78:"IT_Shape",79:"IT_ShapeExternal",80:"IT_EachOf",81:"IT_OneOf",82:"IT_TripleConstraint",83:"IT_IriStem",84:"IT_IriStemRange",85:"IT_LiteralStem",86:"IT_LiteralStemRange",87:"IT_Language",88:"IT_LanguageStem",89:"IT_LanguageStemRange",90:"IT_Wildcard",91:"IT_type",92:"IT_id",93:"IT_semActs",94:"IT_annotations",95:"IT_predicate",102:"GT_atContext",103:"IT_startActs",104:"IT_start",105:"IT_imports",106:"IT_shapes",107:"IT_shapeExprs",108:"IT_shapeExpr",111:"IT_nodeKind",112:"IT_datatype",114:"IT_values",117:"IT_length",118:"IT_minlength",119:"IT_maxlength",120:"IT_pattern",121:"IT_flags",122:"IT_mininclusive",123:"IT_minexclusive",124:"IT_maxinclusive",125:"IT_maxexclusive",126:"IT_totaldigits",127:"IT_fractiondigits",128:"IT_value",129:"IT_language",130:"IT_stem",131:"IT_exclusions",132:"IT_languageTag",133:"IT_closed",134:"IT_extra",135:"IT_expression",136:"IT_expressions",137:"IT_min",138:"IT_max",140:"IT_inverse",141:"IT_valueExpr",142:"IT_name",143:"IT_code",144:"IT_object",145:"IRIREF",147:"PNAME_LN",148:"PNAME_NS"};
+  productions_: ProductionsType = [0,[3,2],[4,2],[8,2],[7,0],[7,2],[6,2],[12,2],[11,0],[11,2],[10,2],[16,2],[15,0],[15,2],[14,2],[19,0],[19,2],[18,2],[18,1],[24,1],[24,1],[21,0],[21,1],[20,2],[20,1],[23,2],[27,1],[27,1],[22,3],[22,4],[22,3],[22,5],[31,0],[31,1],[33,0],[33,2],[35,0],[35,1],[36,1],[36,1],[36,1],[36,1],[36,1],[34,1],[34,1],[40,3],[49,3],[49,3],[49,1],[51,0],[51,1],[52,0],[52,1],[53,3],[53,3],[53,4],[53,4],[61,2],[61,1],[61,1],[56,2],[63,1],[63,1],[63,1],[64,1],[64,1],[54,1],[32,1],[32,1],[32,1],[32,1],[32,1],[32,1],[68,1],[68,1],[68,1],[68,1],[68,1],[68,1],[69,1],[69,1],[69,1],[70,1],[70,1],[70,1],[70,1],[70,1],[70,1],[70,1],[70,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[96,1],[96,1],[96,1],[96,1],[96,1],[97,1],[97,1],[97,1],[97,1],[109,1],[109,1],[109,1],[109,1],[113,1],[113,1],[115,1],[115,1],[115,1],[115,1],[115,1],[116,1],[116,1],[116,1],[116,1],[116,1],[116,1],[99,1],[99,1],[99,1],[99,1],[99,1],[110,1],[110,1],[110,1],[98,1],[98,1],[98,1],[98,1],[139,1],[139,1],[100,1],[100,1],[101,1],[28,1],[28,1],[146,1],[146,1]];
+  table: Array<StateType> = [o($V0,$V1,{3:1,4:2,6:3,10:4,14:5,18:6,21:7,23:8,24:9,27:10,25:$V2,26:$V3,29:$V4,30:$V5}),{1:[3]},{5:[1,15]},o($V6,[2,4],{7:16}),o($V7,[2,8],{11:17}),o($V8,[2,12],{15:18}),o($V9,[2,15],{19:19}),o($Va,$Vb,{22:20,31:21,36:22,37:$Vc,39:$Vd,41:$Ve,42:$Vf,43:$Vg,44:$Vh,45:$Vi}),o($V9,[2,18]),o($V0,[2,22]),{28:30,145:$Vj,146:32,147:$Vk,148:$Vl},o($V0,[2,19]),o($V0,[2,20]),o($Vm,[2,26]),o($Vm,[2,27]),{1:[2,1]},o([5,38,50,65,66,67],[2,2],{8:35,9:[1,36]}),o($V6,[2,6],{12:37,13:[1,38]}),o($V7,[2,10],{16:39,17:[1,40]}),o($V8,[2,14],{27:10,20:41,24:42,23:43,25:$V2,26:$V3,29:$V4,30:$V5}),o($V9,[2,17]),{32:44,34:45,46:[1,52],47:53,68:46,69:47,70:48,71:$Vn,72:$Vo,73:$Vp,74:$Vq,75:$Vr,76:$Vs,77:$Vt,78:$Vu,79:$Vv,80:$Vw,81:$Vx,82:$Vy,83:$Vz,84:$VA,85:$VB,86:$VC,87:$VD,88:$VE,89:$VF,90:$VG,91:[1,71],92:[1,72],93:[1,73],94:[1,74],95:[1,75],96:76,97:77,98:78,99:79,100:80,101:81,102:[1,82],103:[1,83],104:[1,84],105:[1,85],106:[1,86],107:[1,87],108:[1,88],109:89,110:90,111:[1,103],112:[1,104],113:105,114:[1,106],115:112,116:113,117:[1,114],118:[1,115],119:[1,116],120:[1,117],121:[1,118],122:[1,119],123:[1,120],124:[1,121],125:[1,122],126:[1,123],127:[1,124],128:[1,95],129:[1,96],130:[1,97],131:[1,98],132:[1,99],133:[1,107],134:[1,108],135:[1,109],136:[1,91],137:[1,92],138:[1,93],139:94,140:[1,110],141:[1,111],142:[1,100],143:[1,101],144:[1,102]},o($VH,$VI,{68:46,69:47,70:48,35:125,32:126,71:$Vn,72:$Vo,73:$Vp,74:$Vq,75:$Vr,76:$Vs,77:$Vt,78:$Vu,79:$Vv,80:$Vw,81:$Vx,82:$Vy,83:$Vz,84:$VA,85:$VB,86:$VC,87:$VD,88:$VE,89:$VF,90:$VG}),o($V0,$V1,{6:3,10:4,14:5,18:6,21:7,23:8,24:9,27:10,4:127,25:$V2,26:$V3,29:$V4,30:$V5}),o($Va,[2,33]),o($VJ,[2,38]),o($VJ,[2,39]),o($VJ,[2,40]),o($VJ,[2,41]),o($VJ,[2,42]),o($V9,[2,25]),o($V9,[2,144]),o($V9,[2,145]),o($V9,[2,146]),o($V9,[2,147]),o($V6,[2,5]),o($V0,$V1,{10:4,14:5,18:6,21:7,23:8,24:9,27:10,6:128,25:$V2,26:$V3,29:$V4,30:$V5}),o($V7,[2,9]),o($V0,$V1,{14:5,18:6,21:7,23:8,24:9,27:10,10:129,25:$V2,26:$V3,29:$V4,30:$V5}),o($V8,[2,13]),o($V0,$V1,{18:6,21:7,23:8,24:9,27:10,14:130,25:$V2,26:$V3,29:$V4,30:$V5}),o($V9,[2,16]),o($Va,$Vb,{31:21,36:22,22:131,37:$Vc,39:$Vd,41:$Ve,42:$Vf,43:$Vg,44:$Vh,45:$Vi}),o($V9,[2,24]),o($VH,$VK,{33:132}),o($VH,$VI,{68:46,69:47,70:48,32:126,35:133,71:$Vn,72:$Vo,73:$Vp,74:$Vq,75:$Vr,76:$Vs,77:$Vt,78:$Vu,79:$Vv,80:$Vw,81:$Vx,82:$Vy,83:$Vz,84:$VA,85:$VB,86:$VC,87:$VD,88:$VE,89:$VF,90:$VG}),o($VH,[2,67]),o($VH,[2,68]),o($VH,[2,69]),o($VH,[2,70]),o($VH,[2,71]),o($VH,[2,72]),o($VJ,[2,43]),o($VJ,[2,44]),o($VH,[2,73]),o($VH,[2,74]),o($VH,[2,75]),o($VH,[2,76]),o($VH,[2,77]),o($VH,[2,78]),o($VH,[2,79]),o($VH,[2,80]),o($VH,[2,81]),o($VH,[2,82]),o($VH,[2,83]),o($VH,[2,84]),o($VH,[2,85]),o($VH,[2,86]),o($VH,[2,87]),o($VH,[2,88]),o($VH,[2,89]),o($VJ,[2,90]),o($VJ,[2,91]),o($VJ,[2,92]),o($VJ,[2,93]),o($VJ,[2,94]),o($VJ,[2,95]),o($VJ,[2,96]),o($VJ,[2,97]),o($VJ,[2,98]),o($VJ,[2,99]),o($VJ,[2,100]),o($VJ,[2,101]),o($VJ,[2,102]),o($VJ,[2,103]),o($VJ,[2,104]),o($VJ,[2,105]),o($VJ,[2,106]),o($VJ,[2,107]),o($VJ,[2,108]),o($VJ,[2,109]),o($VJ,[2,135]),o($VJ,[2,136]),o($VJ,[2,137]),o($VJ,[2,138]),o($VJ,[2,127]),o($VJ,[2,128]),o($VJ,[2,129]),o($VJ,[2,130]),o($VJ,[2,131]),o($VJ,[2,141]),o($VJ,[2,142]),o($VJ,[2,143]),o($VJ,[2,110]),o($VJ,[2,111]),o($VJ,[2,112]),o($VJ,[2,113]),o($VJ,[2,132]),o($VJ,[2,133]),o($VJ,[2,134]),o($VJ,[2,139]),o($VJ,[2,140]),o($VJ,[2,114]),o($VJ,[2,115]),o($VJ,[2,116]),o($VJ,[2,117]),o($VJ,[2,118]),o($VJ,[2,119]),o($VJ,[2,120]),o($VJ,[2,121]),o($VJ,[2,122]),o($VJ,[2,123]),o($VJ,[2,124]),o($VJ,[2,125]),o($VJ,[2,126]),o($VH,$VK,{33:134}),o($VH,[2,37]),{38:[1,135]},o($V6,[2,3]),o($V7,[2,7]),o($V8,[2,11]),o($V9,[2,23]),o($V9,[2,28],{40:136,48:$VL}),o($VH,$VK,{33:138}),o($V9,[2,30],{40:136,48:$VL}),o($VH,$VI,{68:46,69:47,70:48,32:126,35:139,71:$Vn,72:$Vo,73:$Vp,74:$Vq,75:$Vr,76:$Vs,77:$Vt,78:$Vu,79:$Vv,80:$Vw,81:$Vx,82:$Vy,83:$Vz,84:$VA,85:$VB,86:$VC,87:$VD,88:$VE,89:$VF,90:$VG}),o($VH,[2,35]),o($VM,[2,49],{49:140,51:141,54:142,55:[1,143],62:[1,144]}),o($V9,[2,29],{40:136,48:$VL}),o($VH,$VK,{33:145}),{50:[1,146]},o($V0,$V1,{6:3,10:4,14:5,18:6,21:7,23:8,24:9,27:10,4:147,53:148,25:$V2,26:$V3,29:$V4,30:$V5,57:[1,149],58:[1,150],59:[1,151],60:[1,152]}),{50:[2,48]},o($VM,[2,50]),{50:[2,66]},o($V9,[2,31],{40:136,48:$VL}),o($VH,[2,45]),{50:$VN,52:153,56:154,63:155,65:$VO,66:$VP,67:$VQ},{50:$VN,52:159,56:154,63:155,65:$VO,66:$VP,67:$VQ},{37:[1,160]},{37:[1,161]},{37:[1,162]},{37:[1,163]},{50:[2,46]},{50:[2,52]},{28:166,62:[1,165],64:164,145:$Vj,146:32,147:$Vk,148:$Vl},o($VR,[2,61]),o($VR,[2,62]),o($VR,[2,63]),{50:[2,47]},{38:[1,167]},{38:[1,168]},{28:169,145:$Vj,146:32,147:$Vk,148:$Vl},{28:172,61:170,62:[1,171],145:$Vj,146:32,147:$Vk,148:$Vl},{50:[2,60]},{50:[2,64]},{50:[2,65]},o($VS,[2,53]),o($VS,[2,54]),{38:[1,173]},{38:[1,174]},{28:175,38:[2,58],145:$Vj,146:32,147:$Vk,148:$Vl},{38:[2,59]},o($VS,[2,55]),o($VS,[2,56]),{38:[2,57]}];
+  defaultActions: {[key:number]: any} = {15:[2,1],142:[2,48],144:[2,66],153:[2,46],154:[2,52],159:[2,47],164:[2,60],165:[2,64],166:[2,65],172:[2,59],175:[2,57]};
 
   performAction (yytext:string, yyleng:number, yylineno:number, yy:any, yystate:number /* action[1] */, $$:any /* vstack */, _$:any /* lstack */): any {
 /* this == yyval */
@@ -110,297 +110,300 @@ export class ShapePathParser extends JisonParser implements JisonParserApi {
 case 1:
  return $$[$0-1]; 
 case 2:
-this.$ = $$[$0].length ? new Union([$$[$0-1]].concat($$[$0])) : $$[$0-1];
+this.$ = $$[$0].length ? new Sequence([$$[$0-1]].concat($$[$0])) : $$[$0-1];
 break;
-case 3: case 7:
+case 3: case 7: case 11:
 this.$ = $$[$0];
 break;
-case 4: case 8: case 11: case 30:
+case 4: case 8: case 12: case 15: case 34:
 this.$ = [];
 break;
-case 5: case 9: case 31:
+case 5: case 9: case 13: case 35:
 this.$ = $$[$0-1].concat([$$[$0]]);
 break;
 case 6:
-this.$ = $$[$0].length ? new Intersection([$$[$0-1]].concat($$[$0])) : $$[$0-1];
+this.$ = $$[$0].length ? new Union([$$[$0-1]].concat($$[$0])) : $$[$0-1];
 break;
 case 10:
+this.$ = $$[$0].length ? new Intersection([$$[$0-1]].concat($$[$0])) : $$[$0-1];
+break;
+case 14:
 this.$ = new Path($$[$0-1].concat($$[$0]));
 break;
-case 12:
+case 16:
 this.$ = $$[$0-1].concat($$[$0]);
 break;
-case 13: case 19: case 55:
+case 17: case 23: case 59:
 this.$ = [$$[$0]];
 break;
-case 17: case 28: case 29: case 32: case 47:
+case 21: case 32: case 33: case 36: case 51:
 this.$ = null;
 break;
-case 21:
+case 25:
 this.$ = $$[$0-1] === '@' ? shapeLabelShortCut($$[$0]) : predicateShortCut($$[$0]);
 break;
-case 24:
+case 28:
 this.$ = new ChildStep(t_attribute.Any, filterTermType($$[$0-1], $$[$0]));
 break;
-case 25:
+case 29:
 this.$ = new ChildStep($$[$0-2], filterTermType($$[$0-1], $$[$0]));
 break;
-case 26:
+case 30:
 this.$ = new AxisStep($$[$0-2], filterTermType($$[$0-1], $$[$0]));
 break;
-case 27:
+case 31:
 this.$ = new PathExprStep($$[$0-3], filterTermType($$[$0-1], $$[$0]));
 break;
-case 34:
+case 38:
 this.$ = Axis.thisShapeExpr;
 break;
-case 35:
+case 39:
 this.$ = Axis.thisTripleExpr;
 break;
-case 36:
+case 40:
 this.$ = Axis.self;
 break;
-case 37:
+case 41:
 this.$ = Axis.parent;
 break;
-case 38:
+case 42:
 this.$ = Axis.ancestor;
 break;
-case 39:
+case 43:
 this.$ = t_attribute.Any;
 break;
-case 41:
+case 45:
 this.$ = $$[$0-1];
 break;
-case 42: case 43:
+case 46: case 47:
 this.$ = makeFunction($$[$0-2], $$[$0-1], $$[$0] ? $$[$0] : undefined);
 break;
-case 44:
+case 48:
 this.$ = new Filter(FuncName.index, [$$[$0]]);
 break;
-case 45:
+case 49:
 this.$ = false;
 break;
-case 46:
+case 50:
 this.$ = true;
 break;
-case 49:
+case 53:
 this.$ = new Filter(FuncName.index, []);
 break;
-case 50: case 51: case 52:
+case 54: case 55: case 56:
 this.$ = new Filter(FuncName.count, []);
 break;
-case 53:
+case 57:
 this.$ = [parseInt($$[$0-1]), $$[$0]];
 break;
-case 54:
+case 58:
 this.$ = [parseInt($$[$0])];
 break;
-case 56:
+case 60:
 this.$ = { op: $$[$0-1], r: $$[$0] };
 break;
-case 57:
+case 61:
 this.$ = FuncName.equal;
 break;
-case 58:
+case 62:
 this.$ = FuncName.lessThan;
 break;
-case 59:
+case 63:
 this.$ = FuncName.greaterThan;
 break;
-case 60: case 62:
+case 64: case 66:
 this.$ = parseInt($$[$0]);
 break;
-case 66:
+case 70:
 this.$ = t_termType.Schema;
 break;
-case 67:
+case 71:
 this.$ = t_termType.SemAct;
 break;
-case 68:
+case 72:
 this.$ = t_termType.Annotation;
 break;
-case 69:
+case 73:
 this.$ = t_shapeExprType.ShapeAnd;
 break;
-case 70:
+case 74:
 this.$ = t_shapeExprType.ShapeOr;
 break;
-case 71:
+case 75:
 this.$ = t_shapeExprType.ShapeNot;
 break;
-case 72:
+case 76:
 this.$ = t_shapeExprType.NodeConstraint;
 break;
-case 73:
+case 77:
 this.$ = t_shapeExprType.Shape;
 break;
-case 74:
+case 78:
 this.$ = t_shapeExprType.ShapeExternal;
 break;
-case 75:
+case 79:
 this.$ = t_tripleExprType.EachOf;
 break;
-case 76:
+case 80:
 this.$ = t_tripleExprType.OneOf;
 break;
-case 77:
+case 81:
 this.$ = t_tripleExprType.TripleConstraint;
 break;
-case 78:
+case 82:
 this.$ = t_valueType.IriStem;
 break;
-case 79:
+case 83:
 this.$ = t_valueType.IriStemRange;
 break;
-case 80:
+case 84:
 this.$ = t_valueType.LiteralStem;
 break;
-case 81:
+case 85:
 this.$ = t_valueType.LiteralStemRange;
 break;
-case 82:
+case 86:
 this.$ = t_valueType.Language;
 break;
-case 83:
+case 87:
 this.$ = t_valueType.LanguageStem;
 break;
-case 84:
+case 88:
 this.$ = t_valueType.LanguageStemRange;
 break;
-case 85:
+case 89:
 this.$ = t_valueType.Wildcard;
 break;
-case 86:
+case 90:
 this.$ = t_attribute.type;
 break;
-case 87:
+case 91:
 this.$ = t_attribute.id;
 break;
-case 88:
+case 92:
 this.$ = t_attribute.semActs;
 break;
-case 89:
+case 93:
 this.$ = t_attribute.annotations;
 break;
-case 90:
+case 94:
 this.$ = t_attribute.predicate;
 break;
-case 97:
+case 101:
 this.$ = t_schemaAttr.atContext;
 break;
-case 98:
+case 102:
 this.$ = t_schemaAttr.startActs;
 break;
-case 99:
+case 103:
 this.$ = t_schemaAttr.start;
 break;
-case 100:
+case 104:
 this.$ = t_schemaAttr.imports;
 break;
-case 101:
+case 105:
 this.$ = t_schemaAttr.shapes;
 break;
-case 102:
+case 106:
 this.$ = t_shapeExprAttr.shapeExprs;
 break;
-case 103:
+case 107:
 this.$ = t_shapeExprAttr.shapeExpr;
 break;
-case 106:
+case 110:
 this.$ = t_nodeConstraintAttr.nodeKind;
 break;
-case 107:
+case 111:
 this.$ = t_nodeConstraintAttr.datatype;
 break;
-case 109:
+case 113:
 this.$ = t_nodeConstraintAttr.values;
 break;
-case 112:
+case 116:
 this.$ = t_stringFacetAttr.length;
 break;
-case 113:
+case 117:
 this.$ = t_stringFacetAttr.minlength;
 break;
-case 114:
+case 118:
 this.$ = t_stringFacetAttr.maxlength;
 break;
-case 115:
+case 119:
 this.$ = t_stringFacetAttr.pattern;
 break;
-case 116:
+case 120:
 this.$ = t_stringFacetAttr.flags;
 break;
-case 117:
+case 121:
 this.$ = t_numericFacetAttr.mininclusive;
 break;
-case 118:
+case 122:
 this.$ = t_numericFacetAttr.minexclusive;
 break;
-case 119:
+case 123:
 this.$ = t_numericFacetAttr.maxinclusive;
 break;
-case 120:
+case 124:
 this.$ = t_numericFacetAttr.maxexclusive;
 break;
-case 121:
+case 125:
 this.$ = t_numericFacetAttr.totaldigits;
 break;
-case 122:
+case 126:
 this.$ = t_numericFacetAttr.fractiondigits;
 break;
-case 123:
+case 127:
 this.$ = t_valueSetValueAttr.value;
 break;
-case 124:
+case 128:
 this.$ = t_valueSetValueAttr.language;
 break;
-case 125:
+case 129:
 this.$ = t_valueSetValueAttr.stem;
 break;
-case 126:
+case 130:
 this.$ = t_valueSetValueAttr.exclusions;
 break;
-case 127:
+case 131:
 this.$ = t_valueSetValueAttr.languageTag;
 break;
-case 128:
+case 132:
 this.$ = t_shapeAttr.closed;
 break;
-case 129:
+case 133:
 this.$ = t_shapeAttr.extra;
 break;
-case 130:
+case 134:
 this.$ = t_shapeAttr.expression;
 break;
-case 131:
+case 135:
 this.$ = t_tripleExprAttr.expressions;
 break;
-case 132:
+case 136:
 this.$ = t_tripleExprAttr.min;
 break;
-case 133:
+case 137:
 this.$ = t_tripleExprAttr.max;
 break;
-case 135:
+case 139:
 this.$ = t_tripleConstraintAttr.inverse;
 break;
-case 136:
+case 140:
 this.$ = t_tripleConstraintAttr.valueExpr;
 break;
-case 137:
+case 141:
 this.$ = t_semActAttr.name;
 break;
-case 138:
+case 142:
 this.$ = t_semActAttr.code;
 break;
-case 139:
+case 143:
 this.$ = t_annotationAttr.object;
 break;
-case 140:
+case 144:
 this.$ = new Iri(new URL($$[$0].substr(1, $$[$0].length - 2), yy.base).href);
 break;
-case 142: case 143:
+case 146: case 147:
 this.$ = pnameToUrl($$[$0], yy);
 break;
     }
@@ -414,107 +417,108 @@ export class ShapePathLexer extends JisonLexer implements JisonLexerApi {
     super(yy);
   }
 
-  rules: RegExp[] = [/^(?:\s+|(#[^\u000a\u000d]*|<--([^-]|-[^-]|--[^>])*-->))/,/^(?:([Uu][Nn][Ii][Oo][Nn]))/,/^(?:([Ii][Nn][Tt][Ee][Rr][Ss][Ee][Cc][Tt][Ii][Oo][Nn]))/,/^(?:([Aa][Ss][Ss][Ee][Rr][Tt]))/,/^(?:child::)/,/^(?:thisShapeExpr::)/,/^(?:thisTripleExpr::)/,/^(?:self::)/,/^(?:parent::)/,/^(?:ancestor::)/,/^(?:index\b)/,/^(?:count\b)/,/^(?:foo1\b)/,/^(?:foo2\b)/,/^(?:Schema\b)/,/^(?:SemAct\b)/,/^(?:Annotation\b)/,/^(?:ShapeAnd\b)/,/^(?:ShapeOr\b)/,/^(?:ShapeNot\b)/,/^(?:NodeConstraint\b)/,/^(?:Shape\b)/,/^(?:ShapeExternal\b)/,/^(?:EachOf\b)/,/^(?:OneOf\b)/,/^(?:TripleConstraint\b)/,/^(?:IriStem\b)/,/^(?:IriStemRange\b)/,/^(?:LiteralStem\b)/,/^(?:LiteralStemRange\b)/,/^(?:Language\b)/,/^(?:LanguageStem\b)/,/^(?:LanguageStemRange\b)/,/^(?:Wildcard\b)/,/^(?:type\b)/,/^(?:id\b)/,/^(?:semActs\b)/,/^(?:annotations\b)/,/^(?:predicate\b)/,/^(?:@context\b)/,/^(?:startActs\b)/,/^(?:start\b)/,/^(?:imports\b)/,/^(?:shapes\b)/,/^(?:shapeExprs\b)/,/^(?:shapeExpr\b)/,/^(?:nodeKind\b)/,/^(?:datatype\b)/,/^(?:values\b)/,/^(?:length\b)/,/^(?:minlength\b)/,/^(?:maxlength\b)/,/^(?:pattern\b)/,/^(?:flags\b)/,/^(?:mininclusive\b)/,/^(?:minexclusive\b)/,/^(?:maxinclusive\b)/,/^(?:maxexclusive\b)/,/^(?:totaldigits\b)/,/^(?:fractiondigits\b)/,/^(?:value\b)/,/^(?:language\b)/,/^(?:stem\b)/,/^(?:exclusions\b)/,/^(?:languageTag\b)/,/^(?:closed\b)/,/^(?:extra\b)/,/^(?:expression\b)/,/^(?:expressions\b)/,/^(?:min\b)/,/^(?:max\b)/,/^(?:inverse\b)/,/^(?:valueExpr\b)/,/^(?:name\b)/,/^(?:code\b)/,/^(?:object\b)/,/^(?:(<([^\u0000-\u0020<>\"{}|^`\\]|(\\u([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])|\\U([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])))*>))/,/^(?:(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:)(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|:|[0-9]|((%([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f]))|(\\(_|~|\.|-|!|\$|&|'|\(|\)|\*|\+|,|;|=|\/|\?|#|@|%))))(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.|:|((%([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f]))|(\\(_|~|\.|-|!|\$|&|'|\(|\)|\*|\+|,|;|=|\/|\?|#|@|%))))*)))/,/^(?:((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:))/,/^(?:(([+-])?([0-9])+))/,/^(?:@)/,/^(?:\.)/,/^(?:\*)/,/^(?:\()/,/^(?:\))/,/^(?:\[)/,/^(?:\])/,/^(?:\/\/)/,/^(?:\/)/,/^(?:=)/,/^(?:<)/,/^(?:>)/,/^(?:[a-zA-Z0-9_-]+)/,/^(?:.)/,/^(?:$)/];
-  conditions: any = {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94],"inclusive":true}}
+  rules: RegExp[] = [/^(?:\s+|(#[^\u000a\u000d]*|<--([^-]|-[^-]|--[^>])*-->))/,/^(?:([Uu][Nn][Ii][Oo][Nn]))/,/^(?:([Ii][Nn][Tt][Ee][Rr][Ss][Ee][Cc][Tt][Ii][Oo][Nn]))/,/^(?:([Aa][Ss][Ss][Ee][Rr][Tt]))/,/^(?:child::)/,/^(?:thisShapeExpr::)/,/^(?:thisTripleExpr::)/,/^(?:self::)/,/^(?:parent::)/,/^(?:ancestor::)/,/^(?:index\b)/,/^(?:count\b)/,/^(?:foo1\b)/,/^(?:foo2\b)/,/^(?:Schema\b)/,/^(?:SemAct\b)/,/^(?:Annotation\b)/,/^(?:ShapeAnd\b)/,/^(?:ShapeOr\b)/,/^(?:ShapeNot\b)/,/^(?:NodeConstraint\b)/,/^(?:Shape\b)/,/^(?:ShapeExternal\b)/,/^(?:EachOf\b)/,/^(?:OneOf\b)/,/^(?:TripleConstraint\b)/,/^(?:IriStem\b)/,/^(?:IriStemRange\b)/,/^(?:LiteralStem\b)/,/^(?:LiteralStemRange\b)/,/^(?:Language\b)/,/^(?:LanguageStem\b)/,/^(?:LanguageStemRange\b)/,/^(?:Wildcard\b)/,/^(?:type\b)/,/^(?:id\b)/,/^(?:semActs\b)/,/^(?:annotations\b)/,/^(?:predicate\b)/,/^(?:@context\b)/,/^(?:startActs\b)/,/^(?:start\b)/,/^(?:imports\b)/,/^(?:shapes\b)/,/^(?:shapeExprs\b)/,/^(?:shapeExpr\b)/,/^(?:nodeKind\b)/,/^(?:datatype\b)/,/^(?:values\b)/,/^(?:length\b)/,/^(?:minlength\b)/,/^(?:maxlength\b)/,/^(?:pattern\b)/,/^(?:flags\b)/,/^(?:mininclusive\b)/,/^(?:minexclusive\b)/,/^(?:maxinclusive\b)/,/^(?:maxexclusive\b)/,/^(?:totaldigits\b)/,/^(?:fractiondigits\b)/,/^(?:value\b)/,/^(?:language\b)/,/^(?:stem\b)/,/^(?:exclusions\b)/,/^(?:languageTag\b)/,/^(?:closed\b)/,/^(?:extra\b)/,/^(?:expression\b)/,/^(?:expressions\b)/,/^(?:min\b)/,/^(?:max\b)/,/^(?:inverse\b)/,/^(?:valueExpr\b)/,/^(?:name\b)/,/^(?:code\b)/,/^(?:object\b)/,/^(?:(<([^\u0000-\u0020<>\"{}|^`\\]|(\\u([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])|\\U([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])))*>))/,/^(?:(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:)(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|:|[0-9]|((%([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f]))|(\\(_|~|\.|-|!|\$|&|'|\(|\)|\*|\+|,|;|=|\/|\?|#|@|%))))(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.|:|((%([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f]))|(\\(_|~|\.|-|!|\$|&|'|\(|\)|\*|\+|,|;|=|\/|\?|#|@|%))))*)))/,/^(?:((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:))/,/^(?:(([+-])?([0-9])+))/,/^(?:,)/,/^(?:@)/,/^(?:\.)/,/^(?:\*)/,/^(?:\()/,/^(?:\))/,/^(?:\[)/,/^(?:\])/,/^(?:\/\/)/,/^(?:\/)/,/^(?:=)/,/^(?:<)/,/^(?:>)/,/^(?:[a-zA-Z0-9_-]+)/,/^(?:.)/,/^(?:$)/];
+  conditions: any = {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95],"inclusive":true}}
   performAction (yy:any,yy_:any,$avoiding_name_collisions:any,YY_START:any): any {
     var YYSTATE=YY_START;
     switch($avoiding_name_collisions) {
     case 0:/*skip*/
       break;
-    case 1:return 9;
-    case 2:return 13;
-    case 3:return 51;
-    case 4:return 35;
-    case 5:return 37;
-    case 6:return 38;
-    case 7:return 39;
-    case 8:return 40;
-    case 9:return 41;
-    case 10:return 53;
-    case 11:return 54;
-    case 12:return 55;
-    case 13:return 56;
-    case 14:return 67;
-    case 15:return 68;
-    case 16:return 69;
-    case 17:return 70;
-    case 18:return 71;
-    case 19:return 72;
-    case 20:return 73;
-    case 21:return 74;
-    case 22:return 75;
-    case 23:return 76;
-    case 24:return 77;
-    case 25:return 78;
-    case 26:return 79;
-    case 27:return 80;
-    case 28:return 81;
-    case 29:return 82;
-    case 30:return 83;
-    case 31:return 84;
-    case 32:return 85;
-    case 33:return 86;
-    case 34:return 87;
-    case 35:return 88;
-    case 36:return 89;
-    case 37:return 90;
-    case 38:return 91;
-    case 39:return 98;
-    case 40:return 99;
-    case 41:return 100;
-    case 42:return 101;
-    case 43:return 102;
-    case 44:return 103;
-    case 45:return 104;
-    case 46:return 107;
-    case 47:return 108;
-    case 48:return 110;
-    case 49:return 113;
-    case 50:return 114;
-    case 51:return 115;
-    case 52:return 116;
-    case 53:return 117;
-    case 54:return 118;
-    case 55:return 119;
-    case 56:return 120;
-    case 57:return 121;
-    case 58:return 122;
-    case 59:return 123;
-    case 60:return 124;
-    case 61:return 125;
-    case 62:return 126;
-    case 63:return 127;
-    case 64:return 128;
-    case 65:return 129;
-    case 66:return 130;
-    case 67:return 131;
-    case 68:return 132;
-    case 69:return 133;
-    case 70:return 134;
-    case 71:return 136;
-    case 72:return 137;
-    case 73:return 138;
-    case 74:return 139;
-    case 75:return 140;
-    case 76:return 141;
-    case 77:return 143;
-    case 78:return 144;
-    case 79:return 58;
-    case 80:return 25;
-    case 81:return 26;
-    case 82:return 42;
-    case 83:return 33;
-    case 84:return 34;
-    case 85:return 44;
-    case 86:return 46;
-    case 87:return 22;
-    case 88:return 21;
-    case 89:return 61;
-    case 90:return 62;
-    case 91:return 63;
-    case 92:return 'unexpected word "'+yy_.yytext+'"';
-    case 93:return 'invalid character '+yy_.yytext;
-    case 94:return 5;
+    case 1:return 13;
+    case 2:return 17;
+    case 3:return 55;
+    case 4:return 39;
+    case 5:return 41;
+    case 6:return 42;
+    case 7:return 43;
+    case 8:return 44;
+    case 9:return 45;
+    case 10:return 57;
+    case 11:return 58;
+    case 12:return 59;
+    case 13:return 60;
+    case 14:return 71;
+    case 15:return 72;
+    case 16:return 73;
+    case 17:return 74;
+    case 18:return 75;
+    case 19:return 76;
+    case 20:return 77;
+    case 21:return 78;
+    case 22:return 79;
+    case 23:return 80;
+    case 24:return 81;
+    case 25:return 82;
+    case 26:return 83;
+    case 27:return 84;
+    case 28:return 85;
+    case 29:return 86;
+    case 30:return 87;
+    case 31:return 88;
+    case 32:return 89;
+    case 33:return 90;
+    case 34:return 91;
+    case 35:return 92;
+    case 36:return 93;
+    case 37:return 94;
+    case 38:return 95;
+    case 39:return 102;
+    case 40:return 103;
+    case 41:return 104;
+    case 42:return 105;
+    case 43:return 106;
+    case 44:return 107;
+    case 45:return 108;
+    case 46:return 111;
+    case 47:return 112;
+    case 48:return 114;
+    case 49:return 117;
+    case 50:return 118;
+    case 51:return 119;
+    case 52:return 120;
+    case 53:return 121;
+    case 54:return 122;
+    case 55:return 123;
+    case 56:return 124;
+    case 57:return 125;
+    case 58:return 126;
+    case 59:return 127;
+    case 60:return 128;
+    case 61:return 129;
+    case 62:return 130;
+    case 63:return 131;
+    case 64:return 132;
+    case 65:return 133;
+    case 66:return 134;
+    case 67:return 135;
+    case 68:return 136;
+    case 69:return 137;
+    case 70:return 138;
+    case 71:return 140;
+    case 72:return 141;
+    case 73:return 142;
+    case 74:return 143;
+    case 75:return 144;
+    case 76:return 145;
+    case 77:return 147;
+    case 78:return 148;
+    case 79:return 62;
+    case 80:return 9;
+    case 81:return 29;
+    case 82:return 30;
+    case 83:return 46;
+    case 84:return 37;
+    case 85:return 38;
+    case 86:return 48;
+    case 87:return 50;
+    case 88:return 26;
+    case 89:return 25;
+    case 90:return 65;
+    case 91:return 66;
+    case 92:return 67;
+    case 93:return 'unexpected word "'+yy_.yytext+'"';
+    case 94:return 'invalid character '+yy_.yytext;
+    case 95:return 5;
     }
   }
 }

@@ -1,6 +1,7 @@
 import { TysonTypeDictionary, yy } from "./ShapePathParser.typedict";
 
 import {
+  Sequence,
   Union,
   Intersection,
   Path,
@@ -110,11 +111,43 @@ const semanticActions = {
     return $1;
   },
 
-  "shapePath -> unionStep _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star"(
-    $1: TysonTypeDictionary["unionStep"],
-    $2: TysonTypeDictionary["_Q_O_QIT_union_E_S_QunionStep_E_C_E_Star"]
+  "shapePath -> sequenceStep _Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star"(
+    $1: TysonTypeDictionary["sequenceStep"],
+    $2: TysonTypeDictionary["_Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star"]
   ): TysonTypeDictionary["shapePath"] {
     let $$: TysonTypeDictionary["shapePath"];
+    $$ = $2.length ? new Sequence([$1].concat($2)) : $1;
+    return $$;
+  },
+
+  "_O_QGT_COMMA_E_S_QsequenceStep_E_C -> GT_COMMA sequenceStep"(
+    $2: TysonTypeDictionary["sequenceStep"]
+  ): TysonTypeDictionary["_O_QGT_COMMA_E_S_QsequenceStep_E_C"] {
+    let $$: TysonTypeDictionary["_O_QGT_COMMA_E_S_QsequenceStep_E_C"];
+    $$ = $2;
+    return $$;
+  },
+
+  "_Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star -> "(): TysonTypeDictionary["_Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star"] {
+    let $$: TysonTypeDictionary["_Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star"];
+    $$ = [];
+    return $$;
+  },
+
+  "_Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star -> _Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star _O_QGT_COMMA_E_S_QsequenceStep_E_C"(
+    $1: TysonTypeDictionary["_Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star"],
+    $2: TysonTypeDictionary["_O_QGT_COMMA_E_S_QsequenceStep_E_C"]
+  ): TysonTypeDictionary["_Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star"] {
+    let $$: TysonTypeDictionary["_Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star"];
+    $$ = $1.concat([$2]);
+    return $$;
+  },
+
+  "sequenceStep -> unionStep _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star"(
+    $1: TysonTypeDictionary["unionStep"],
+    $2: TysonTypeDictionary["_Q_O_QIT_union_E_S_QunionStep_E_C_E_Star"]
+  ): TysonTypeDictionary["sequenceStep"] {
+    let $$: TysonTypeDictionary["sequenceStep"];
     $$ = $2.length ? new Union([$1].concat($2)) : $1;
     return $$;
   },

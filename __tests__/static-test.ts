@@ -19,86 +19,92 @@ function parse(text: string): object {
 }
 
 describe('parser coverage', () => {
+  test('junction', () => {
+    parse('/*, /* union /* intersection /*')
+  })
   test('separator', () => {
-    parse('/* union //* union */* union *//*')
+    parse('/*, //*, */*, *//*')
   })
   test('shortcut', () => {
-    parse('@<i> union .<i>')
+    parse('@<i>, .<i>')
   })
   test('axes', () => {
-    parse('child::* union thisShapeExpr:: union thisTripleExpr:: union self:: union parent:: union ancestor::')
+    parse('child::*, thisShapeExpr::, thisTripleExpr::, self::, parent::, ancestor::')
   })
   test('axis type', () => {
     parse('thisShapeExpr::Shape')
   })
   test('function', () => {
-    parse('*[index() = 1] union *[count()] union *[foo1(<n>) = <n>] union *[foo2(<n>) = <n>] union *[foo2(1) = 1] union *[foo2(1 <n>) = 1]')
+    parse('*[index() = 1], *[count()], *[foo1(<n>) = <n>], *[foo2(<n>) = <n>], *[foo2(1) = 1], *[foo2(1 <n>) = 1]')
   })
   test('assert', () => {
     parse('*[assert index() = 1]')
   })
+  test('numericExpr', () => {
+    parse('*[1]')
+  })
   test('comparison', () => {
-    parse('*[assert index() = 1] union *[assert index() < 1] union *[assert index() > 1]')
+    parse('*[assert index() = 1], *[assert index() < 1], *[assert index() > 1]')
   })
   test('termType', () => {
-    parse('Schema union SemAct union Annotation')
+    parse('Schema, SemAct, Annotation')
   })
   test('shapeExprType', () => {
-    parse('ShapeAnd union ShapeOr union ShapeNot union NodeConstraint union Shape union ShapeExternal')
+    parse('ShapeAnd, ShapeOr, ShapeNot, NodeConstraint, Shape, ShapeExternal')
   })
   test('tripleExprType', () => {
-    parse('EachOf union OneOf union TripleConstraint')
+    parse('EachOf, OneOf, TripleConstraint')
   })
   test('valueType', () => {
-    parse('IriStem union IriStemRange')
-    parse('LiteralStem union LiteralStemRange')
-    parse('Language union LanguageStem union LanguageStemRange')
+    parse('IriStem, IriStemRange')
+    parse('LiteralStem, LiteralStemRange')
+    parse('Language, LanguageStem, LanguageStemRange')
     parse('Wildcard')
   })
   test('attributeType', () => {
-    parse('type union id union semActs union annotations union predicate')
+    parse('type, id, semActs, annotations, predicate')
   })
   test('schemaAttr', () => {
-    parse('@context union startActs union start union imports union shapes')
+    parse('@context, startActs, start, imports, shapes')
   })
   test('shapeExprAttr', () => {
-    parse('shapeExprs union shapeExpr')
+    parse('shapeExprs, shapeExpr')
   })
   test('nodeConstraintAttr', () => {
-    parse('nodeKind union datatype union values')
+    parse('nodeKind, datatype, values')
   })
   test('stringFacetAttr', () => {
-    parse('length union minlength union maxlength union pattern union flags')
+    parse('length, minlength, maxlength, pattern, flags')
   })
   test('numericFacetAttr', () => {
-    parse('mininclusive union  minexclusive union maxinclusive union  maxexclusive union totaldigits union fractiondigits')
+    parse('mininclusive,  minexclusive, maxinclusive,  maxexclusive, totaldigits, fractiondigits')
   })
   test('valueSetValueAttr', () => {
-    parse('value union language union language union stem union exclusions union languageTag')
+    parse('value, language, language, stem, exclusions, languageTag')
   })
   test('shapeAttr', () => {
-    parse('closed union extra union expression')
+    parse('closed, extra, expression')
   })
   test('tripleExprAttr', () => {
-    parse('expressions union min union max')
+    parse('expressions, min, max')
   })
   test('tripleConstraintAttr', () => {
-    parse('inverse union valueExpr')
+    parse('inverse, valueExpr')
   })
   test('semActAttr', () => {
-    parse('name union code')
+    parse('name, code')
   })
   test('annotationAttr', () => {
     parse('object')
   })
   test('prefixedName', () => {
-    parse('*[id = :lname] union *[id = pre:] union *[id = pre:lname]')
+    parse('*[id = :lname], *[id = pre:], *[id = pre:lname]')
   })
   test('values', () => {
-    parse('*[id = <i>] union *[id = 123]')
+    parse('*[id = <i>], *[id = 123]')
   })
   test('PathExprStep', () => {
-    parse('(* union *) union (* union *)[id = 123]')
+    parse('(*, *), (*, *)[id = 123]')
   })
 
   test('lexer', () => {

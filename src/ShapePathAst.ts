@@ -3,6 +3,7 @@
  *   Serializable
  *     PathExpr
  *       Junction
+ *         Sequence
  *         Union
  *         Intersection
  *       Path
@@ -105,6 +106,13 @@ export abstract class Junction extends PathExpr {
     public exprs: Array<Path | Junction>
   ) {
     super()
+  }
+}
+
+export class Sequence extends Junction {
+  t = "Sequence"
+  evalPathExpr(nodes: NodeSet, ctx: EvalContext): NodeSet {
+    return nodes
   }
 }
 

@@ -3,7 +3,7 @@
  */
 
 %{
-import {Union, Intersection, Path, ChildStep, AxisStep, PathExprStep, Axis,
+import {Sequence, Union, Intersection, Path, ChildStep, AxisStep, PathExprStep, Axis,
         Assertion, Filter, Function, FuncArg, FuncName, Iri, BNode, termType,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
@@ -209,6 +209,7 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 //{HEX}                 return 'HEX';
 //{PERCENT}             return 'PERCENT';
 
+","                     return 'GT_COMMA';
 "@"                     return 'GT_AT';
 "."                     return 'GT_DOT';
 "*"                     return 'GT_STAR';
@@ -230,6 +231,7 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 
 /* operator associations and precedence */
 
+// %left ','
 // %left 'intersection'
 // %left 'union'
 // %right '!'
@@ -243,6 +245,19 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 top: shapePath EOF { return $1; };
 
 shapePath:
+    sequenceStep _Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star	-> $2.length ? new Sequence([$1].concat($2)) : $1
+;
+
+_O_QGT_COMMA_E_S_QsequenceStep_E_C:
+    GT_COMMA sequenceStep	-> $2
+;
+
+_Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star:
+    	-> []
+  | _Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star _O_QGT_COMMA_E_S_QsequenceStep_E_C	-> $1.concat([$2])
+;
+
+sequenceStep:
     unionStep _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star	-> $2.length ? new Union([$1].concat($2)) : $1
 ;
 

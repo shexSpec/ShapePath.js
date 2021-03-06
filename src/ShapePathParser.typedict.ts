@@ -1,5 +1,5 @@
 import {
-  PathExpr, Intersection, Path, Step, Axis, Attribute, Function, FuncName, Iri, BNode,
+  PathExpr, Union, Intersection, Path, Step, Axis, Attribute, Function, FuncName, Iri, BNode,
   termType,
   shapeExprType,
   tripleExprType,
@@ -23,6 +23,9 @@ import { comparison, rvalue } from './ShapePathParserInternals'
 export interface TysonTypeDictionary {
   top: unknown;
   shapePath: PathExpr;
+  _O_QGT_COMMA_E_S_QsequenceStep_E_C: Union | Intersection | Path;
+  _Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star: Array<Union | Intersection | Path>;
+  sequenceStep: Union | Intersection | Path;
   _O_QIT_union_E_S_QunionStep_E_C: Intersection | Path;
   _Q_O_QIT_union_E_S_QunionStep_E_C_E_Star: Array<Path | Intersection>;
   unionStep: Path | Intersection;
