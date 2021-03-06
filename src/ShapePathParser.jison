@@ -24,7 +24,7 @@ function makeFunction (assertionP: boolean, firstArg: FuncArg, comp: comparison 
 }
 
 
-function makeFilters(type: termType | null, filters: Array<Function>): Array<Function> | undefined {
+function filterTermType(type: termType | null, filters: Array<Function>): Array<Function> | undefined {
   if (type)
     filters.unshift(
       new Filter(FuncName.equal, [
@@ -66,11 +66,11 @@ export function shapeLabelShortCut(label: Iri) {
 
 export function predicateShortCut(label: Iri) {
   return [
-    new AxisStep(Axis.thisShapeExpr, makeFilters(t_shapeExprType.Shape, [])),
+    new AxisStep(Axis.thisShapeExpr, filterTermType(t_shapeExprType.Shape, [])),
     new ChildStep(t_shapeAttr.expression),
     new AxisStep(
       Axis.thisTripleExpr,
-      makeFilters(
+      filterTermType(
         t_tripleExprType.TripleConstraint,
         [
           new Filter(FuncName.equal, [
@@ -307,10 +307,10 @@ _O_QGT_AT_E_Or_QGT_DOT_E_C:
 ;
 
 step:
-    _QIT_child_E_Opt termType _Qfilter_E_Star	-> new ChildStep(t_attribute.Any, makeFilters($2, $3))
-  | _QIT_child_E_Opt attributeOrAny _QtermType_E_Opt _Qfilter_E_Star	-> new ChildStep($2, makeFilters($3, $4))
-  | nonChildAxis _QtermType_E_Opt _Qfilter_E_Star	-> new AxisStep($1, makeFilters($2, $3))
-  | GT_LPAREN shapePath GT_RPAREN _QtermType_E_Opt _Qfilter_E_Star	-> new PathExprStep($2, makeFilters($4, $5))
+    _QIT_child_E_Opt termType _Qfilter_E_Star	-> new ChildStep(t_attribute.Any, filterTermType($2, $3))
+  | _QIT_child_E_Opt attributeOrAny _QtermType_E_Opt _Qfilter_E_Star	-> new ChildStep($2, filterTermType($3, $4))
+  | nonChildAxis _QtermType_E_Opt _Qfilter_E_Star	-> new AxisStep($1, filterTermType($2, $3))
+  | GT_LPAREN shapePath GT_RPAREN _QtermType_E_Opt _Qfilter_E_Star	-> new PathExprStep($2, filterTermType($4, $5))
 ;
 
 _QIT_child_E_Opt:
@@ -318,14 +318,14 @@ _QIT_child_E_Opt:
   | IT_child	-> null
 ;
 
-_QtermType_E_Opt:
-    	-> null
-  | termType	
-;
-
 _Qfilter_E_Star:
     	-> []
   | _Qfilter_E_Star filter	-> $1.concat([$2])
+;
+
+_QtermType_E_Opt:
+    	-> null
+  | termType	
 ;
 
 nonChildAxis:

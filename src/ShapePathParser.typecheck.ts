@@ -48,7 +48,7 @@ function makeFunction(
   return assertionP ? new Assertion(ret) : ret;
 }
 
-function makeFilters(
+function filterTermType(
   type: termType | null,
   filters: Array<Function>
 ): Array<Function> | undefined {
@@ -88,11 +88,11 @@ export function shapeLabelShortCut(label: Iri) {
 
 export function predicateShortCut(label: Iri) {
   return [
-    new AxisStep(Axis.thisShapeExpr, makeFilters(t_shapeExprType.Shape, [])),
+    new AxisStep(Axis.thisShapeExpr, filterTermType(t_shapeExprType.Shape, [])),
     new ChildStep(t_shapeAttr.expression),
     new AxisStep(
       Axis.thisTripleExpr,
-      makeFilters(t_tripleExprType.TripleConstraint, [
+      filterTermType(t_tripleExprType.TripleConstraint, [
         new Filter(FuncName.equal, [
           new Path([new ChildStep(t_attribute.predicate)]),
           label,
@@ -290,7 +290,7 @@ const semanticActions = {
     $3: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
     let $$: TysonTypeDictionary["step"];
-    $$ = new ChildStep(t_attribute.Any, makeFilters($2, $3));
+    $$ = new ChildStep(t_attribute.Any, filterTermType($2, $3));
     return $$;
   },
 
@@ -300,7 +300,7 @@ const semanticActions = {
     $4: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
     let $$: TysonTypeDictionary["step"];
-    $$ = new ChildStep($2, makeFilters($3, $4));
+    $$ = new ChildStep($2, filterTermType($3, $4));
     return $$;
   },
 
@@ -310,7 +310,7 @@ const semanticActions = {
     $3: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
     let $$: TysonTypeDictionary["step"];
-    $$ = new AxisStep($1, makeFilters($2, $3));
+    $$ = new AxisStep($1, filterTermType($2, $3));
     return $$;
   },
 
@@ -320,7 +320,7 @@ const semanticActions = {
     $5: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
     let $$: TysonTypeDictionary["step"];
-    $$ = new PathExprStep($2, makeFilters($4, $5));
+    $$ = new PathExprStep($2, filterTermType($4, $5));
     return $$;
   },
 
@@ -336,20 +336,6 @@ const semanticActions = {
     return $$;
   },
 
-  "_QtermType_E_Opt -> "(): TysonTypeDictionary["_QtermType_E_Opt"] {
-    let $$: TysonTypeDictionary["_QtermType_E_Opt"];
-    $$ = null;
-    return $$;
-  },
-
-  "_QtermType_E_Opt -> termType"(
-    $1: TysonTypeDictionary["termType"]
-  ): TysonTypeDictionary["_QtermType_E_Opt"] {
-    let $$: TysonTypeDictionary["_QtermType_E_Opt"];
-    $$ = $1;
-    return $$;
-  },
-
   "_Qfilter_E_Star -> "(): TysonTypeDictionary["_Qfilter_E_Star"] {
     let $$: TysonTypeDictionary["_Qfilter_E_Star"];
     $$ = [];
@@ -362,6 +348,20 @@ const semanticActions = {
   ): TysonTypeDictionary["_Qfilter_E_Star"] {
     let $$: TysonTypeDictionary["_Qfilter_E_Star"];
     $$ = $1.concat([$2]);
+    return $$;
+  },
+
+  "_QtermType_E_Opt -> "(): TysonTypeDictionary["_QtermType_E_Opt"] {
+    let $$: TysonTypeDictionary["_QtermType_E_Opt"];
+    $$ = null;
+    return $$;
+  },
+
+  "_QtermType_E_Opt -> termType"(
+    $1: TysonTypeDictionary["termType"]
+  ): TysonTypeDictionary["_QtermType_E_Opt"] {
+    let $$: TysonTypeDictionary["_QtermType_E_Opt"];
+    $$ = $1;
     return $$;
   },
 
