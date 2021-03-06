@@ -8,7 +8,6 @@ import {
   AxisStep,
   PathExprStep,
   Axis,
-  t_Selector,
   Assertion,
   Filter,
   Function,
@@ -75,7 +74,7 @@ function pnameToUrl(pname: string, yy: any): Iri {
 export function shapeLabelShortCut(label: Iri) {
   return [
     new AttributeStep(t_schemaAttr.shapes),
-    new AttributeStep(t_Selector.Any, [
+    new AttributeStep(t_attribute.Any, [
       new Filter(FuncName.equal, [
         new Path([new AttributeStep(t_attribute.id)]),
         label,
@@ -286,8 +285,8 @@ const semanticActions = {
     return $$;
   },
 
-  "step -> _QIT_child_E_Opt selector _QtermType_E_Opt _Qfilter_E_Star"(
-    $2: TysonTypeDictionary["selector"],
+  "step -> _QIT_child_E_Opt attributeOrAny _QtermType_E_Opt _Qfilter_E_Star"(
+    $2: TysonTypeDictionary["attributeOrAny"],
     $3: TysonTypeDictionary["_QtermType_E_Opt"],
     $4: TysonTypeDictionary["_Qfilter_E_Star"]
   ): TysonTypeDictionary["step"] {
@@ -387,16 +386,16 @@ const semanticActions = {
     return $$;
   },
 
-  "selector -> GT_STAR"(): TysonTypeDictionary["selector"] {
-    let $$: TysonTypeDictionary["selector"];
-    $$ = t_Selector.Any;
+  "attributeOrAny -> GT_STAR"(): TysonTypeDictionary["attributeOrAny"] {
+    let $$: TysonTypeDictionary["attributeOrAny"];
+    $$ = t_attribute.Any;
     return $$;
   },
 
-  "selector -> attribute"(
+  "attributeOrAny -> attribute"(
     $1: TysonTypeDictionary["attribute"]
-  ): TysonTypeDictionary["selector"] {
-    let $$: TysonTypeDictionary["selector"];
+  ): TysonTypeDictionary["attributeOrAny"] {
+    let $$: TysonTypeDictionary["attributeOrAny"];
     $$ = $1;
     return $$;
   },

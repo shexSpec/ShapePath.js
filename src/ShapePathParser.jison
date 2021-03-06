@@ -3,7 +3,7 @@
  */
 
 %{
-import {Union, Intersection, Path, AttributeStep, AxisStep, PathExprStep, Axis, t_Selector,
+import {Union, Intersection, Path, AttributeStep, AxisStep, PathExprStep, Axis,
         Assertion, Filter, Function, FuncArg, FuncName, Iri, BNode, termType,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
@@ -48,7 +48,7 @@ function pnameToUrl (pname: string, yy: any): Iri {
 export function shapeLabelShortCut(label: Iri) {
   return [
     new AttributeStep(t_schemaAttr.shapes),
-    new AttributeStep(t_Selector.Any, [
+    new AttributeStep(t_attribute.Any, [
       new Filter(FuncName.equal, [
         new Path([new AttributeStep(t_attribute.id)]),
         label
@@ -307,7 +307,7 @@ _O_QGT_AT_E_Or_QGT_DOT_E_C:
 ;
 
 step:
-    _QIT_child_E_Opt selector _QtermType_E_Opt _Qfilter_E_Star	-> new AttributeStep($2, makeFilters($3, $4))
+    _QIT_child_E_Opt attributeOrAny _QtermType_E_Opt _Qfilter_E_Star	-> new AttributeStep($2, makeFilters($3, $4))
   | nonChildAxis _QtermType_E_Opt _Qfilter_E_Star	-> new AxisStep($1, makeFilters($2, $3))
   | GT_LPAREN shapePath GT_RPAREN _QtermType_E_Opt _Qfilter_E_Star	-> new PathExprStep($2, makeFilters($4, $5))
 ;
@@ -335,8 +335,8 @@ nonChildAxis:
   | IT_ancestor	-> Axis.ancestor
 ;
 
-selector:
-    GT_STAR	-> t_Selector.Any
+attributeOrAny:
+    GT_STAR	-> t_attribute.Any
   | attribute	
 ;
 

@@ -1,10 +1,9 @@
 import {
-  PathExpr, Intersection, Path, Step, Axis, Selector, Function, FuncName, Iri, BNode,
+  PathExpr, Intersection, Path, Step, Axis, Attribute, Function, FuncName, Iri, BNode,
   termType,
   shapeExprType,
   tripleExprType,
   valueType,
-  attribute,
   schemaAttr,
   shapeExprAttr,
   nodeConstraintAttr,
@@ -42,7 +41,7 @@ export interface TysonTypeDictionary {
   _QtermType_E_Opt: termType | null;
   _Qfilter_E_Star: Array<Function>;
   nonChildAxis: Axis;
-  selector: Selector;
+  attributeOrAny: Attribute;
   filter: Function;
   filterExpr: Function
   _QIT_ASSERT_E_Opt: boolean;
@@ -57,7 +56,7 @@ export interface TysonTypeDictionary {
   shapeExprType: shapeExprType;
   tripleExprType: tripleExprType;
   valueType: valueType;
-  attribute: attribute;
+  attribute: Attribute;
   schemaAttr: schemaAttr;
   shapeExprAttr: shapeExprAttr;
   nodeConstraintAttr: nodeConstraintAttr;

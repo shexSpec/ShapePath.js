@@ -143,19 +143,19 @@ export abstract class Step extends Serializable {
 export class AttributeStep extends Step {
   t = 'AttributeStep'
   constructor(
-    public selector: Selector,
+    public attribute: Attribute,
     public filters?: Function[]
   ) { super() }
   evalStep(nodes: NodeSet, ctx: EvalContext): NodeSet {
     const selectedNodes = nodes.reduce((ret, node) => {
       let match: NodeSet = []
-      if (node instanceof Array && this.selector === t_Selector.Any) {
+      if (node instanceof Array && this.attribute === t_attribute.Any) {
         match = node
       } else if (node instanceof Object) {
-        if (this.selector === t_Selector.Any) {
+        if (this.attribute === t_attribute.Any) {
           match = Object.values(node)
         } else {
-          const key = this.selector.toString()
+          const key = this.attribute.toString()
           if (key in node)
             match = [(<any>node)[key]]
         }
@@ -358,12 +358,6 @@ export class Assertion extends Function {
   }
 }
 
-export enum t_Selector {
-  Any = '*',
-}
-
-export type Selector = t_Selector | attribute // | shapeExprAttr | valueSetValueAttr | tripleExprAttr | semActAttr | annotationAttr
-
 export enum t_termType {
   Schema = 'Schema',
   SemAct = 'SemAct',
@@ -401,13 +395,14 @@ export enum t_valueType {
 export type valueType = t_valueType
 
 export enum t_attribute {
+  Any = '*',
   type = 'type',
   id = 'id',
   semActs = 'semActs',
   annotations = 'annotations',
   predicate = 'predicate',
 }
-export type attribute = t_attribute | schemaAttr | shapeExprAttr | tripleExprAttr | valueSetValueAttr | semActAttr | annotationAttr
+export type Attribute = t_attribute | schemaAttr | shapeExprAttr | tripleExprAttr | valueSetValueAttr | semActAttr | annotationAttr
 
 export enum t_schemaAttr {
   atContext = '@context',
