@@ -1,7 +1,7 @@
 const Fs = require('fs')
 const Path = require('path')
 import { stringFacet } from 'shexj'
-import { EvalContext, NodeSet, Iri, BNode, SchemaNode, stringFacetAttr } from '../src/ShapePathAst'
+import { EvalContext, NodeSet, SchemaNode, stringFacetAttr } from '../src/ShapePathAst'
 import { ShapePathParser, ShapePathLexer } from '../src/ShapePathParser'
 import { Schema } from 'shexj'
 
@@ -104,30 +104,19 @@ Manifest.map((entry) => {
         valTest.action.schema.replace(/\.shex$/, '.json')
       )
     )
-    const inp: NodeSet = [urlify(schema)]
+    const inp: NodeSet = [schema]
     const yy = {
       base: new URL(Base),
       prefixes: {}
     }
     const pathExpr = new ShapePathParser(yy).parse(entry.shapePath)
     const res: NodeSet = pathExpr.evalPathExpr(inp, new EvalContext(schema))
-    const asJson = JSON.parse(JSON.stringify(res))
-    expect(asJson).toEqual(entry.shapePathSchemaMatch)
+    expect(res).toEqual(entry.shapePathSchemaMatch)
   })
 })
 
 function readJson(filePath: string): any {
   return JSON.parse(Fs.readFileSync(filePath, 'utf8'))
-}
-
-function urlify(s: any): Schema {
-  for (let k in s) {
-    if (['id', 'predicate'].indexOf(k) !== -1)
-      s[k] = s[k].startsWith('_:') ? new BNode(s[k]) : new Iri(s[k])
-    else if (s[k] instanceof Object)
-      urlify(s[k]);
-  }
-  return <Schema>s
 }
 
 function parse(text: string): object {
@@ -138,9 +127,7 @@ function parse(text: string): object {
       pre: 'http://a.example/pre',
     }
   }
-  const parsed = new ShapePathParser(yy).parse(text)
-  const stripped = JSON.parse(JSON.stringify(parsed))
-  return stripped
+  return new ShapePathParser(yy).parse(text)
 }
 
 describe('parser coverage', () => {

@@ -2,7 +2,8 @@
  *
  */
 
-import { FuncName, Iri } from './ShapePathAst'
+import { FuncName } from './ShapePathAst'
+type Iri = string // annotate IRIs
 
 export type rvalue = number | Iri
 export interface comparison {

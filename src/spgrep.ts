@@ -2,7 +2,7 @@
 const Fs = require('fs')
 import { Schema } from 'shexj'
 import { ShapePathParser } from './ShapePathParser'
-import { EvalContext, NodeSet, Iri, BNode } from './ShapePathAst'
+import { EvalContext, NodeSet } from './ShapePathAst'
 
 const Base = 'file://' + __dirname
 
@@ -34,7 +34,7 @@ program
     files.forEach(filePath => {
       log('Executing %s on %s', pathStr, filePath)
       const schema: Schema = readJson(filePath)
-      const inp: NodeSet = [urlify(schema)]
+      const inp: NodeSet = [schema]
       const leader = command['with-filename'] ? filePath + ': ' : ''
 
       const res: NodeSet = pathExpr.evalPathExpr(inp, new EvalContext(schema))
@@ -48,12 +48,3 @@ function readJson(filePath: string): any {
   return JSON.parse(Fs.readFileSync(filePath, 'utf8'))
 }
 
-function urlify(s: any): Schema {
-  for (let k in s) {
-    if (['id', 'predicate'].indexOf(k) !== -1)
-      s[k] = s[k].startsWith('_:') ? new BNode(s[k]) : new Iri(s[k])
-    else if (s[k] instanceof Object)
-      urlify(s[k]);
-  }
-  return <Schema>s
-}

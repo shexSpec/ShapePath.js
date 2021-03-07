@@ -4,7 +4,7 @@
  */
 
 import {Sequence, Union, Intersection, Path, ChildStep, AxisStep, PathExprStep, Axis,
-        Assertion, Filter, Function, FuncArg, FuncName, Iri, BNode, termType,
+        Assertion, Filter, Function, FuncArg, FuncName, termType,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
         t_numericFacetAttr, t_valueSetValueAttr, t_shapeAttr, t_tripleExprAttr,
@@ -35,6 +35,8 @@ function filterTermType(type: termType | null, filters: Array<Function>): Array<
   return filters.length > 0 ? filters : undefined
 }
 
+type Iri = string // annotate IRIs
+const newIri = (s:string) => s
 function pnameToUrl (pname: string, yy: any): Iri {
   const idx = pname.indexOf(':')
   const pre = pname.substr(0, idx)
@@ -42,7 +44,7 @@ function pnameToUrl (pname: string, yy: any): Iri {
   if (!(pre in yy.prefixes))
     throw Error(`unknown prefix in ${pname}`)
   const ns = yy.prefixes[pre]
-  return new Iri(new URL(ns + lname, yy.base).href)
+  return newIri(new URL(ns + lname, yy.base).href)
 }
 
 export function shapeLabelShortCut(label: Iri) {
@@ -401,7 +403,7 @@ case 143:
 this.$ = t_annotationAttr.object;
 break;
 case 144:
-this.$ = new Iri(new URL($$[$0].substr(1, $$[$0].length - 2), yy.base).href);
+this.$ = newIri(new URL($$[$0].substr(1, $$[$0].length - 2), yy.base).href);
 break;
 case 146: case 147:
 this.$ = pnameToUrl($$[$0], yy);

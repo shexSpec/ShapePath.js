@@ -1,18 +1,4 @@
 /** ShapePath types
- * class hierarchy:
- *   Serializable
- *     PathExpr
- *       Junction
- *         Sequence
- *         Union
- *         Intersection
- *       Path
- *     Step
- *       UnitStep
- *       PathExprStep
- *     Function
- *       Filter
- *       Assertion
  */
 
 import * as ShExJ from 'shexj';
@@ -63,30 +49,6 @@ export type SchemaNode = ShExJ.Schema
 
 export type NodeSet = Array<SchemaNode>
 
-export abstract class RdfTerm {
-  constructor(
-    protected value: string
-  ) { }
-  abstract equals(other: RdfTerm): boolean
-  toJSON(): string {
-    return this.value
-  }
-}
-export class Iri extends RdfTerm {
-  equals(other: RdfTerm): boolean {
-    return (other instanceof Iri)
-      ? other.value === this.value
-      : false
-  }
-}
-export class BNode extends RdfTerm {
-  equals(other: RdfTerm): boolean {
-    return (other instanceof BNode)
-      ? other.value === this.value
-      : false
-  }
-}
-
 export abstract class Serializable {
   abstract t: string
 }
@@ -96,6 +58,22 @@ export class EvalContext {
     public schema: ShExJ.Schema,
   ) { }
 }
+
+/* class hierarchy
+ *   Serializable
+ *     PathExpr
+ *       Junction
+ *         Sequence
+ *         Union
+ *         Intersection
+ *       Path
+ *     Step
+ *       UnitStep
+ *       PathExprStep
+ *     Function
+ *       Filter
+ *       Assertion
+ */
 
 export abstract class PathExpr extends Serializable {
   abstract evalPathExpr(nodes: NodeSet, ctx: EvalContext): NodeSet
@@ -281,6 +259,7 @@ export enum FuncName {
   greaterThan = 'greaterThan',
 }
 
+type Iri = string // annotate IRIs
 export type FuncArg = Function | PathExpr | termType | Iri | number
 
 export class Filter extends Function {
@@ -309,10 +288,10 @@ export class Filter extends Function {
       switch (this.op) {
         case FuncName.equal:
           const [l, r] = args
-          if (l === r) // (number, numper), (Iri, Iri), (Object, Object)
+          if (l === r || sameJsonldString(l, r)) // (number, numper), (Iri, Iri), (Object, Object)
             return [node]
-          if (l instanceof Iri && r instanceof Iri && l.toJSON() === r.toJSON()) // (number, numper), (Iri, Iri), (Object, Object)
-            return [node]
+          // if (l instanceof Iri && r instanceof Iri && l.toJSON() === r.toJSON()) // (number, numper), (Iri, Iri), (Object, Object)
+          //   return [node]
           break
         case FuncName.lessThan:
         case FuncName.greaterThan:
@@ -325,7 +304,7 @@ export class Filter extends Function {
 
     function evalArgs(args: FuncArg[], node: SchemaNode, allNodes: NodeSet) {
       return args.map((arg, idx) => {
-        if (typeof arg === 'number' || typeof arg === 'string' || arg instanceof Iri)
+        if (typeof arg === 'number' || typeof arg === 'string' /* || arg instanceof Iri */)
           return arg
         if (arg instanceof Function)
           return arg.evalFunction(node, allNodes, idx, ctx)[0]
@@ -337,6 +316,18 @@ export class Filter extends Function {
   }
 }
 
+function sameJsonldString(l: any, r: any): boolean {
+  return isPlainObject(l) && isPlainObject(r)
+    // test as ShExJ.ObjectLiteral
+    && l.value === r.value
+    && l.language === r.language
+    && l.type === r.type
+
+  function isPlainObject(value: any) {
+    return value instanceof Object &&
+      Object.getPrototypeOf(value) == Object.prototype;
+  }
+}
 
 const Pass = [true]
 const Fail = [false]

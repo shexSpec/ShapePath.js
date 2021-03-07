@@ -1,5 +1,5 @@
 import {
-  PathExpr, Union, Intersection, Path, Step, Axis, Attribute, Function, FuncName, Iri, BNode,
+  PathExpr, Union, Intersection, Path, Step, Axis, Attribute, Function, FuncName,
   termType,
   shapeExprType,
   tripleExprType,
@@ -18,6 +18,7 @@ import {
   annotationAttr,
   FuncArg,
 } from './ShapePathAst'
+type Iri = string // annotate IRIs
 import { comparison, rvalue } from './ShapePathParserInternals'
 
 export interface TysonTypeDictionary {

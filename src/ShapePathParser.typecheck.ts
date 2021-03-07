@@ -14,8 +14,6 @@ import {
   Function,
   FuncArg,
   FuncName,
-  Iri,
-  BNode,
   termType,
   t_termType,
   t_shapeExprType,
@@ -63,13 +61,15 @@ function filterTermType(
   return filters.length > 0 ? filters : undefined;
 }
 
+type Iri = string; // annotate IRIs
+const newIri = (s: string) => s;
 function pnameToUrl(pname: string, yy: any): Iri {
   const idx = pname.indexOf(":");
   const pre = pname.substr(0, idx);
   const lname = pname.substr(idx + 1);
   if (!(pre in yy.prefixes)) throw Error(`unknown prefix in ${pname}`);
   const ns = yy.prefixes[pre];
-  return new Iri(new URL(ns + lname, yy.base).href);
+  return newIri(new URL(ns + lname, yy.base).href);
 }
 
 export function shapeLabelShortCut(label: Iri) {
@@ -1100,7 +1100,7 @@ const semanticActions = {
     $1: TysonTypeDictionary["IRIREF"]
   ): TysonTypeDictionary["iri"] {
     let $$: TysonTypeDictionary["iri"];
-    $$ = new Iri(new URL($1.substr(1, $1.length - 2), yy.base).href);
+    $$ = newIri(new URL($1.substr(1, $1.length - 2), yy.base).href);
     return $$;
   },
 
