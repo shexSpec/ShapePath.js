@@ -1,0 +1,13 @@
+[
+  {
+    "title": "#1dotShapeAND1dot3X_pass",
+    "desc": "<S1> { <p1> . } AND { <p2> . } AND { <p3> . } on { <s1> <p1> 'X'; <p2> 'X'; <p3> 'X' }",
+    "shexTest": "#1dotShapeAND1dot3X_pass",
+    "shapePath": "@<http://a.example/S1>.<http://a.example/p2>",
+    "shapePathSchemaMatch": [{
+      "type": "TripleConstraint",
+      "predicate": "http://a.example/p2"
+    }],
+    "shapePathDataMatch": ["X"]
+  }
+]

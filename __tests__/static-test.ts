@@ -1,9 +1,134 @@
 const Fs = require('fs')
 const Path = require('path')
+import { stringFacet } from 'shexj'
+import { EvalContext, NodeSet, Iri, BNode, SchemaNode, stringFacetAttr } from '../src/ShapePathAst'
 import { ShapePathParser, ShapePathLexer } from '../src/ShapePathParser'
+import { Schema } from 'shexj'
+
 const Base = 'http://a.example/some/path/' // 'file://'+__dirname
 
+interface extensionResults {
+  extension: string,
+  prints: string
+}
 
+enum trait {
+  Empty,
+  TriplePattern,
+  ToldBNode,
+  BNodeShapeLabel,
+  NodeKind,
+  Datatype,
+  ValidLexicalForm,
+  DotCardinality,
+  ShapeReference,
+  IriEquivalence,
+  NumericEquivalence,
+  LanguageTagEquivalence,
+  DatatypedLiteralEquivalence,
+  BooleanEquivalence,
+  LengthFacet,
+  FractionDigitsFacet,
+  TotalDigitsFacet,
+  ComparatorFacet,
+  LexicalBNode,
+  OutsideBMP,
+  PaternFacet,
+  Stem,
+  ValueSet,
+  ValueReference,
+  OrValueExpression,
+  AndValueExpression,
+  RepeatedOneOf,
+  EachOf,
+  Extra,
+  VapidExtra,
+  Start,
+  Annotation,
+  SemanticAction,
+  ExternalSemanticAction,
+  Unsatisfiable,
+  FocusConstraint,
+}
+
+interface ShExValidationTest {
+  "@id": string,
+  "@type": "sht:ValidationTest" | "sht:ValidationFailure",
+  "action": {
+    "schema": string,
+    "shape": string,
+    "data": string,
+    "focus": stringFacetAttr
+  },
+  "extensionResults": Array<extensionResults>,
+  "name": string,
+  "trait": Array<trait>,
+  "comment": string,
+  "status": string
+}
+
+interface TestMap { [name: string]: ShExValidationTest }
+
+interface ManifestEntry {
+  title: string,
+  desc: string,
+  shexTest: string,
+  shapePath: string,
+  shapePathSchemaMatch: Array<SchemaNode>,
+  shapePathDataMatch: Array<any>,
+}
+
+const ValidationTestsById: TestMap = JSON.parse(
+  Fs.readFileSync(Path.join(__dirname,
+    '../../shexTest/validation/manifest.jsonld'),
+    'utf8'))['@graph'][0].entries
+  .reduce((tests: TestMap, test: ShExValidationTest) => {
+    tests[test['@id']] = test
+    return tests
+  }, {})
+const Manifest: Array<ManifestEntry> = JSON.parse(
+  Fs.readFileSync(
+    Path.join(
+      __dirname,
+      'Manifest.json'),
+    'utf8')
+)
+
+Manifest.map((entry) => {
+  test(`${entry.title}`, () => {
+    const valTest = ValidationTestsById![entry.shexTest]
+    const schema: Schema = readJson(
+      Path.join(
+        __dirname,
+        '../../shexTest/validation/',
+        valTest.action.schema.replace(/\.shex$/, '.json')
+      )
+    )
+    const inp: NodeSet = [urlify(schema)]
+    const yy = {
+      base: new URL(Base),
+      prefixes: {}
+    }
+    const pathExpr = new ShapePathParser(yy).parse(entry.shapePath)
+    const res: NodeSet = pathExpr.evalPathExpr(inp, new EvalContext(schema))
+    const asJson = JSON.parse(JSON.stringify(res))
+    expect(asJson).toEqual(entry.shapePathSchemaMatch)
+  })
+})
+
+function readJson(filePath: string): any {
+  return JSON.parse(Fs.readFileSync(filePath, 'utf8'))
+}
+
+function urlify(s: any): Schema {
+  for (let k in s) {
+    if (['id', 'predicate'].indexOf(k) !== -1)
+      s[k] = s[k].startsWith('_:') ? new BNode(s[k]) : new Iri(s[k])
+    else if (s[k] instanceof Object)
+      urlify(s[k]);
+  }
+  return <Schema>s
+}
 
 function parse(text: string): object {
   const yy = {
@@ -139,14 +264,14 @@ describe('parser errors', () => {
   })
 })
 
-function parseFile(filename: string): object {
+function parseShapePathFile(filename: string): object {
   const txt = Fs.readFileSync(Path.join(__dirname, filename), 'utf8')
   return parse(txt)
 }
 
 describe('ShapePathParser', () => {
   test('shortcuts', () => {
-    expect(parseFile('spz/shortcuts.sp')).toEqual(Ref1)
+    expect(parseShapePathFile('spz/shortcuts.sp')).toEqual(Ref1)
   })
 })
 
