@@ -1,9 +1,17 @@
 const Fs = require('fs')
 const Path = require('path')
-import { stringFacet } from 'shexj'
+import { stringFacet, TripleConstraint } from 'shexj'
 import { EvalContext, NodeSet, SchemaNode, stringFacetAttr } from '../src/ShapePathAst'
 import { ShapePathParser, ShapePathLexer } from '../src/ShapePathParser'
 import { Schema } from 'shexj'
+
+// For validation tests
+const ShExValidator = require('@shexjs/validator')
+const ShExUtil = require('@shexjs/util')
+const ShExTerm = require('@shexjs/term')
+const ShExMap = require('@shexjs/map')
+const MapModule = ShExMap(ShExTerm)
+import { Store as RdfStore, Parser as TurtleParser } from 'n3'
 
 const Base = 'http://a.example/some/path/' // 'file://'+__dirname
 
@@ -93,27 +101,6 @@ const Manifest: Array<ManifestEntry> = JSON.parse(
       'Manifest.json'),
     'utf8')
 )
-
-Manifest.map((entry) => {
-  test(`${entry.title}`, () => {
-    const valTest = ValidationTestsById![entry.shexTest]
-    const schema: Schema = readJson(
-      Path.join(
-        __dirname,
-        '../../shexTest/validation/',
-        valTest.action.schema.replace(/\.shex$/, '.json')
-      )
-    )
-    const inp: NodeSet = [schema]
-    const yy = {
-      base: new URL(Base),
-      prefixes: {}
-    }
-    const pathExpr = new ShapePathParser(yy).parse(entry.shapePath)
-    const res: NodeSet = pathExpr.evalPathExpr(inp, new EvalContext(schema))
-    expect(res).toEqual(entry.shapePathSchemaMatch)
-  })
-})
 
 function readJson(filePath: string): any {
   return JSON.parse(Fs.readFileSync(filePath, 'utf8'))
@@ -249,6 +236,67 @@ describe('parser errors', () => {
       new ShapePathParser().parse('*[id = pre:lname]')
     }).toThrow('Cannot use \'in\' operator to search for \'pre\' in undefined')
   })
+})
+
+describe('selection/validation tests', () => {
+  Manifest.forEach((entry) =>
+    test(entry.title, () => {
+      const valTest = ValidationTestsById![entry.shexTest]
+      const schema: Schema = readJson(
+        Path.join(
+          __dirname,
+          '../../shexTest/validation/',
+          valTest.action.schema.replace(/\.shex$/, '.json')
+        )
+      )
+
+      // Resolve path against schema
+      const inp: NodeSet = [schema]
+      const yy = {
+        base: new URL(Base),
+        prefixes: {}
+      }
+      const pathExpr = new ShapePathParser(yy).parse(entry.shapePath)
+      const nodeSet: NodeSet = pathExpr.evalPathExpr(inp, new EvalContext(schema))
+      expect(nodeSet).toEqual(entry.shapePathSchemaMatch)
+
+      // Parse validation data.
+      const graph = new RdfStore()
+      graph.addQuads(new TurtleParser().parse(
+        Fs.readFileSync(
+          Path.join(
+            __dirname,
+            '../../shexTest/validation/',
+            valTest.action.data
+          )
+          , 'utf8'
+        )
+      ))
+
+      // Construct validator with ShapeMap semantic action handler.
+      const validator = ShExValidator.construct(schema, ShExUtil.rdfjsDB(graph), {});
+      const mapper = MapModule.register(validator, { ShExTerm })
+      const myVar = 'http://a.example/var1'
+      nodeSet.forEach((shexNode) => {
+        // Pretend it's a TripleConstraint. Could be any shapeExpr or tripleExpr.
+        (shexNode as TripleConstraint).semActs = [{
+          "type": "SemAct",
+          "name": MapModule.url,
+          "code": `<${myVar}>`
+        }]
+      })
+
+      // Expect successful validation.
+      const shape = valTest.action.shape || ShExValidator.start
+      const node = valTest.action.focus
+      const valRes = validator.validate([{ node, shape }])
+      expect(valRes.errors).toBeUndefined
+
+      // Compare to reference.
+      const resultBindings = ShExUtil.valToExtension(valRes, MapModule.url);
+      expect(resultBindings[myVar]).toEqual(entry.shapePathDataMatch)
+    })
+  )
 })
 
 function parseShapePathFile(filename: string): object {
