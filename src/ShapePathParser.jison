@@ -90,7 +90,7 @@ export function predicateShortCut(label: Iri) {
 /* lexical grammar */
 %lex
 
-COMMENT                 '#' [^\u000a\u000d]* | "<--" ([^-] | '-' [^-] | '--' [^>])* "-->"
+COMMENT                 '#' [^\u000a\u000d]* | "<!--" ([^-] | '-' [^-] | '--' [^>])* "-->"
 IRIREF                  '<' ([^\u0000-\u0020<>\"{}|^`\\] | {UCHAR})* '>' /* #x00=NULL #01-#x1F=control codes #x20=space */
 PNAME_NS                {PN_PREFIX}? ':'
 PNAME_LN                {PNAME_NS} {PN_LOCAL}

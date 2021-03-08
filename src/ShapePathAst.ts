@@ -90,21 +90,57 @@ export abstract class Junction extends PathExpr {
 export class Sequence extends Junction {
   t = "Sequence"
   evalPathExpr(nodes: NodeSet, ctx: EvalContext): NodeSet {
-    return nodes
+    return this.exprs.reduce(
+      (ret, expr) => ret.concat(expr.evalPathExpr(nodes, ctx))
+      , [] as NodeSet
+    )
   }
 }
 
 export class Union extends Junction {
   t = "Union"
   evalPathExpr(nodes: NodeSet, ctx: EvalContext): NodeSet {
-    return nodes
+    const seen: string[] = []
+    return this.exprs.reduce(
+      (ret, expr) => {
+        const res = expr.evalPathExpr(nodes, ctx)
+        res.forEach((elt) => {
+          const str = JSON.stringify(elt)
+          if (seen.indexOf(str) !== -1)
+            return ret
+          ret.push(elt)
+          seen.push(str)
+        })
+        return ret
+      }, [] as NodeSet
+    )
   }
 }
 
 export class Intersection extends Junction {
   t = "Intersection"
   evalPathExpr(nodes: NodeSet, ctx: EvalContext): NodeSet {
-    return nodes
+    const [first, ...rest] = this.exprs
+    const firstRes = first.evalPathExpr(nodes, ctx)
+    let seen: Map<string, SchemaNode> = new Map()
+    firstRes.forEach((elt) => {
+      const str = JSON.stringify(elt)
+      if (!(seen.has(str)))
+        seen.set(str, elt)
+    })
+    return rest.reduce(
+      (ret, expr) => {
+        const res = expr.evalPathExpr(nodes, ctx)
+        let next: Map<string, SchemaNode> = new Map()
+        res.forEach((elt) => {
+          const str = JSON.stringify(elt)
+          if (seen.has(str) && !(next.has(str)))
+            next.set(str, elt)
+        })
+        seen = next
+        return ret
+      }, firstRes
+    )
   }
 }
 
@@ -170,6 +206,9 @@ export class AxisStep extends Step {
     const selectedNodes = nodes.reduce((ret, node) => {
       let match: NodeSet = []
       switch (this.axis) {
+        case Axis.self:
+          match = [node]
+          break
         case Axis.thisShapeExpr:
           match = walkShapeExpr(node)
           break
