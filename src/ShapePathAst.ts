@@ -53,10 +53,27 @@ export abstract class Serializable {
   abstract t: string
 }
 
+type ParentMap = Map<SchemaNode, SchemaNode | null>
 export class EvalContext {
   constructor(
     public schema: ShExJ.Schema,
   ) { }
+
+  // lazy eval of parents
+  parents: ParentMap | null = null
+  getParents(): ParentMap {
+    if (this.parents === null) {
+      this.parents = new Map()
+      populateParents(this.parents, this.schema, null)
+    }
+    return this.parents
+
+    function populateParents(parents: ParentMap, node: SchemaNode, parent: SchemaNode | null) {
+      parents.set(node, parent)
+      if (typeof node === 'object')
+        Object.values(node).forEach(n2 => populateParents(parents, n2, node))
+    }
+  }
 }
 
 /* class hierarchy
@@ -215,6 +232,15 @@ export class AxisStep extends Step {
         case Axis.thisTripleExpr:
           match = walkTripleExpr(node)
           break
+        case Axis.parent: {
+          const parentMap: ParentMap = ctx.getParents()
+          const parent = parentMap.get(node)!
+          match = parent ? [parent] : []
+        } break
+        case Axis.ancestor:
+          const parentMap: ParentMap = ctx.getParents()
+          match = walkParents(parentMap, node)
+          break
       }
       return ret.concat(match)
     }, [] as NodeSet)
@@ -227,6 +253,15 @@ export class AxisStep extends Step {
         )
       , selectedNodes // Start filter walk from selected nodes.
     )
+
+    function walkParents(parentMap: ParentMap, node: SchemaNode): NodeSet {
+      const parent: SchemaNode | undefined | null = parentMap.get(node)
+      if (parent === undefined)
+        throw Error(`Should not arrive here: parentMap.get(${node})`)
+      if (parent === null) // top of the hieararchy
+        return []
+      return [parent].concat(walkParents(parentMap, parent))
+    }
 
     function walkShapeExpr(node: SchemaNode): NodeSet {
       if (node instanceof Array)

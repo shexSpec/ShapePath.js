@@ -119,19 +119,19 @@ function parse(text: string): object {
 }
 
 describe('parser coverage', () => {
-  // test('junction', () => {
-  //   parse('/*, /* union /* intersection /*')
-  // })
-  // test('separator', () => {
-  //   parse('/*, //*, */*, *//*')
-  // })
-  // test('shortcut', () => {
-  //   parse('@<i>, .<i>')
-  // })
-  test('axes', () => {
-    parse('<!-- child::*, thisShapeExpr::, thisTripleExpr, ::self::,--> parent::, ancestor::')
+  xtest('junction', () => {
+    parse('/*, /* union /* intersection /*')
   })
-  test('axis type', () => {
+  xtest('separator', () => {
+    parse('/*, //*, */*, *//*')
+  })
+  xtest('shortcut', () => {
+    parse('@<i>, .<i>')
+  })
+  xtest('axes', () => {
+    parse('child::*, thisShapeExpr::, thisTripleExpr, ::self::, parent::, ancestor::')
+  })
+  xtest('axis type', () => {
     parse('thisShapeExpr::Shape')
   })
   test('function', () => {
@@ -276,9 +276,8 @@ describe('selection/validation tests', () => {
         )
       ))
 
-      // Construct validator with ShapeMap semantic action handler.
-      const validator = ShExValidator.construct(schema, ShExUtil.rdfjsDB(graph), {});
-      const mapper = MapModule.register(validator, { ShExTerm })
+      // Add ShExMap annotations to each element of the nodeSet.
+      // ShExMap binds variables which we use to capture schema matches.
       const vars = nodeSet.map((shexNode) => {
         const varName = 'http://a.example/var' + nodeSet.indexOf(shexNode);
         // Pretend it's a TripleConstraint. Could be any shapeExpr or tripleExpr.
@@ -289,6 +288,10 @@ describe('selection/validation tests', () => {
         }]
         return varName
       })
+
+      // Construct validator with ShapeMap semantic action handler.
+      const validator = ShExValidator.construct(schema, ShExUtil.rdfjsDB(graph), {});
+      const mapper = MapModule.register(validator, { ShExTerm })
 
       // Expect successful validation.
       const shape = valTest.action.shape || ShExValidator.start
