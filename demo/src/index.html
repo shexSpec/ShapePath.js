@@ -31,9 +31,9 @@
             <input id="shape-path-input" type="text" class="form-control" placeholder="Enter ShapePath expression to select from schema" value="@<http://a.example/S1>.<http://a.example/p1>" />
 
             <span class="help-block">
-              <!-- <label> -->
-              <!--   <input id="show-shape-path-ast" type="checkbox"/> Output paths -->
-              <!-- </label> -->
+              <label>
+                <input id="show-shape-path-ast" type="checkbox"/> Output ShapePath AST
+              </label>
 
               <button class="btn btn-link btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                 Expand ShapePath expressions
@@ -105,9 +105,9 @@
       </div>
 
       <p>
-        <!-- <label> -->
-        <!--   <input id="show-parsed-triples" type="checkbox"/> show triples -->
-        <!-- </label> -->
+        <label>
+          <input id="show-parsed-triples" type="checkbox"/> show parsed triples
+        </label>
         <input id="shape-map-input" type="text" class="form-control" placeholder="Enter ShapeMap to validate data against schema" value="<http://a.example/n1>@<http://a.example/S1>" />
       </p>
 
@@ -115,7 +115,7 @@
         <div class="col-sm-6">
           <h2>Data</h2>
           <!-- htmlmin:ignore -->
-          <div id="turtle-editor" class="editor">@prefix : &lt;http://a.example/&gt; .
+          <div id="turtle-editor" class="editor">PREFIX : &lt;http://a.example/&gt;
 :n1 :p1 1;
      :p2 2 ;
      :p3 3 .</div>
