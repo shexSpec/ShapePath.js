@@ -21,6 +21,8 @@ const Base = 'http://a.example/some/path/' // 'file://'+__dirname
 class ShapePathOnlineEvaluator {
   constructor() {
     this.updateShapePathResults = this.updateShapePathResults.bind(this);
+    this.updateQueryResults = this.updateQueryResults.bind(this);
+
     this.shexjEditor = ace.edit('shexj-editor');
     this.shexjEditor.setTheme('ace/theme/solarized_dark');
     this.shexjEditor.getSession().setMode('ace/mode/json');
@@ -34,7 +36,6 @@ class ShapePathOnlineEvaluator {
     // $('#show-shape-path-ast').on('change', this.updateShapePathResults);
     this.shexjEditor.on('change', this.updateShapePathResults);
 
-    this.updateQueryResults = this.updateQueryResults.bind(this);
     this.turtleEditor = ace.edit('turtle-editor');
     this.turtleEditor.setTheme('ace/theme/solarized_dark');
     // this.turtleEditor.getSession().setMode('ace/mode/plain');
@@ -46,19 +47,18 @@ class ShapePathOnlineEvaluator {
 
     $('#shape-map-input').on('input', this.updateQueryResults);
     // $('#path-switch').on('change', this.updateQueryResults);
-    this.shexjEditor.on('change', this.updateQueryResults);
+    this.turtleEditor.on('change', this.updateQueryResults);
 
     this.updateShapePathResults();
   }
 
   updateShapePathResults() {
-    let schema;
     const shapePath = $('#shape-path-input').val();
     // const mode = $('#show-shape-path-ast').is(':checked') ? 'PATH' : 'VALUE';
     const shexjStr = this.shexjEditor.getValue();
 
     try {
-      schema = JSON.parse(shexjStr.replace(/(\r\n|\n|\r)/gm, ''));
+      this.schema = JSON.parse(shexjStr.replace(/(\r\n|\n|\r)/gm, ''));
       $('#shape-area').removeClass('has-error');
       $('#shape-alert').text('');
     } catch (error) {
@@ -67,37 +67,36 @@ class ShapePathOnlineEvaluator {
     }
 
     // Resolve path against schema
-    const inp = [schema]
+    const inp = [this.schema]
     const yy = {
       base: new URL(Base),
       prefixes: {}
     }
     const pathExpr = new ShapePathParser(yy).parse(shapePath)
-    const nodeSet = pathExpr.evalPathExpr(inp, new EvalContext(schema))
+    this.nodeSet = pathExpr.evalPathExpr(inp, new EvalContext(this.schema))
 
-    if (!_.isEmpty(nodeSet)) {
+    if (!_.isEmpty(this.nodeSet)) {
       const ret = this.shapepathResultEditor.getSession()
-            .setValue(JSON.stringify(nodeSet, undefined, 2));
-      this.updateQueryResults(schema, nodeSet);
+            .setValue(JSON.stringify(this.nodeSet, undefined, 2));
+      this.updateQueryResults(this.schema, this.nodeSet);
       return ret;
     } else {
       return this.shapepathResultEditor.getSession().setValue('No match');
     }
   }
 
-  updateQueryResults(schema, nodeSet) {
+  updateQueryResults() {
     const turtleStr = this.turtleEditor.getValue();
 
     // Parse validation data.
     const graph = new RdfStore()
     graph.addQuads(new TurtleParser({baseIRI: Base}).parse(turtleStr))
-    console.log(graph.getQuads())
 
 
     // Add ShExMap annotations to each element of the nodeSet.
     // ShExMap binds variables which we use to capture schema matches.
-    const vars = nodeSet.map((shexNode) => {
-      const varName = 'http://a.example/var' + nodeSet.indexOf(shexNode);
+    const vars = this.nodeSet.map((shexNode) => {
+      const varName = 'http://a.example/var' + this.nodeSet.indexOf(shexNode);
       // Pretend it's a TripleConstraint. Could be any shapeExpr or tripleExpr.
       shexNode.semActs = [{
         "type": "SemAct",
@@ -108,7 +107,7 @@ class ShapePathOnlineEvaluator {
     })
 
     // Construct validator with ShapeMap semantic action handler.
-    const validator = ShExValidator.construct(schema, ShExUtil.rdfjsDB(graph), {});
+    const validator = ShExValidator.construct(this.schema, ShExUtil.rdfjsDB(graph), {});
     const mapper = MapModule.register(validator, { ShExTerm })
 
     // Expect successful validation.
@@ -120,16 +119,20 @@ class ShapePathOnlineEvaluator {
     const dataMeta = schemaMeta; // cheat 'cause we're not populating them
     const smap = ShapeMap.Parser.construct(Base, schemaMeta, dataMeta)
           .parse(smapStr);
-    const valRes = validator.validate(smap)
     const resEditor = this.queryResultEditor.getSession();
-    if ("errors" in valRes) {
-      resEditor.setValue(JSON.stringify(valRes, undefined, 2))
-      return 999;
-    } else {
-    // Compare to reference.
-      const resultBindings = ShExUtil.valToExtension(valRes, MapModule.url);
-      const ret = resEditor.setValue(JSON.stringify(resultBindings, undefined, 2));
-      return ret;
+    try {
+      const valRes = validator.validate(smap)
+      if ("errors" in valRes) {
+        resEditor.setValue(JSON.stringify(valRes, undefined, 2))
+        return 999;
+      } else {
+        // Compare to reference.
+        const resultBindings = ShExUtil.valToExtension(valRes, MapModule.url);
+        const ret = resEditor.setValue(JSON.stringify(resultBindings, undefined, 2));
+        return ret;
+      }
+    } catch (e) {
+      resEditor.setValue(String(e));
     }
   }
 }
