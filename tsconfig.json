@@ -4,7 +4,9 @@
   "tabSize": 8,
   "indentStyle": 2,
   "newLineCharacter": "\n",
+  "include": [ "src" ],
   "compilerOptions": {
+    "outDir": "./dist",
 
     /* Basic Options */
     // "incremental": true,

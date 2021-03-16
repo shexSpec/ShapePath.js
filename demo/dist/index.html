@@ -1,0 +1,23 @@
+<!doctype html><html class="no-js"><head><meta charset="utf-8"><title>ShapePath online evaluator</title><meta name="description" content="An online playground for ShapePath"><meta name="viewport" content="width=device-width"><link rel="shortcut icon" href="/favicon.ico"><meta property="og:title" content="ShapePath Online Evaluator"><meta property="og:type" content="website"><meta property="og:url" content="https://github.com/shexSpec/ShapePath.js"><meta property="og:site_name" content="ShapePath Online Evaluator"><meta property="og:locale" content="en_US"><meta property="og:description" content="ShapePath Online Evaluator"><meta property="fb:admins" content="ericprud"></head><body><a href="https://github.com/shexSpec/ShapePath.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"/></a><div class="container-fluid"><div class="header"><h3 class="text-muted">ShapePath Online Evaluator <small style="font-size: 50%">stolen from <a href="http://ashphy.com/">Kazuki Hamasaki</a>'s <a href="https://jsonpath.com/">JSONPath Evaluator</a></small></h3></div><div class="row"><div class="col-sm"><div class="form-group"><input id="shape-path-input" class="form-control" placeholder="Enter ShapePath expression to select from schema" value="@<http://a.example/S1>.<http://a.example/p1>"/> <span class="help-block"><button class="btn btn-link btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Expand ShapePath expressions</button></span><div class="collapse" id="collapseExample"><div class="card card-body"><p>A ShapePath is a series of steps that select ShExJ attributes, types, axes, or the wildcard <code>*</code> which selects any child.</p><table class="table table-sm"><thead><tr><th>ShapePath</th><th>Description</th></tr></thead><tbody><tr><td>/</td><td>step separator, e.g. <code>/shapes/</code></td></tr><tr><td>@&lt;http://a.example/S1&gt;</td><td>shortcut for <code>/shapes/*[id=&lt;http://a.example/S1&gt;]</code></td></tr><tr><td>p&lt;http://a.example/p2&gt;</td><td>shortcut for <code>/thisShapeExpr::Shape/expression/thisTripleExpr::TripleConstraint[predicate=&lt;http://a.example/p2&gt;]</code></td></tr><tr><td>[]</td><td>predicate, e.g. <code>[id=&lt;http://a.example/S1&gt;]</code></td></tr></tbody></table><p>See: <a href="https://github.com/shexSpec/ShapePath.js/blob/main/src/ShapePathParser.jison#L247">grammar</a>, <a href="https://github.com/shexSpec/ShapePath.js/blob/main/__tests__/static-test.ts">tests</a></p></div></div></div></div></div><div class="row"><div class="col-sm-6"><h2>Schema</h2>
+          <div id="shexj-editor" class="editor">{ "type": "Schema", "shapes": [
+  { "type": "Shape", "id": "http://a.example/S2" },
+  { "type": "ShapeAnd", "id": "http://a.example/S1", "shapeExprs": [
+    { "type": "Shape", "expression": { "type": "EachOf", "expressions": [
+      { "type": "TripleConstraint", "predicate": "http://a.example/p1" },
+      { "type": "TripleConstraint", "predicate": "http://a.example/p2" }
+    ] } },
+    { "type": "NodeConstraint", "nodeKind": "iri" },
+    { "type": "Shape", "expression": { "type": "EachOf", "expressions": [
+      { "type": "TripleConstraint", "predicate": "http://a.example/p3" },
+      { "type": "TripleConstraint", "predicate": "http://a.example/p1" }
+    ] } }
+  ] },
+  { "type": "Shape", "id": "http://a.example/S4" }
+] }
+</div>
+          </div><div class="col-sm-6"><h2>Evaluation Results</h2><div id="shapepath-results-editor" class="editor"></div></div></div><p><input id="shape-map-input" class="form-control" placeholder="Enter ShapeMap to validate data against schema" value="<http://a.example/n1>@<http://a.example/S1>"/></p><div class="row"><div class="col-sm-6"><h2>Data</h2>
+          <div id="turtle-editor" class="editor">@prefix : &lt;http://a.example/&gt; .
+:n1 :p1 1;
+     :p2 2 ;
+     :p3 3 .</div>
+          </div><div class="col-sm-6"><h2>Query Results</h2><div id="query-results-editor" class="editor"></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js"></script><script src="scripts/main.js"></script></body></html>
