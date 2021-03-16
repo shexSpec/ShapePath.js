@@ -21,24 +21,14 @@
 
     <div class="container-fluid">
       <div class="header">
-        <h3 class="text-muted">ShapePath Online Evaluator <small style="font-size: 50%">stolen from <a href="http://ashphy.com/">Kazuki Hamasaki</a>'s <a href="https://jsonpath.com/">JSONPath Evaluator</a></small></h3>
+        <h3 class="text-muted">ShapePath Online Evaluator </h3>
+        <small class="credits">stolen from <a href="http://ashphy.com/">Kazuki Hamasaki</a>'s <a href="https://jsonpath.com/">JSONPath Evaluator</a></small>
       </div>
 
       <div class="row">
         <div class="col-sm">
           <div class="form-group">
             <!-- <label>ShapePath</label> -->
-            <input id="shape-path-input" type="text" class="form-control" placeholder="Enter ShapePath expression to select from schema" value="@<http://a.example/S1>.<http://a.example/p1>" />
-
-            <span class="help-block">
-              <label>
-                <input id="show-shape-path-ast" type="checkbox"/> Output ShapePath AST
-              </label>
-
-              <button class="btn btn-link btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                Expand ShapePath expressions
-              </button>
-            </span>
 
             <div class="collapse" id="collapseExample">
               <div class="card card-body">
@@ -79,6 +69,13 @@
       <div class="row">
         <div class="col-sm-6">
           <h2>Schema</h2>
+          <span class="help-block">
+
+            <button class="btn btn-link btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+              ?
+            </button>
+          </span>
+          <input id="shape-path-input" type="text" class="form-control" placeholder="Enter ShapePath expression to select from schema" value="@<http://a.example/S1>.<http://a.example/p1>" />
           <!-- htmlmin:ignore -->
           <div id="shexj-editor" class="editor">{ "type": "Schema", "shapes": [
   { "type": "Shape", "id": "http://a.example/S2" },
@@ -100,20 +97,20 @@
         </div>
         <div class="col-sm-6">
           <h2>Evaluation Results</h2>
+          <label>
+            <input id="show-shape-path-ast" type="checkbox"/> Output ShapePath AST
+          </label>
           <div id="shapepath-results-editor" class="editor"></div>
         </div>
       </div>
 
       <p>
-        <label>
-          <input id="show-parsed-triples" type="checkbox"/> show parsed triples
-        </label>
-        <input id="shape-map-input" type="text" class="form-control" placeholder="Enter ShapeMap to validate data against schema" value="<http://a.example/n1>@<http://a.example/S1>" />
       </p>
 
       <div class="row">
         <div class="col-sm-6">
           <h2>Data</h2>
+          <input id="shape-map-input" type="text" class="form-control" placeholder="Enter ShapeMap to validate data against schema" value="<http://a.example/n1>@<http://a.example/S1>" />
           <!-- htmlmin:ignore -->
           <div id="turtle-editor" class="editor">PREFIX : &lt;http://a.example/&gt;
 :n1 :p1 1;
@@ -123,6 +120,9 @@
         </div>
         <div class="col-sm-6">
           <h2>Query Results</h2>
+          <label>
+            <input id="show-parsed-triples" type="checkbox"/> show parsed triples
+          </label>
           <div id="query-results-editor" class="editor"></div>
         </div>
       </div>

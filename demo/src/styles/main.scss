@@ -74,3 +74,20 @@ body {
     padding-right: 0;
   }
 }
+
+h2, h3 { display: inline; }
+label { display: inline; float: right }
+input.form-control {
+    clear: both;
+    display: inline;
+    width: 50%;
+    float: right; }
+.btn {
+    margin-left: .2em;
+    background-color: buttonface;
+    border: thin solid buttontext;
+}
+.credits {
+    float: right;
+    padding-right: 8em;
+}
