@@ -53,9 +53,11 @@ module.exports = {
       // },
     ]
   },
-  node: {
-    fs: 'empty',  // @@ webpack-monitor shows require('fs') errors. help?
-    // net: 'empty',
-    // tls: 'empty',
+  resolve: {
+    fallback: {
+      fs: false,
+      buffer: false,
+      path: false,
+    }
   }
 };
