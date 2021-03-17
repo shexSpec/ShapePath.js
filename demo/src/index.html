@@ -17,7 +17,7 @@
   </head>
   <body>
     <!-- GitHub Ribbons -->
-    <a href="https://github.com/shexSpec/ShapePath.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"/></a>
+    <a href="https://github.com/shexSpec/ShapePath.js"><img class="forkMe" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"/></a>
 
     <div class="container-fluid">
       <div class="header">
@@ -68,14 +68,16 @@
 
       <div class="row">
         <div class="col-sm-6">
-          <h2>Schema</h2>
-          <span class="help-block">
-
-            <button class="btn btn-link btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-              ?
-            </button>
-          </span>
-          <input id="shape-path-input" type="text" class="form-control" placeholder="Enter ShapePath expression to select from schema" value="@<http://a.example/S1>.<http://a.example/p1>" />
+          <div class="panelHeading">
+            <h2>Schema</h2>
+            <span class="help-block">
+            
+              <button class="help btn btn-link btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                ?
+              </button>
+            </span>
+            <input id="shape-path-input" type="text" class="form-control" placeholder="Enter ShapePath expression to select from schema" value="@<http://a.example/S1>.<http://a.example/p1>" />
+          </div>
           <!-- htmlmin:ignore -->
           <div id="shexj-editor" class="editor">{ "type": "Schema", "shapes": [
   { "type": "Shape", "id": "http://a.example/S2" },
@@ -96,10 +98,12 @@
           <!-- htmlmin:ignore -->
         </div>
         <div class="col-sm-6">
-          <h2>Evaluation Results</h2>
-          <label>
-            <input id="show-shape-path-ast" type="checkbox"/> Output ShapePath AST
-          </label>
+          <div class="panelHeading">
+            <h2>Evaluation Results</h2>
+            <label>
+              <input id="show-shape-path-ast" type="checkbox"/> show ShapePath AST
+            </label>
+          </div>
           <div id="shapepath-results-editor" class="editor"></div>
         </div>
       </div>
@@ -109,9 +113,11 @@
 
       <div class="row">
         <div class="col-sm-6">
-          <h2>Data</h2>
-          <input id="shape-map-input" type="text" class="form-control" placeholder="Enter ShapeMap to validate data against schema" value="<http://a.example/n1>@<http://a.example/S1>" />
-          <!-- htmlmin:ignore -->
+          <div class="panelHeading">
+            <h2>Data</h2>
+            <input id="shape-map-input" type="text" class="form-control" placeholder="Enter ShapeMap to validate data against schema" value="<http://a.example/n1>@<http://a.example/S1>" />
+            <!-- htmlmin:ignore -->
+          </div>
           <div id="turtle-editor" class="editor">PREFIX : &lt;http://a.example/&gt;
 :n1 :p1 1;
      :p2 2 ;
@@ -119,10 +125,12 @@
           <!-- htmlmin:ignore -->
         </div>
         <div class="col-sm-6">
-          <h2>Query Results</h2>
-          <label>
-            <input id="show-parsed-triples" type="checkbox"/> show parsed triples
-          </label>
+          <div class="panelHeading">
+            <h2>Query Results</h2>
+            <label>
+              <input id="show-parsed-triples" type="checkbox"/> show parsed triples
+            </label>
+          </div>
           <div id="query-results-editor" class="editor"></div>
         </div>
       </div>

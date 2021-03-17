@@ -102,14 +102,15 @@ class ShapePathOnlineEvaluator {
     const graph = new RdfStore()
     graph.addQuads(new TurtleParser({baseIRI: Base}).parse(turtleStr))
     if ($('#show-parsed-triples').is(':checked')) {
-      queryResultsSession.setValue(JSON.stringify(graph.getQuads(), null, 2));
+      queryResultsSession.setValue(graph.getQuads().map(ntriplify).join('\n'));
     } else {
 
 
       // Add ShExMap annotations to each element of the nodeSet.
       // ShExMap binds variables which we use to capture schema matches.
       const vars = this.nodeSet.map((shexNode) => {
-        const varName = 'http://a.example/var' + this.nodeSet.indexOf(shexNode);
+        const idx = this.nodeSet.indexOf(shexNode); // first occurance of shexNode
+        const varName = 'http://a.example/binding-' + idx;
         // Pretend it's a TripleConstraint. Could be any shapeExpr or tripleExpr.
         shexNode.semActs = [{
           "type": "SemAct",
@@ -123,26 +124,43 @@ class ShapePathOnlineEvaluator {
       const validator = ShExValidator.construct(this.schema, ShExUtil.rdfjsDB(graph), {});
       const mapper = MapModule.register(validator, { ShExTerm })
 
-      // Expect successful validation.
-      const smapStr = $('#shape-map-input').val();
-      const schemaMeta = {
-        base: Base,
-        prefixes: {}
-      };
-      const dataMeta = schemaMeta; // cheat 'cause we're not populating them
-      const smap = ShapeMap.Parser.construct(Base, schemaMeta, dataMeta)
-            .parse(smapStr);
       try {
+        // Validate data against schema.
+        const smapStr = $('#shape-map-input').val();
+        const schemaMeta = {
+          base: Base,
+          prefixes: {}
+        };
+        const dataMeta = schemaMeta; // cheat 'cause we're not populating them
+        const smap = ShapeMap.Parser.construct(Base, schemaMeta, dataMeta)
+              .parse(smapStr);
         const valRes = validator.validate(smap)
         if ("errors" in valRes) {
           queryResultsSession.setValue(JSON.stringify(valRes, undefined, 2))
         } else {
-          // Compare to reference.
+          // Show values extracted from data.
           const resultBindings = ShExUtil.valToExtension(valRes, MapModule.url);
-          queryResultsSession.setValue(JSON.stringify(resultBindings, undefined, 2));
+          const values = vars.map(v => resultBindings[v])
+          queryResultsSession.setValue(JSON.stringify(values, undefined, 2));
         }
       } catch (e) {
         queryResultsSession.setValue(String(e));
+      }
+    }
+
+    function ntriplify (q) {debugger
+      return `${ntt(q.subject)} ${ntt(q.predicate)} ${ntt(q.object)} .`
+
+      function ntt (t) {
+        switch (t.termType) {
+        case 'NamedNode': return '<' + t.value + '>'
+        case 'BlankNode': return '_:' + t.value
+        case 'Literal': return '"' + t.value + '"' + (
+          t.language
+            ? '@' + t.language
+            : '^^' + t.datatype.value
+        )
+        }
       }
     }
   }

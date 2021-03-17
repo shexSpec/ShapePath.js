@@ -58,7 +58,7 @@ body {
 }
 
 .editor {
-  height: 500px;
+  height: 40vh;
 }
 
 // Responsive: Portrait tablets and up
@@ -75,19 +75,43 @@ body {
   }
 }
 
-h2, h3 { display: inline; }
-label { display: inline; float: right }
-input.form-control {
-    clear: both;
-    display: inline;
-    width: 50%;
-    float: right; }
-.btn {
+h2, h3 { display: inline; margin: 0; }
+
+input {
+    margin-left: 1em;
+}
+
+.panelHeading {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.help {
     margin-left: .2em;
     background-color: buttonface;
     border: thin solid buttontext;
+    height: 2.5em;
+    width: 1.5em;
+    font-size: .5em;
+    vertical-align: 80%;
+    padding: 0;
+    text-decoration: none;
 }
+
 .credits {
     float: right;
     padding-right: 8em;
 }
+
+.forkMe {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    opacity: 20%;
+}
+
+.forkMe:hover { opacity: 80%; }
+
