@@ -4,7 +4,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import 'bootstrap';
 import { EvalContext } from '../../../dist/ShapePathAst'
-import { ShapePathParser, ShapePathLexer } from '../../../dist/ShapePathParser'
+import { ShapePathParser } from '../../../dist/ShapePathParser'
 const ShExValidator = require('@shexjs/validator')
 const ShExUtil = require('@shexjs/util')
 const ShExTerm = require('@shexjs/term')
@@ -16,10 +16,11 @@ import { Store as RdfStore, Parser as TurtleParser } from 'n3'
 ShapeMap.start = ShExValidator.start; // ShapeMap uses ShExValidator's start symbol.
 
 const Base = 'http://a.example/some/path/' // 'file://'+__dirname
+let Me = null
 
 // ShapePath Online Evaluator
 class ShapePathOnlineEvaluator {
-  constructor() {
+  constructor() {Me = this
     this.schema = { type: "Schema" };
     this.nodeSet = [];
 
@@ -164,9 +165,29 @@ class ShapePathOnlineEvaluator {
       }
     }
   }
+
+  async loadManifestEntry (entry, base) {
+    const loaded = await Promise.all(
+      Object.keys(entry).filter(attr => attr.endsWith('URL')).map(async attr => {
+        const bare = attr.substr(0, attr.length - 3)
+        entry[attr] = new URL(entry[attr], base)
+        const resp = await fetch(entry[attr])
+        entry[bare] = await resp.text()
+        return bare // handy to see which ones were loaded
+      }))
+    $('#shape-path-input').val(entry.shapePath)
+    $('#shape-map-input').val(entry.shapeMap)
+    this.shexjEditor.getSession().setValue(entry.schema)
+    this.turtleEditor.getSession().setValue(entry.data)
+  }
 }
 
-$(() => {
+$(async () => {
   $('#shape-path-input').focus();
-  return new ShapePathOnlineEvaluator();
+  const demo = new ShapePathOnlineEvaluator();
+  const manURL = new URL('examples/issue/manifest.json', location)
+  const resp = await fetch(manURL)
+  const text = await resp.text()
+  const manifest = JSON.parse(text)
+  demo.loadManifestEntry(manifest[0], manURL)
 });
