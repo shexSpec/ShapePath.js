@@ -104,10 +104,10 @@
     "status": "unapproved"
   },
   {
-    "title": "@<S1>.<p2>->[X]",
-    "desc": "shortcut @shape.predicate",
+    "title": "@<S1>~<p2>->[X]",
+    "desc": "shortcut @shape~predicate",
     "shexTest": "#1dotShapeAND1dot3X_pass",
-    "shapePath": "@<http://a.example/S1>.<http://a.example/p2>",
+    "shapePath": "@<http://a.example/S1>~<http://a.example/p2>",
     "shapePathSchemaMatch": [{
       "type": "TripleConstraint",
       "predicate": "http://a.example/p2"
@@ -116,8 +116,8 @@
     "status": "unapproved"
   },
   {
-    "title": "compile(@<S1>.<p2>)->[X]",
-    "desc": "expanded @shape.predicate",
+    "title": "compile(@<S1>~<p2>)->[X]",
+    "desc": "expanded @shape~predicate",
     "shexTest": "#1dotShapeAND1dot3X_pass",
     "shapePath": "/shapes/*[id=<http://a.example/S1>][assert count() = 1]/thisShapeExpr::Shape/expression/thisTripleExpr::TripleConstraint[predicate=<http://a.example/p2>]",
     "shapePathSchemaMatch": [{
@@ -129,7 +129,7 @@
   },
   {
     "title": "child-axis",
-    "desc": "expanded @shape.predicate using child:: axis",
+    "desc": "expanded @shape~predicate using child:: axis",
     "shexTest": "#1dotShapeAND1dot3X_pass",
     "shapePath": "/child::*/*[id=<http://a.example/S1>][assert count() = 1]/thisShapeExpr::Shape/child::expression/thisTripleExpr::TripleConstraint[predicate=<http://a.example/p2>]",
     "shapePathSchemaMatch": [{
@@ -141,7 +141,7 @@
   },
   {
     "title": "self-axis",
-    "desc": "expanded @shape.predicate using self:: axis",
+    "desc": "expanded @shape~predicate using self:: axis",
     "shexTest": "#1dotShapeAND1dot3X_pass",
     "shapePath": "/self::/shapes/*/self::[id=<http://a.example/S1>][assert count() = 1]/thisShapeExpr::Shape/child::expression/thisTripleExpr::TripleConstraint[predicate=<http://a.example/p2>]",
     "shapePathSchemaMatch": [{
@@ -153,7 +153,7 @@
   },
   {
     "title": "parent-axis",
-    "desc": "expanded @shape.predicate",
+    "desc": "expanded @shape~predicate",
     "shexTest": "#1dotShapeAND1dot3X_pass",
     "shapePath": "/shapes/parent::/shapes/*[id=<http://a.example/S1>][assert count() = 1]/thisShapeExpr::Shape/expression/parent::/expression/thisTripleExpr::TripleConstraint[predicate=<http://a.example/p2>]",
     "shapePathSchemaMatch": [{
@@ -165,7 +165,7 @@
   },
   {
     "title": "ancestor-axis",
-    "desc": "expanded @shape.predicate",
+    "desc": "expanded @shape~predicate",
     "shexTest": "#1dotShapeAND1dot3X_pass",
     "shapePath": "/shapes/*/ancestor::/shapes/*[id=<http://a.example/S1>][assert count() = 1]/thisShapeExpr::Shape/expression/thisTripleExpr::TripleConstraint[predicate=<http://a.example/p2>]",
     "shapePathSchemaMatch": [{
@@ -176,10 +176,10 @@
     "status": "unapproved"
   },
   {
-    "title": "@<S1>.<p3>UNION@<S1>.<p2>->[X,X]",
+    "title": "@<S1>~<p3>UNION@<S1>~<p2>->[X,X]",
     "desc": "union of different results",
     "shexTest": "#1dotShapeAND1dot3X_pass",
-    "shapePath": "@<http://a.example/S1>.<http://a.example/p3> union @<http://a.example/S1>.<http://a.example/p2>",
+    "shapePath": "@<http://a.example/S1>~<http://a.example/p3> union @<http://a.example/S1>~<http://a.example/p2>",
     "shapePathSchemaMatch": [{
       "type": "TripleConstraint",
       "predicate": "http://a.example/p3"
@@ -191,10 +191,10 @@
     "status": "unapproved"
   },
   {
-    "title": "@<S1>.<p2>UNION@<S1>.<p2>->[X]",
+    "title": "@<S1>~<p2>UNION@<S1>~<p2>->[X]",
     "desc": "union of identical results",
     "shexTest": "#1dotShapeAND1dot3X_pass",
-    "shapePath": "@<http://a.example/S1>.<http://a.example/p2> union @<http://a.example/S1>.<http://a.example/p2>",
+    "shapePath": "@<http://a.example/S1>~<http://a.example/p2> union @<http://a.example/S1>~<http://a.example/p2>",
     "shapePathSchemaMatch": [{
       "type": "TripleConstraint",
       "predicate": "http://a.example/p2"
@@ -203,10 +203,10 @@
     "status": "unapproved"
   },
   {
-    "title": "@<S1>.<p2>,@<S1>.<p2>->[X,X]",
+    "title": "@<S1>~<p2>,@<S1>~<p2>->[X,X]",
     "desc": "sequence of identical results",
     "shexTest": "#1dotShapeAND1dot3X_pass",
-    "shapePath": "@<http://a.example/S1>.<http://a.example/p2>, @<http://a.example/S1>.<http://a.example/p2>",
+    "shapePath": "@<http://a.example/S1>~<http://a.example/p2>, @<http://a.example/S1>~<http://a.example/p2>",
     "shapePathSchemaMatch": [{
       "type": "TripleConstraint",
       "predicate": "http://a.example/p2"

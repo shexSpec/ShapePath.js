@@ -213,7 +213,7 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 
 ","                     return 'GT_COMMA';
 "@"                     return 'GT_AT';
-"."                     return 'GT_DOT';
+"~"                     return 'GT_TILDE';
 "*"                     return 'GT_STAR';
 "("                     return 'GT_LPAREN';
 ")"                     return 'GT_RPAREN';
@@ -315,12 +315,12 @@ nextStep:
 ;
 
 shortcut:
-    _O_QGT_AT_E_Or_QGT_DOT_E_C iri	-> $1 === '@' ? shapeLabelShortCut($2) : predicateShortCut($2)
+    _O_QGT_AT_E_Or_QGT_TILDE_E_C iri	-> $1 === '@' ? shapeLabelShortCut($2) : predicateShortCut($2)
 ;
 
-_O_QGT_AT_E_Or_QGT_DOT_E_C:
+_O_QGT_AT_E_Or_QGT_TILDE_E_C:
     GT_AT	
-  | GT_DOT	
+  | GT_TILDE	
 ;
 
 step:

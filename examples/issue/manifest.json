@@ -4,7 +4,7 @@
     "desc": "Issue hrefs",
 
     "schemaURL": "Issue.json",
-    "shapePath": "@<http://project.example/schema#DiscItem>.<http://project.example/ns#href>,@<http://project.example/schema#Issue>.<http://project.example/ns#spec>/valueExpr/shapeExprs.<http://project.example/ns#href>",
+    "shapePath": "@<http://project.example/schema#DiscItem>~<http://project.example/ns#href>,@<http://project.example/schema#Issue>~<http://project.example/ns#spec>/valueExpr/shapeExprs~<http://project.example/ns#href>",
     "shapePathSchemaMatch": [{"type":"TripleConstraint","predicate":"http://project.example/ns#href","valueExpr":{"type":"NodeConstraint","nodeKind":"iri"}},{"type":"TripleConstraint","predicate":"http://project.example/ns#href","valueExpr":{"type":"NodeConstraint","nodeKind":"iri"}}],
 
     "dataURL": "Issue2.ttl",

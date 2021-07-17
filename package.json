@@ -9,9 +9,9 @@
     "build": "tsc && webpack --config webpack.prod.js",
     "all": "npm run parser && npm run test",
     "parser": "ts-jison -n ShapePath -t typescript -o ./src/ShapePathParser.ts ./src/ShapePathParser.jison && ./scripts/redundantBreaks ./src/ShapePathParser.ts",
-    "compile": "tsc ./src/ShapePathParser.ts",
+    "compile": "tsc",
     "parse": "ts-node ./src/parseAndPrint.ts ./__tests__/spz/shortcuts.sp",
-    "test": "jest",
+    "test": "jest && npm run parse",
     "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand ./__tests__/static-test.ts",
     "test3999": "npm run parser && npm run compile && npm run test",
     "tyson": "tyson ./src/ShapePathParser.jison ./src/ShapePathParser.typedict.ts --out ./src/ShapePathParser.typecheck.ts && ./scripts/fixupNames ./src/ShapePathParser.typecheck.ts && tsc --noEmit ./src/ShapePathParser.typecheck.ts"
