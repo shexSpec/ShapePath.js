@@ -12,7 +12,8 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: 'demo/src/index.html'
+      filename: 'index.html',
+      template: 'demo/src/index.html',
     }),
     new CopyWebpackPlugin({
       patterns: [

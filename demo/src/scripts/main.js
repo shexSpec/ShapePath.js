@@ -57,58 +57,65 @@ class ShapePathOnlineEvaluator {
   }
 
   updateShapePathResults() { // one early return
+    let currentAction;
+    document.querySelector('#shapepath-results-editor').classList.remove('error');
     const shapepathResultsSession = this.shapepathResultEditor.getSession();
 
-    // Parse ShapePath
-    const shapePath = $('#shape-path-input').val();
-    const yy = {
-      base: new URL(Base),
-      prefixes: {}
-    }
-    const pathExpr = new ShapePathParser(yy).parse(shapePath)
-    if ($('#show-shape-path-ast').is(':checked')) {
-      shapepathResultsSession.setValue(JSON.stringify(pathExpr, null, 2));
-    } else {
-
-      const shexjStr = this.shexjEditor.getValue();
-
-      try {
-        this.schema = JSON.parse(shexjStr.replace(/(\r\n|\n|\r)/gm, ''));
-        $('#shape-area').removeClass('has-error');
-        $('#shape-alert').text('');
-      } catch (error) {
-        shapepathResultsSession.setValue('Shape Parse Error');
-        return;
+    try {
+      currentAction = 'Parsing ShapePath';
+      const shapePath = $('#shape-path-input').val();
+      const yy = {
+        base: new URL(Base),
+        prefixes: {}
       }
-
-      // Resolve path against schema
-      const inp = [this.schema]
-      this.nodeSet = pathExpr.evalPathExpr(inp, new EvalContext(this.schema))
-
-      if (!_.isEmpty(this.nodeSet)) {
-        shapepathResultsSession
-          .setValue(JSON.stringify(this.nodeSet, undefined, 2));
-        this.updateQueryResults(this.schema, this.nodeSet);
+      const pathExpr = new ShapePathParser(yy).parse(shapePath)
+      if ($('#show-shape-path-ast').is(':checked')) {
+        shapepathResultsSession.setValue(JSON.stringify(pathExpr, null, 2));
       } else {
-        shapepathResultsSession.setValue('No match');
+
+        const shexjStr = this.shexjEditor.getValue();
+
+        try {
+          this.schema = JSON.parse(shexjStr.replace(/(\r\n|\n|\r)/gm, ''));
+          $('#shape-area').removeClass('has-error');
+          $('#shape-alert').text('');
+        } catch (error) {
+          shapepathResultsSession.setValue('Shape Parse Error');
+          return;
+        }
+
+        // Resolve path against schema
+        const inp = [this.schema]
+        this.nodeSet = pathExpr.evalPathExpr(inp, new EvalContext(this.schema))
+
+        if (!_.isEmpty(this.nodeSet)) {
+          shapepathResultsSession
+            .setValue(JSON.stringify(this.nodeSet, undefined, 2));
+          this.updateQueryResults(this.schema, this.nodeSet);
+        } else {
+          shapepathResultsSession.setValue('No match');
+        }
       }
+    } catch (e) {
+      const errorMessage = 'Error while ' + currentAction + String(e);
+      console.error(new Date().toISOString() + ' ' + errorMessage);
+      document.querySelector('#shapepath-results-editor').classList.add('error');
+      shapepathResultsSession.setValue(errorMessage);
     }
   }
 
   updateQueryResults() {
+    let currentAction;
+    document.querySelector('#query-results-editor').classList.remove('error');
     const queryResultsSession = this.queryResultEditor.getSession();
     const turtleStr = this.turtleEditor.getValue();
 
     // Parse validation data.
     const graph = new RdfStore()
-    graph.addQuads(new TurtleParser({baseIRI: Base}).parse(turtleStr))
-    if ($('#show-parsed-triples').is(':checked')) {
-      queryResultsSession.setValue(graph.getQuads().map(ntriplify).join('\n'));
-    } else {
-
-
+    try {
       // Add ShExMap annotations to each element of the nodeSet.
       // ShExMap binds variables which we use to capture schema matches.
+      currentAction = 'Annotating (copy of) schema';
       const vars = this.nodeSet.map((shexNode) => {
         const idx = this.nodeSet.indexOf(shexNode); // first occurance of shexNode
         const varName = 'http://a.example/binding-' + idx;
@@ -121,12 +128,16 @@ class ShapePathOnlineEvaluator {
         return varName
       })
 
-      // Construct validator with ShapeMap semantic action handler.
-      const validator = ShExValidator.construct(this.schema, ShExUtil.rdfjsDB(graph), {});
-      const mapper = MapModule.register(validator, { ShExTerm })
+      currentAction = 'Parsing Turtle';
+      graph.addQuads(new TurtleParser({baseIRI: Base}).parse(turtleStr))
+      if ($('#show-parsed-triples').is(':checked')) {
+        queryResultsSession.setValue(graph.getQuads().map(ntriplify).join('\n'));
+      } else {
+        // Construct validator with ShapeMap semantic action handler.
+        const validator = ShExValidator.construct(this.schema, ShExUtil.rdfjsDB(graph), {});
+        const mapper = MapModule.register(validator, { ShExTerm })
 
-      try {
-        // Validate data against schema.
+        currentAction = 'Validating data against schema';
         const smapStr = $('#shape-map-input').val();
         const schemaMeta = {
           base: Base,
@@ -139,17 +150,23 @@ class ShapePathOnlineEvaluator {
         if ("errors" in valRes) {
           queryResultsSession.setValue(JSON.stringify(valRes, undefined, 2))
         } else {
-          // Show values extracted from data.
+          if (document.querySelector('#shapepath-results-editor').classList.contains('error'))
+            throw new Error('Can\'t validate while there are errors in Evaluation Results');
+
+          currentAction = 'Showing values extracted from data';
           const resultBindings = ShExUtil.valToExtension(valRes, MapModule.url);
           const values = vars.map(v => resultBindings[v])
           queryResultsSession.setValue(JSON.stringify(values, undefined, 2));
         }
-      } catch (e) {
-        queryResultsSession.setValue(String(e));
       }
+    } catch (e) {
+      const errorMessage = 'Error while ' + currentAction + String(e);
+      console.error(new Date().toISOString() + ' ' + errorMessage);
+      document.querySelector('#query-results-editor').classList.add('error');
+      queryResultsSession.setValue(errorMessage);
     }
 
-    function ntriplify (q) {debugger
+    function ntriplify (q) {
       return `${ntt(q.subject)} ${ntt(q.predicate)} ${ntt(q.object)} .`
 
       function ntt (t) {
