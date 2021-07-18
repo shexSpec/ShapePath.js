@@ -3,12 +3,14 @@ import '../styles/main.scss';
 import $ from 'jquery';
 import _ from 'lodash';
 import 'bootstrap';
+
+const Yaml = require('js-yaml')
 import { EvalContext } from '../../../dist/ShapePathAst'
 import { ShapePathParser } from '../../../dist/ShapePathParser'
 const ShExValidator = require('@shexjs/validator')
 const ShExUtil = require('@shexjs/util')
 const ShExTerm = require('@shexjs/term')
-const ShExMap = require('@shexjs/map')
+const ShExMap = require('@shexjs/extension-map')
 const ShapeMap = require('shape-map')
 const MapModule = ShExMap(ShExTerm)
 import { Store as RdfStore, Parser as TurtleParser } from 'n3'
@@ -202,9 +204,23 @@ class ShapePathOnlineEvaluator {
 $(async () => {
   $('#shape-path-input').focus();
   const demo = new ShapePathOnlineEvaluator();
-  const manURL = new URL('examples/issue/manifest.json', location)
+  const manURL = new URL('examples/issue/manifest.yaml', location)
   const resp = await fetch(manURL)
   const text = await resp.text()
-  const manifest = JSON.parse(text)
-  demo.loadManifestEntry(manifest[0], manURL)
+  const manifest = Yaml.load(text)
+
+  // paint manifest selector
+  const manSel = $(`<select id="manifest-selector">`)
+  const titleToManifestEntry = manifest.reduce((map, entry) => {
+    map[entry.title] = entry
+    manSel.append($(`<option value="${entry.title}">${entry.title} - ${entry.desc}</option>`))
+    return map
+  }, {})
+  $('h3').after(manSel)
+  manSel.change(() => {
+    const selectedTitle = $('select option:selected').val()
+    console.log(`switching to ${selectedTitle}`)
+    demo.loadManifestEntry(titleToManifestEntry[selectedTitle], manURL)
+  })
+
 });

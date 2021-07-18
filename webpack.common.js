@@ -8,6 +8,7 @@ module.exports = {
   output: {
     filename: 'scripts/main.js',
     path: path.resolve(__dirname, 'demo/dist'),
+    // clean: true,
   },
   plugins: [
     new CleanWebpackPlugin(),

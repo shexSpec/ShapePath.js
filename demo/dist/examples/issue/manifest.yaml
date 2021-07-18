@@ -1,0 +1,96 @@
+---
+- title: Discussion hrefs (compact)
+  desc: Issue hrefs with shortcuts '@' and '~'
+  schemaURL: Issue.json
+  shapePath: >-
+    @<http://project.example/schema#DiscItem>~<http://project.example/ns#href>
+  shapePathSchemaMatch:
+  - type: TripleConstraint
+    predicate: http://project.example/ns#href
+    valueExpr:
+      type: NodeConstraint
+      nodeKind: iri
+  - type: TripleConstraint
+    predicate: http://project.example/ns#href
+    valueExpr:
+      type: NodeConstraint
+      nodeKind: iri
+  dataURL: Issue2.ttl
+  shapeMap: <http://instance.example/project1/Issue2>@<http://project.example/schema#Issue>
+  shapePathDataMatch:
+  - http://instance.example/project1/img1.jpg
+  - http://instance.example/project1/spec3
+  status: unapproved
+
+- title: impNote hrefs (expanded)
+  desc: Issue hrefs with no shortcuts
+  schemaURL: Issue.json
+  shapePath: >-
+    /shapes/*[id=<http://project.example/schema#Issue>][assert count() = 1]/thisShapeExpr::/expression/thisTripleExpr::[predicate=<http://project.example/ns#spec>]/valueExpr/shapeExprs/thisShapeExpr::/expression/thisTripleExpr::[predicate=<http://project.example/ns#href>]
+  shapePathSchemaMatch:
+  - type: TripleConstraint
+    predicate: http://project.example/ns#href
+    valueExpr:
+      type: NodeConstraint
+      nodeKind: iri
+  - type: TripleConstraint
+    predicate: http://project.example/ns#href
+    valueExpr:
+      type: NodeConstraint
+      nodeKind: iri
+  dataURL: Issue2.ttl
+  shapeMap: <http://instance.example/project1/Issue2>@<http://project.example/schema#Issue>
+  shapePathDataMatch:
+  - http://instance.example/project1/img1.jpg
+  - http://instance.example/project1/spec3
+  status: unapproved
+
+- title: both (compact)
+  desc: discussion/href and impNote/href
+  schemaURL: Issue.json
+  shapePath: >-
+    @<http://project.example/schema#DiscItem>~<http://project.example/ns#href>
+    ,
+    @<http://project.example/schema#Issue>~<http://project.example/ns#spec>/valueExpr/shapeExprs~<http://project.example/ns#href>
+  shapePathSchemaMatch:
+  - type: TripleConstraint
+    predicate: http://project.example/ns#href
+    valueExpr:
+      type: NodeConstraint
+      nodeKind: iri
+  - type: TripleConstraint
+    predicate: http://project.example/ns#href
+    valueExpr:
+      type: NodeConstraint
+      nodeKind: iri
+  dataURL: Issue2.ttl
+  shapeMap: <http://instance.example/project1/Issue2>@<http://project.example/schema#Issue>
+  shapePathDataMatch:
+  - http://instance.example/project1/img1.jpg
+  - http://instance.example/project1/spec3
+  status: unapproved
+
+- title: Issue hrefs (expanded)
+  desc: discussion/href and impNote/href
+  schemaURL: Issue.json
+  shapePath: >-
+    /shapes/*[id=<http://project.example/schema#DiscItem>][assert count() = 1]/thisShapeExpr::/expression/thisTripleExpr::[predicate=<http://project.example/ns#href>]
+    ,
+    /shapes/*[id=<http://project.example/schema#Issue>][assert count() = 1]/thisShapeExpr::/expression/thisTripleExpr::[predicate=<http://project.example/ns#spec>]/valueExpr/shapeExprs/thisShapeExpr::/expression/thisTripleExpr::[predicate=<http://project.example/ns#href>]
+  shapePathSchemaMatch:
+  - type: TripleConstraint
+    predicate: http://project.example/ns#href
+    valueExpr:
+      type: NodeConstraint
+      nodeKind: iri
+  - type: TripleConstraint
+    predicate: http://project.example/ns#href
+    valueExpr:
+      type: NodeConstraint
+      nodeKind: iri
+  dataURL: Issue2.ttl
+  shapeMap: <http://instance.example/project1/Issue2>@<http://project.example/schema#Issue>
+  shapePathDataMatch:
+  - http://instance.example/project1/img1.jpg
+  - http://instance.example/project1/spec3
+  status: unapproved
