@@ -199,28 +199,44 @@ class ShapePathOnlineEvaluator {
     this.shexjEditor.getSession().setValue(entry.schema)
     this.turtleEditor.getSession().setValue(entry.data)
   }
+
+  renderManifest (manifest, baseUrl) {
+    // paint manifest selector
+    const manSel = $(`<select id="manifest-selector">`)
+    const titleToManifestEntry = manifest.reduce((map, entry) => {
+      map[entry.title] = entry
+      manSel.append($(`<option value="${entry.title}">${entry.title} - ${entry.desc}</option>`))
+      return map
+    }, {})
+    $('#title').after(manSel)
+    manSel.change(() => {
+      const selectedTitle = $('select option:selected').val()
+      console.log(`switching to ${selectedTitle}`)
+      this.loadManifestEntry(titleToManifestEntry[selectedTitle], baseUrl)
+    })
+  }
 }
 
 $(async () => {
   $('#shape-path-input').focus();
   const demo = new ShapePathOnlineEvaluator();
-  const manURL = new URL('examples/issue/manifest.yaml', location)
-  const resp = await fetch(manURL)
-  const text = await resp.text()
-  const manifest = Yaml.load(text)
 
-  // paint manifest selector
-  const manSel = $(`<select id="manifest-selector">`)
-  const titleToManifestEntry = manifest.reduce((map, entry) => {
-    map[entry.title] = entry
-    manSel.append($(`<option value="${entry.title}">${entry.title} - ${entry.desc}</option>`))
-    return map
-  }, {})
-  $('h3').after(manSel)
-  manSel.change(() => {
-    const selectedTitle = $('select option:selected').val()
-    console.log(`switching to ${selectedTitle}`)
-    demo.loadManifestEntry(titleToManifestEntry[selectedTitle], manURL)
+  if (location.search === '')
+    location.search = 'manifestURL=examples/issue/manifest.yaml'
+
+  const cgiParms = location.search.substr(1).split(/[,&]/).map(
+    pair => pair.split("=").map(decodeURIComponent)
+  )
+
+  // load manifest(s)
+  cgiParms.forEach(p => {
+    if (p[0] === "manifestURL") {
+      const mURL = new URL(p[1], location)
+      fetch(mURL).
+        then(resp => resp.text()).
+        then(t => demo.renderManifest(Yaml.load(t), mURL))
+    } else if (p[0] === "manifest") {
+      demo.renderManifest(Yaml.load(p[1]), location.href)
+    }
   })
-
 });
