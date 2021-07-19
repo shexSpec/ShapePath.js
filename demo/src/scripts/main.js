@@ -1,7 +1,6 @@
 import '../styles/main.scss';
 
 import $ from 'jquery';
-import _ from 'lodash';
 import 'bootstrap';
 
 const Yaml = require('js-yaml')
@@ -90,12 +89,12 @@ class ShapePathOnlineEvaluator {
         const inp = [this.schema]
         this.nodeSet = pathExpr.evalPathExpr(inp, new EvalContext(this.schema))
 
-        if (!_.isEmpty(this.nodeSet)) {
+        if (this.nodeSet.length === 0) {
+          shapepathResultsSession.setValue('No match');
+        } else {
           shapepathResultsSession
             .setValue(JSON.stringify(this.nodeSet, undefined, 2));
           this.updateQueryResults(this.schema, this.nodeSet);
-        } else {
-          shapepathResultsSession.setValue('No match');
         }
       }
     } catch (e) {
