@@ -9,7 +9,7 @@ const ShapePathAst_1 = require("./ShapePathAst");
 const ShExValidator = require('@shexjs/validator');
 const ShExUtil = require('@shexjs/util');
 const ShExTerm = require('@shexjs/term');
-const ShExMap = require('@shexjs/map');
+const ShExMap = require('@shexjs/extension-map');
 const ShapeMap = require('shape-map');
 const MapModule = ShExMap(ShExTerm);
 const n3_1 = require("n3");
@@ -77,9 +77,9 @@ new Command()
     .action(run)
     .parse();
 function test() {
-    run('@<http://project.example/schema#DiscItem>.<http://project.example/ns#href>,@<http://project.example/schema#Issue>.<http://project.example/ns#spec>/valueExpr/shapeExprs.<http://project.example/ns#href>', ['__tests__/issue/Issue.json'], {}, null);
-    run('@<http://project.example/schema#DiscItem>.<http://project.example/ns#href>,@<http://project.example/schema#Issue>.<http://project.example/ns#spec>/valueExpr/shapeExprs.<http://project.example/ns#href>', ['__tests__/issue/Issue.json'], {
-        data: '__tests__/issue/Issue2.ttl',
+    run('@<http://project.example/schema#DiscItem>~<http://project.example/ns#href>,@<http://project.example/schema#Issue>~<http://project.example/ns#spec>/valueExpr/shapeExprs~<http://project.example/ns#href>', ['examples/issue/Issue.json'], {}, null);
+    run('@<http://project.example/schema#DiscItem>~<http://project.example/ns#href>,@<http://project.example/schema#Issue>~<http://project.example/ns#spec>/valueExpr/shapeExprs~<http://project.example/ns#href>', ['examples/issue/Issue.json'], {
+        data: 'examples/issue/Issue2.ttl',
         shapeMap: '<http://instance.example/project1/Issue2>@<http://project.example/schema#Issue>'
     }, null);
 }
@@ -111,6 +111,7 @@ function run(pathStr, files, command, commander) {
         else
             console.log(leader + JSON.stringify(schemaNodes, null, 2));
     });
+    process.exit(0);
 }
 exports.run = run;
 function readJson(filePath) {
