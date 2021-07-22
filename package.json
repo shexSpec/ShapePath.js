@@ -2,7 +2,7 @@
   "name": "shape-path-core",
   "version": "0.0.1",
   "description": "A typescript library for parsing and executing ShapePaths",
-  "main": "ShapePathJison.js",
+  "main": "shape-path-core.js",
   "type": "package",
   "scripts": {
     "all": "npm run parser && npm run test",
@@ -51,10 +51,6 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
-    "@shexjs/extension-map": "^1.0.0-alpha.15",
-    "@shexjs/term": "^1.0.0-alpha.12",
-    "@shexjs/util": "^1.0.0-alpha.14",
-    "@shexjs/validator": "^1.0.0-alpha.14",
     "@ts-jison/parser": "^0.0.5",
     "@types/n3": "^1.4.4",
     "js-yaml": "^3.14.1",

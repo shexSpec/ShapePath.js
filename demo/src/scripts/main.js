@@ -1,7 +1,6 @@
 import '../styles/main.scss';
 
 import $ from 'jquery';
-import 'bootstrap';
 
 const Yaml = require('js-yaml')
 import { EvalContext } from '../../../dist/ShapePathAst'
