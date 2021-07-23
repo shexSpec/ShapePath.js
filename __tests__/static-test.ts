@@ -6,8 +6,6 @@ import { ShapePathParser, ShapePathLexer } from '../src/ShapePathParser'
 import { Schema, SemAct } from 'shexj'
 
 // For validation tests
-const ShExPath = require('@shexjs/shape-path-query')
-import { Store as RdfStore, Parser as TurtleParser } from 'n3'
 
 const Base = 'http://a.example/some/path/' // 'file://'+__dirname
 
@@ -258,28 +256,6 @@ describe('selection/validation tests', () => {
       const pathExpr = new ShapePathParser(yy).parse(entry.shapePath)
       const nodeSet: NodeSet = pathExpr.evalPathExpr(inp, new EvalContext(schema))
       expect(nodeSet).toEqual(entry.shapePathSchemaMatch)
-
-      // Parse validation data.
-      const graph = new RdfStore()
-      graph.addQuads(new TurtleParser().parse(
-        Fs.readFileSync(
-          Path.join(
-            __dirname,
-            '../../shexTest/validation/',
-            valTest.action.data
-          )
-          , 'utf8'
-        )
-      ))
-      const db = ShExUtil.rdfjsDB(graph)
-      const queryResults = ShExPath.shapePathQuery(
-        schema,
-        nodeSet,
-        db,
-        valTest.action.focus,
-        valTest.action.shape || ShExValidator.start
-      );
-      expect(queryResults).toEqual(entry.shapePathDataMatch)
     })
   )
 })

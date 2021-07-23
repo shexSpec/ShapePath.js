@@ -1,6 +1,6 @@
 {
   "name": "shape-path-core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A typescript library for parsing and executing ShapePaths",
   "main": "shape-path-core.js",
   "type": "package",
@@ -53,6 +53,7 @@
   "dependencies": {
     "@ts-jison/parser": "^0.0.5",
     "@types/n3": "^1.4.4",
+    "commander": "^8.0.0",
     "js-yaml": "^3.14.1",
     "n3": "^1.8.1",
     "shape-map": "^1.0.0-alpha.12"

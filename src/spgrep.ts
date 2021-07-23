@@ -16,18 +16,23 @@ export const cmd = new Command()
   .option('-H, --with-filename', 'Print the file name for each match.  This is the default when there is more than one file to search.')
   .option('-D, --debug', 'display some debugging')
 
-if (require.main === module) {
+if (require.main === module || process.env._INCLUDE_DEPTH === '0') {
+  // test() // uncomment to run a basic test
   cmd.action(report).parse()
   process.exit(0)
 }
 
 function test (): void {
-  run(
-    '@<http://project.example/schema#DiscItem>.<http://project.example/ns#href>,@<http://project.example/schema#Issue>.<http://project.example/ns#spec>/valueExpr/shapeExprs.<http://project.example/ns#href>',
-    ['__tests__/issue/Issue.json'],
+  console.log(run(
+    '@<http://project.example/schema#DiscItem>'
+      + '~<http://project.example/ns#href>'
+      + ',@<http://project.example/schema#Issue>'
+      + '~<http://project.example/ns#spec>/valueExpr/shapeExprs'
+      + '~<http://project.example/ns#href>',
+    ['examples/issue/Issue.json'],
     { },
     null
-  )
+  )[0][2])
 }
 
 export function report (pathStr: string, files: string[], command: any, commander: any) {

@@ -14,12 +14,17 @@ exports.cmd = new Command()
     .option('-r, --resolve <resolve.json>', 'JSON resolve file to use for URI resolution')
     .option('-H, --with-filename', 'Print the file name for each match.  This is the default when there is more than one file to search.')
     .option('-D, --debug', 'display some debugging');
-if (require.main === module) {
+if (require.main === module || process.env._INCLUDE_DEPTH === '0') {
+    // test() // uncomment to run a basic test
     exports.cmd.action(report).parse();
     process.exit(0);
 }
 function test() {
-    run('@<http://project.example/schema#DiscItem>.<http://project.example/ns#href>,@<http://project.example/schema#Issue>.<http://project.example/ns#spec>/valueExpr/shapeExprs.<http://project.example/ns#href>', ['__tests__/issue/Issue.json'], {}, null);
+    console.log(run('@<http://project.example/schema#DiscItem>'
+        + '~<http://project.example/ns#href>'
+        + ',@<http://project.example/schema#Issue>'
+        + '~<http://project.example/ns#spec>/valueExpr/shapeExprs'
+        + '~<http://project.example/ns#href>', ['examples/issue/Issue.json'], {}, null)[0][2]);
 }
 function report(pathStr, files, command, commander) {
     run(pathStr, files, command, commander).forEach(([leader, schema, schemaNodes]) => {
