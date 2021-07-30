@@ -13,3 +13,4 @@ const p = new ShapePathParser_1.ShapePathParser(yy);
 const i = require('fs').readFileSync(process.argv[2], 'utf8');
 const r = p.parse(i);
 console.log(JSON.stringify(r));
+process.exit(0);

@@ -7,11 +7,12 @@ class Serializable {
 }
 exports.Serializable = Serializable;
 class EvalContext {
+    schema;
     constructor(schema) {
         this.schema = schema;
-        // lazy eval of parents
-        this.parents = null;
     }
+    // lazy eval of parents
+    parents = null;
     getParents() {
         if (this.parents === null) {
             this.parents = new Map();
@@ -45,6 +46,7 @@ class PathExpr extends Serializable {
 }
 exports.PathExpr = PathExpr;
 class Junction extends PathExpr {
+    exprs;
     constructor(exprs) {
         super();
         this.exprs = exprs;
@@ -52,20 +54,14 @@ class Junction extends PathExpr {
 }
 exports.Junction = Junction;
 class Sequence extends Junction {
-    constructor() {
-        super(...arguments);
-        this.t = "Sequence";
-    }
+    t = "Sequence";
     evalPathExpr(nodes, ctx) {
         return this.exprs.reduce((ret, expr) => ret.concat(expr.evalPathExpr(nodes, ctx)), []);
     }
 }
 exports.Sequence = Sequence;
 class Union extends Junction {
-    constructor() {
-        super(...arguments);
-        this.t = "Union";
-    }
+    t = "Union";
     evalPathExpr(nodes, ctx) {
         const seen = [];
         return this.exprs.reduce((ret, expr) => {
@@ -83,10 +79,7 @@ class Union extends Junction {
 }
 exports.Union = Union;
 class Intersection extends Junction {
-    constructor() {
-        super(...arguments);
-        this.t = "Intersection";
-    }
+    t = "Intersection";
     evalPathExpr(nodes, ctx) {
         const [first, ...rest] = this.exprs;
         const firstRes = first.evalPathExpr(nodes, ctx);
@@ -111,10 +104,11 @@ class Intersection extends Junction {
 }
 exports.Intersection = Intersection;
 class Path extends PathExpr {
+    steps;
+    t = 'Path';
     constructor(steps) {
         super();
         this.steps = steps;
-        this.t = 'Path';
     }
     evalPathExpr(nodes, ctx) {
         return this.steps.reduce((ret, step) => {
@@ -127,11 +121,13 @@ class Step extends Serializable {
 }
 exports.Step = Step;
 class ChildStep extends Step {
+    attribute;
+    filters;
+    t = 'ChildStep';
     constructor(attribute, filters) {
         super();
         this.attribute = attribute;
         this.filters = filters;
-        this.t = 'ChildStep';
     }
     evalStep(nodes, ctx) {
         const selectedNodes = nodes.reduce((ret, node) => {
@@ -160,11 +156,13 @@ class ChildStep extends Step {
 }
 exports.ChildStep = ChildStep;
 class AxisStep extends Step {
+    axis;
+    filters;
+    t = 'AxisStep';
     constructor(axis, filters) {
         super();
         this.axis = axis;
         this.filters = filters;
-        this.t = 'AxisStep';
     }
     evalStep(nodes, ctx) {
         const selectedNodes = nodes.reduce((ret, node) => {
@@ -241,11 +239,13 @@ class AxisStep extends Step {
 }
 exports.AxisStep = AxisStep;
 class PathExprStep extends Step {
+    pathExpr;
+    filters;
+    t = 'PathExprStep';
     constructor(pathExpr, filters) {
         super();
         this.pathExpr = pathExpr;
         this.filters = filters;
-        this.t = 'PathExprStep';
     }
     evalStep(nodes, ctx) {
         throw Error('PatheExprStep.evalStep not yet implemented');
@@ -275,11 +275,13 @@ var FuncName;
     FuncName["greaterThan"] = "greaterThan";
 })(FuncName = exports.FuncName || (exports.FuncName = {}));
 class Filter extends Function {
+    op;
+    args;
+    t = 'Filter';
     constructor(op, args) {
         super();
         this.op = op;
         this.args = args;
-        this.t = 'Filter';
     }
     isAggregate() { return [FuncName.index, FuncName.count, FuncName.ebv].indexOf(this.op) !== -1; }
     evalFunction(node, allNodes, idx, ctx) {
@@ -352,10 +354,11 @@ function ebv(nodes) {
     return Pass;
 }
 class Assertion extends Function {
+    expect;
+    t = 'Assertion';
     constructor(expect) {
         super();
         this.expect = expect;
-        this.t = 'Assertion';
     }
     evalFunction(node, allNodes, idx, ctx) {
         const val = this.expect.evalFunction(node, allNodes, idx, ctx);

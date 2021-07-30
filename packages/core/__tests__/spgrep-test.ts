@@ -1,4 +1,5 @@
 const Path = require('path')
+import { RunCli } from '../tools/cli-runner'
 
 const queryResults = [
   "http://instance.example/project1/img1.jpg",
@@ -7,7 +8,7 @@ const queryResults = [
 
 describe('spgrep script', () => {
   test('query data', () => {
-    const {log, error} = run(
+    const {log, error} = RunCli(
       '../dist/spgrep.js',
       '@<http://project.example/schema#DiscItem>~<http://project.example/ns#href>'
         +',@<http://project.example/schema#Issue>'
@@ -37,30 +38,3 @@ describe('spgrep script', () => {
   })
 })
 
-function run (... command: string[]):
-{log:Array<Array<string>>, error:Array<Array<any>>}
-{
-  const exitErrorString = 'process.exit() was called.'
-  const consoleLogSpy = jest.spyOn(console, 'log')
-  const consoleErrorSpy = jest.spyOn(process.stderr, 'write')
-  jest.spyOn(process, 'exit').mockImplementation(() => {
-    throw new Error(exitErrorString)
-  });
-
-  const oldArgv = process.argv
-  process.argv = [process.argv[0]].concat(command)
-  expect(() => {
-    process.env._INCLUDE_DEPTH = '0'
-    require(command[0])
-  }).toThrow(exitErrorString)
-  process.argv = oldArgv
-
-  const ret = {
-    log: consoleLogSpy.mock.calls,
-    error: consoleErrorSpy.mock.calls,
-  }
-  // expect(process.exit).toHaveBeenCalledWith(0)
-  consoleLogSpy.mockRestore()
-  consoleErrorSpy.mockRestore()
-  return ret
-}
