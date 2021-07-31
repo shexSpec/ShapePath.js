@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>ShapePath demo redirector</title>
+  </head>
+  <body>
+    <h1>ShapePath demo redirector</h1>
+    <p>
+      The ShapePath library has been split into multiple components.
+      See the <a class="demolink" href="../../packages/demo/dist/">ShapePath demo</a>'s new location.
+    </p>
+    <script>
+      const loc = new URL(window.location)
+      document.querySelectorAll('a.demolink').forEach(a => {
+        const orig = a.getAttribute('href')
+        a.setAttribute('href', orig + loc.search + loc.hash)
+      })
+    </script>
+  </body>
+</html>

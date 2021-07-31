@@ -54,7 +54,7 @@
 
     /* Advanced Options */
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
 
     // "noImplicitThis": true,
     // "preserveConstEnums": true,
@@ -68,10 +68,10 @@
     // "experimentalDecorators": true,
     // "downlevelIteration": true,
     // "forceConsistentCasingInFileNames": true,
-    // "sourceMap": true,
-    // "declarationMap": true,
+    "sourceMap": true,
+    "declarationMap": true,
     // "noImplicitAny": true,
-    // "declaration": true,
+    "declaration": true,
     // "noFallthroughCasesInSwitch": true,
     // "noImplicitReturns": true,
     // "stripInternal": true,

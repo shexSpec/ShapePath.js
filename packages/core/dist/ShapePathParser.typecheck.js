@@ -791,3 +791,4 @@ const semanticActions = {
         return $$;
     },
 };
+//# sourceMappingURL=ShapePathParser.typecheck.js.map

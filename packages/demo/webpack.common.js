@@ -4,21 +4,21 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: './demo/src/scripts/main.js',
+  entry: './src/scripts/main.js',
   output: {
     filename: 'scripts/main.js',
-    path: path.resolve(__dirname, 'demo/dist'),
+    path: path.resolve(__dirname, 'dist'),
     // clean: true,
   },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'demo/src/index.html',
+      template: 'src/index.html',
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'examples', to: 'examples' }
+        { from: '../core/examples', to: 'examples' }
       ]
     })
   ],

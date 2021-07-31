@@ -3,8 +3,7 @@ import '../styles/main.scss';
 import $ from 'jquery';
 
 const Yaml = require('js-yaml')
-import { EvalContext } from '../../../dist/ShapePathAst'
-import { ShapePathParser } from '../../../dist/ShapePathParser'
+import { Ast, Parser } from 'shape-path-core' // shape-path-core'
 const ShExValidator = require('@shexjs/validator')
 const ShExUtil = require('@shexjs/util')
 const ShExTerm = require('@shexjs/term')
@@ -68,7 +67,7 @@ class ShapePathOnlineEvaluator {
         base: new URL(Base),
         prefixes: {}
       }
-      const pathExpr = new ShapePathParser(yy).parse(shapePath)
+      const pathExpr = new Parser.ShapePathParser(yy).parse(shapePath)
       if ($('#show-shape-path-ast').is(':checked')) {
         shapepathResultsSession.setValue(JSON.stringify(pathExpr, null, 2));
       } else {
@@ -86,7 +85,7 @@ class ShapePathOnlineEvaluator {
 
         // Resolve path against schema
         const inp = [this.schema]
-        this.nodeSet = pathExpr.evalPathExpr(inp, new EvalContext(this.schema))
+        this.nodeSet = pathExpr.evalPathExpr(inp, new Ast.EvalContext(this.schema))
 
         if (this.nodeSet.length === 0) {
           shapepathResultsSession.setValue('No match');

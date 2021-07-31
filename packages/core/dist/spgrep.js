@@ -59,3 +59,4 @@ exports.run = run;
 function readJson(filePath) {
     return JSON.parse(Fs.readFileSync(filePath, 'utf8'));
 }
+//# sourceMappingURL=spgrep.js.map

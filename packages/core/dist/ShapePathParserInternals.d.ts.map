@@ -1,0 +1,1 @@
+{"version":3,"file":"ShapePathParserInternals.d.ts","sourceRoot":"","sources":["../src/ShapePathParserInternals.ts"],"names":[],"mappings":"AAAA;;GAEG;AAEH,OAAO,EAAE,QAAQ,EAAE,MAAM,gBAAgB,CAAA;AACzC,aAAK,GAAG,GAAG,MAAM,CAAA;AAEjB,oBAAY,MAAM,GAAG,MAAM,GAAG,GAAG,CAAA;AACjC,MAAM,WAAW,UAAU;IACzB,EAAE,EAAE,QAAQ,CAAC;IACb,CAAC,EAAE,MAAM,GAAG,IAAI,CAAA;CACjB"}

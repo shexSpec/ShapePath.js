@@ -14,3 +14,4 @@ const i = require('fs').readFileSync(process.argv[2], 'utf8');
 const r = p.parse(i);
 console.log(JSON.stringify(r));
 process.exit(0);
+//# sourceMappingURL=parseAndPrint.js.map
