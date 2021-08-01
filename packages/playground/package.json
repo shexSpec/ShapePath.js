@@ -1,9 +1,7 @@
 {
   "name": "shape-path-playground",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A playground for ShapePaths",
-  "main": "@@",
-  "type": "package",
   "scripts": {
     "build": "npm run webpack",
     "start": "webpack serve --mode development --open --config webpack.dev.js",
