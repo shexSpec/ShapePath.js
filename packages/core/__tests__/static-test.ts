@@ -5,7 +5,12 @@ import { EvalContext, NodeSet, SchemaNode, stringFacetAttr } from '../src/ShapeP
 import { ShapePathParser, ShapePathLexer } from '../src/ShapePathParser'
 import { Schema, SemAct } from 'shexj'
 
-const ShExTestPath = process.env.SHEX_TEST_PATH || '../node_modules/shex-test'
+// Override the shex-test dir with relative (SHEX_TEST_PATH=../../../shexTest) or
+// absolute (SHEX_TEST_PATH=/home/eric/checkouts/shexSpec/shexTest) path.
+const ShExTestPath = 'SHEX_TEST_PATH' in process.env
+  ? Path.resolve(__dirname, '..', process.env.SHEX_TEST_PATH)
+  : Path.resolve(require.resolve('shex-test'), '..')
+
 // For validation tests
 const Base = 'http://a.example/some/path/' // 'file://'+__dirname
 
@@ -83,7 +88,7 @@ interface ManifestEntry {
 
 const ValidationTestsById: TestMap = JSON.parse(
   Fs.readFileSync(
-    Path.join(__dirname, ShExTestPath,'validation/manifest.jsonld'),
+    Path.join(ShExTestPath,'validation/manifest.jsonld'),
     'utf8'))['@graph'][0].entries
   .reduce((tests: TestMap, test: ShExValidationTest) => {
     tests[test['@id']] = test
@@ -241,7 +246,6 @@ describe('selection/validation tests', () => {
       const valTest = ValidationTestsById![entry.shexTest]
       const schema: Schema = readJson(
         Path.join(
-          __dirname,
           ShExTestPath,
           'validation',
           valTest.action.schema.replace(/\.shex$/, '.json')
