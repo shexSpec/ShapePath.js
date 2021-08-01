@@ -4,11 +4,8 @@ import $ from 'jquery';
 
 const Yaml = require('js-yaml')
 import { Ast, Parser } from 'shape-path-core' // shape-path-core'
-const ShExValidator = require('@shexjs/validator')
 const ShExUtil = require('@shexjs/util')
-const ShExTerm = require('@shexjs/term')
-const ShExMap = require('@shexjs/extension-map')
-const ShapeMap = require('shape-map')
+const SPQuery = require('@shexjs/shape-path-query');
 const MapModule = ShExMap(ShExTerm)
 import { Store as RdfStore, Parser as TurtleParser } from 'n3'
 
@@ -132,6 +129,11 @@ class ShapePathOnlineEvaluator {
       if ($('#show-parsed-triples').is(':checked')) {
         queryResultsSession.setValue(graph.getQuads().map(ntriplify).join('\n'));
       } else {
+/*
+        const ShExValidator = require('@shexjs/validator')
+const ShExTerm = require('@shexjs/term')
+const ShExMap = require('@shexjs/extension-map')
+const ShapeMap = require('shape-map')
         // Construct validator with ShapeMap semantic action handler.
         const validator = ShExValidator.construct(this.schema, ShExUtil.rdfjsDB(graph), {});
         const mapper = MapModule.register(validator, { ShExTerm })
@@ -156,6 +158,13 @@ class ShapePathOnlineEvaluator {
           const resultBindings = ShExUtil.valToExtension(valRes, MapModule.url);
           const values = vars.map(v => resultBindings[v])
           queryResultsSession.setValue(JSON.stringify(values, undefined, 2));
+        }
+*/
+        try {
+          const values = SPQuery.shapePathQuery(this.schema, nodeSet, ShExUtil.rdfjsDB(graph), smap)
+          queryResultsSession.setValue(JSON.stringify(values, undefined, 2));
+        } catch (e) {
+          queryResultsSession.setValue(JSON.stringify(e, undefined, 2))
         }
       }
     } catch (e) {
