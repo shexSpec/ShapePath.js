@@ -1,2 +1,6 @@
 /node_modules
-/coverage
+/packages/*/node_modules
+/packages/core/coverage
+
+# w3t-sys convention for ignored directory
+/**/EGP

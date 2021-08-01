@@ -1,0 +1,124 @@
+const Path = require('path')
+import { RunCli } from '../tools/cli-runner'
+
+const queryResults = [
+  "http://instance.example/project1/img1.jpg",
+  "http://instance.example/project1/spec3"
+]
+
+describe('parseAndPrint script', () => {
+  test('query data', () => {
+    const {log, error} = RunCli(
+      '../src/parseAndPrint.ts',
+      './__tests__/spz/shortcuts.sp',
+    );
+    expect(error).toEqual([])
+    expect(JSON.parse(log[0][0])).toEqual(
+      {"exprs":[
+        {"steps":[
+          {"attribute":"shapes","t":"ChildStep"},
+          {"attribute":"*","filters":[
+            {"op":"equal","args":[
+              {"steps":[{"attribute":"id","t":"ChildStep"}],"t":"Path"},
+              "http://a.example/some/path/S1"
+            ],"t":"Filter"},
+            {"expect":{"op":"equal","args":[
+              {"op":"count","args":[],"t":"Filter"},
+              1
+            ],"t":"Filter"},"t":"Assertion"}
+          ],"t":"ChildStep"},
+          {"axis":"thisShapeExpr::","filters":[{"op":"equal","args":[
+            {"steps":[{"attribute":"type","t":"ChildStep"}],"t":"Path"},
+            "Shape"
+          ],"t":"Filter"}],"t":"AxisStep"},
+          {"attribute":"expression","t":"ChildStep"},
+          {"axis":"thisTripleExpr::","filters":[
+            {"op":"equal","args":[
+              {"steps":[{"attribute":"type","t":"ChildStep"}],"t":"Path"},
+              "TripleConstraint"
+            ],"t":"Filter"},
+            {"op":"equal","args":[
+              {"steps":[{"attribute":"predicate","t":"ChildStep"}],"t":"Path"},
+              "http://a.example/some/path/p1"
+            ],"t":"Filter"}
+          ],"t":"AxisStep"},
+          {"attribute":"shapes","t":"ChildStep"},
+          {"attribute":"*","filters":[
+            {"op":"equal","args":[
+              {"steps":[{"attribute":"id","t":"ChildStep"}],"t":"Path"},
+              "http://a.example/some/path/S2"
+            ],"t":"Filter"},
+            {"expect":{"op":"equal","args":[{"op":"count","args":[],"t":"Filter"},1],"t":"Filter"},"t":"Assertion"}
+          ],"t":"ChildStep"}
+        ],"t":"Path"},
+        {"steps":[
+          {"attribute":"shapes","t":"ChildStep"},
+          {"attribute":"*","filters":[
+            {"op":"equal","args":[
+              {"steps":[{"attribute":"id","t":"ChildStep"}],"t":"Path"},
+              "http://a.example/some/path/S1"
+            ],"t":"Filter"},
+            {"expect":{"op":"equal","args":[
+              {"op":"count","args":[],"t":"Filter"},
+              1
+            ],"t":"Filter"},"t":"Assertion"}
+          ],"t":"ChildStep"},
+          {"axis":"thisShapeExpr::","filters":[{"op":"equal","args":[
+            {"steps":[{"attribute":"type","t":"ChildStep"}],"t":"Path"},
+            "Shape"
+          ],"t":"Filter"}],"t":"AxisStep"},
+          {"attribute":"expression","t":"ChildStep"},
+          {"axis":"thisTripleExpr::","filters":[
+            {"op":"equal","args":[
+              {"steps":[{"attribute":"type","t":"ChildStep"}],"t":"Path"},
+              "TripleConstraint"
+            ],"t":"Filter"},
+            {"op":"equal","args":[
+              {"steps":[{"attribute":"predicate","t":"ChildStep"}],"t":"Path"},
+              "http://a.example/some/path/p1"
+            ],"t":"Filter"}
+          ],"t":"AxisStep"},
+          {"attribute":"shapes","t":"ChildStep"},
+          {"attribute":"*","filters":[
+            {"op":"equal","args":[
+              {"steps":[{"attribute":"id","t":"ChildStep"}],"t":"Path"},
+              "http://a.example/some/path/S2"
+            ],"t":"Filter"},
+            {"expect":{"op":"equal","args":[
+              {"op":"count","args":[],"t":"Filter"},
+              1
+            ],"t":"Filter"},"t":"Assertion"}
+          ],"t":"ChildStep"}
+        ],"t":"Path"},
+        {"exprs":[
+          {"steps":[
+            {"attribute":"shapes","t":"ChildStep"},
+            {"attribute":"*","filters":[{"op":"index","args":[1],"t":"Filter"}],"t":"ChildStep"},
+            {"attribute":"*","filters":[{"op":"index","args":[2],"t":"Filter"}],"t":"ChildStep"}
+          ],"t":"Path"},
+          {"steps":[
+            {"attribute":"shapes","t":"ChildStep"},
+            {"attribute":"*","filters":[
+              {"op":"equal","args":[
+                {"steps":[{"attribute":"type","t":"ChildStep"}],"t":"Path"},
+                "ShapeAnd"
+              ],"t":"Filter"},
+              {"op":"index","args":[2],"t":"Filter"}
+            ],"t":"ChildStep"}
+          ],"t":"Path"},
+          {"steps":[
+            {"attribute":"*","filters":[
+              {"op":"equal","args":[
+                {"steps":[{"attribute":"type","t":"ChildStep"}],"t":"Path"},
+                "ShapeOr"
+              ],"t":"Filter"},
+              {"op":"index","args":[1],"t":"Filter"}
+            ],"t":"ChildStep"},
+            {"attribute":"*","filters":[{"op":"index","args":[2],"t":"Filter"}],"t":"ChildStep"}
+          ],"t":"Path"}
+        ],"t":"Intersection"}
+      ],"t":"Union"}
+    )
+  })
+})
+
