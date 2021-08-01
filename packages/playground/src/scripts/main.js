@@ -4,12 +4,10 @@ import $ from 'jquery';
 
 const Yaml = require('js-yaml')
 import { Ast, Parser } from 'shape-path-core' // shape-path-core'
+const ShapeMap = require('shape-map')
 const ShExUtil = require('@shexjs/util')
 const SPQuery = require('@shexjs/shape-path-query');
-const MapModule = ShExMap(ShExTerm)
 import { Store as RdfStore, Parser as TurtleParser } from 'n3'
-
-ShapeMap.start = ShExValidator.start; // ShapeMap uses ShExValidator's start symbol.
 
 const Base = 'http://a.example/some/path/' // 'file://'+__dirname
 let Me = null
@@ -109,36 +107,12 @@ class ShapePathOnlineEvaluator {
     // Parse validation data.
     const graph = new RdfStore()
     try {
-      // Add ShExMap annotations to each element of the nodeSet.
-      // ShExMap binds variables which we use to capture schema matches.
-      currentAction = 'Annotating (copy of) schema';
-      const vars = this.nodeSet.map((shexNode) => {
-        const idx = this.nodeSet.indexOf(shexNode); // first occurance of shexNode
-        const varName = 'http://a.example/binding-' + idx;
-        // Pretend it's a TripleConstraint. Could be any shapeExpr or tripleExpr.
-        shexNode.semActs = [{
-          "type": "SemAct",
-          "name": MapModule.url,
-          "code": `<${varName}>`
-        }]
-        return varName
-      })
-
       currentAction = 'Parsing Turtle';
       graph.addQuads(new TurtleParser({baseIRI: Base}).parse(turtleStr))
       if ($('#show-parsed-triples').is(':checked')) {
         queryResultsSession.setValue(graph.getQuads().map(ntriplify).join('\n'));
       } else {
-/*
-        const ShExValidator = require('@shexjs/validator')
-const ShExTerm = require('@shexjs/term')
-const ShExMap = require('@shexjs/extension-map')
-const ShapeMap = require('shape-map')
-        // Construct validator with ShapeMap semantic action handler.
-        const validator = ShExValidator.construct(this.schema, ShExUtil.rdfjsDB(graph), {});
-        const mapper = MapModule.register(validator, { ShExTerm })
-
-        currentAction = 'Validating data against schema';
+        currentAction = 'Parsing ShapeMap';
         const smapStr = $('#shape-map-input').val();
         const schemaMeta = {
           base: Base,
@@ -147,28 +121,13 @@ const ShapeMap = require('shape-map')
         const dataMeta = schemaMeta; // cheat 'cause we're not populating them
         const smap = ShapeMap.Parser.construct(Base, schemaMeta, dataMeta)
               .parse(smapStr);
-        const valRes = validator.validate(smap)
-        if ("errors" in valRes) {
-          queryResultsSession.setValue(JSON.stringify(valRes, undefined, 2))
-        } else {
-          if (document.querySelector('#shapepath-results-editor').classList.contains('error'))
-            throw new Error('Can\'t validate while there are errors in Evaluation Results');
 
-          currentAction = 'Showing values extracted from data';
-          const resultBindings = ShExUtil.valToExtension(valRes, MapModule.url);
-          const values = vars.map(v => resultBindings[v])
-          queryResultsSession.setValue(JSON.stringify(values, undefined, 2));
-        }
-*/
-        try {
-          const values = SPQuery.shapePathQuery(this.schema, nodeSet, ShExUtil.rdfjsDB(graph), smap)
-          queryResultsSession.setValue(JSON.stringify(values, undefined, 2));
-        } catch (e) {
-          queryResultsSession.setValue(JSON.stringify(e, undefined, 2))
-        }
+        currentAction = 'Queridating data';
+        const values = SPQuery.shapePathQuery(this.schema, this.nodeSet, ShExUtil.rdfjsDB(graph), smap)
+        queryResultsSession.setValue(JSON.stringify(values, undefined, 2));
       }
     } catch (e) {
-      const errorMessage = 'Error while ' + currentAction + String(e);
+      const errorMessage = 'Error while ' + currentAction + ': ' + String(e.stack || e);
       console.error(new Date().toISOString() + ' ' + errorMessage);
       document.querySelector('#query-results-editor').classList.add('error');
       queryResultsSession.setValue(errorMessage);
@@ -225,7 +184,7 @@ const ShapeMap = require('shape-map')
 
 $(async () => {
   $('#shape-path-input').focus();
-  const demo = new ShapePathOnlineEvaluator();
+  const playground = new ShapePathOnlineEvaluator();
 
   if (location.search === '')
     location.search = 'manifestURL=examples/issue/manifest.yaml'
@@ -235,14 +194,14 @@ $(async () => {
   )
 
   // load manifest(s)
-  cgiParms.forEach(p => {
+  await cgiParms.map(async p => {
     if (p[0] === "manifestURL") {
       const mURL = new URL(p[1], location)
-      fetch(mURL).
-        then(resp => resp.text()).
-        then(t => demo.renderManifest(Yaml.load(t), mURL))
+      const resp = await fetch(mURL)
+      const t = await resp.text()
+      playground.renderManifest(Yaml.load(t), mURL)
     } else if (p[0] === "manifest") {
-      demo.renderManifest(Yaml.load(p[1]), location.href)
+      playground.renderManifest(Yaml.load(p[1]), location.href)
     }
   })
 });

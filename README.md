@@ -2,7 +2,7 @@
 A typescript library for executing ShapePaths
 
 ## Online Demo
-https://shexspec.github.io/ShapePath.js/demo/dist/index.html
+https://shexspec.github.io/ShapePath.js/packages/playground/dist/index.html
 
 ## language/evaluation changes
 

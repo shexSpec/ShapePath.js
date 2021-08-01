@@ -1,8 +1,8 @@
 # ShapePath.js
 A typescript library for executing ShapePaths
 
-## Online Demo
-https://shexspec.github.io/ShapePath.js/demo/dist/index.html
+## Playground
+There is an accompanying playground module `shape-path-playground`, available online at https://shexspec.github.io/ShapePath.js/pacakges/playground/dist/
 
 ## language/evaluation changes
 
