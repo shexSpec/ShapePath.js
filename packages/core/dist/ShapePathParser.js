@@ -46,7 +46,8 @@ function shapeLabelShortCut(label) {
                 new ShapePathAst_1.Filter(ShapePathAst_1.FuncName.count, []),
                 1
             ]))
-        ])
+        ]),
+        new ShapePathAst_1.ChildStep(ShapePathAst_1.t_shapeDeclAttr.shapeExpr),
     ];
 }
 exports.shapeLabelShortCut = shapeLabelShortCut;

@@ -2,7 +2,7 @@
 /** ShapePath types
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.t_annotationAttr = exports.t_semActAttr = exports.t_tripleConstraintAttr = exports.t_tripleExprAttr = exports.t_shapeAttr = exports.t_valueSetValueAttr = exports.t_numericFacetAttr = exports.t_stringFacetAttr = exports.t_xsFacetAttr = exports.t_nodeConstraintAttr = exports.t_shapeExprAttr = exports.t_schemaAttr = exports.t_attribute = exports.t_valueType = exports.t_tripleExprType = exports.t_shapeExprType = exports.t_termType = exports.Assertion = exports.Filter = exports.FuncName = exports.Function = exports.Axis = exports.PathExprStep = exports.AxisStep = exports.ChildStep = exports.Step = exports.Path = exports.Intersection = exports.Union = exports.Sequence = exports.Junction = exports.PathExpr = exports.EvalContext = exports.Serializable = void 0;
+exports.t_annotationAttr = exports.t_semActAttr = exports.t_tripleConstraintAttr = exports.t_tripleExprAttr = exports.t_shapeAttr = exports.t_valueSetValueAttr = exports.t_numericFacetAttr = exports.t_stringFacetAttr = exports.t_xsFacetAttr = exports.t_nodeConstraintAttr = exports.t_shapeExprAttr = exports.t_schemaAttr = exports.t_attribute = exports.t_valueType = exports.t_tripleExprType = exports.t_shapeExprType = exports.t_shapeDeclAttr = exports.t_termType = exports.Assertion = exports.Filter = exports.FuncName = exports.Function = exports.Axis = exports.PathExprStep = exports.AxisStep = exports.ChildStep = exports.Step = exports.Path = exports.Intersection = exports.Union = exports.Sequence = exports.Junction = exports.PathExpr = exports.EvalContext = exports.Serializable = void 0;
 class Serializable {
 }
 exports.Serializable = Serializable;
@@ -210,8 +210,6 @@ class AxisStep extends Step {
             if (!(node instanceof Object))
                 return [];
             switch (node.type) {
-                case "ShapeDecl":
-                    return walkShapeExpr(node.shapeExpr);
                 case "ShapeAnd":
                 case "ShapeOr":
                     return [node].concat(walkShapeExpr(node.shapeExprs));
@@ -373,9 +371,15 @@ exports.Assertion = Assertion;
 var t_termType;
 (function (t_termType) {
     t_termType["Schema"] = "Schema";
+    t_termType["ShapeDecl"] = "ShapeDecl";
     t_termType["SemAct"] = "SemAct";
     t_termType["Annotation"] = "Annotation";
 })(t_termType = exports.t_termType || (exports.t_termType = {}));
+var t_shapeDeclAttr;
+(function (t_shapeDeclAttr) {
+    t_shapeDeclAttr["abstract"] = "abstract";
+    t_shapeDeclAttr["shapeExpr"] = "shapeExpr";
+})(t_shapeDeclAttr = exports.t_shapeDeclAttr || (exports.t_shapeDeclAttr = {}));
 var t_shapeExprType;
 (function (t_shapeExprType) {
     t_shapeExprType["ShapeAnd"] = "ShapeAnd";

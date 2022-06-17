@@ -4,7 +4,7 @@
 
 %{
 import {Sequence, Union, Intersection, Path, ChildStep, AxisStep, PathExprStep, Axis,
-        Assertion, Filter, Function, FuncArg, FuncName, termType,
+        Assertion, Filter, Function, FuncArg, FuncName, termType, t_shapeDeclAttr,
         t_termType, t_shapeExprType, t_tripleExprType, t_valueType, t_attribute,
         t_schemaAttr, t_shapeExprAttr, t_nodeConstraintAttr, t_stringFacetAttr,
         t_numericFacetAttr, t_valueSetValueAttr, t_shapeAttr, t_tripleExprAttr,
@@ -61,7 +61,8 @@ export function shapeLabelShortCut(label: Iri) {
           1
         ])
       )
-    ])
+    ]),
+    new ChildStep(t_shapeDeclAttr.shapeExpr),
   ]
 }
 

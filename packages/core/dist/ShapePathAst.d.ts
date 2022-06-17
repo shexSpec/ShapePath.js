@@ -1,7 +1,7 @@
 /** ShapePath types
  */
 import * as ShExJ from 'shexj';
-export declare type SchemaNode = ShExJ.Schema | ShExJ.shapeExpr | ShExJ.ShapeOr | ShExJ.ShapeAnd | ShExJ.ShapeNot | ShExJ.ShapeExternal | ShExJ.shapeExprRef | ShExJ.shapeExprLabel | ShExJ.NodeConstraint | ShExJ.xsFacet | ShExJ.stringFacet | ShExJ.numericFacet | ShExJ.numericLiteral | ShExJ.valueSetValue | ShExJ.objectValue | ShExJ.ObjectLiteral | ShExJ.IriStem | ShExJ.IriStemRange | ShExJ.LiteralStem | ShExJ.LiteralStemRange | ShExJ.Language | ShExJ.LanguageStem | ShExJ.LanguageStemRange | ShExJ.Wildcard | ShExJ.Shape | ShExJ.tripleExpr | ShExJ.tripleExprBase | ShExJ.EachOf | ShExJ.OneOf | ShExJ.TripleConstraint | ShExJ.tripleExprRef | ShExJ.tripleExprLabel | ShExJ.SemAct | ShExJ.Annotation | ShExJ.IRIREF | ShExJ.BNODE | ShExJ.INTEGER | ShExJ.STRING | ShExJ.DECIMAL | ShExJ.DOUBLE | ShExJ.LANGTAG | ShExJ.BOOL | ShExJ.IRI;
+export declare type SchemaNode = ShExJ.Schema | ShExJ.ShapeDecl | ShExJ.shapeExpr | ShExJ.ShapeOr | ShExJ.ShapeAnd | ShExJ.ShapeNot | ShExJ.ShapeExternal | ShExJ.shapeExprRef | ShExJ.shapeExprLabel | ShExJ.NodeConstraint | ShExJ.xsFacet | ShExJ.stringFacet | ShExJ.numericFacet | ShExJ.numericLiteral | ShExJ.valueSetValue | ShExJ.objectValue | ShExJ.ObjectLiteral | ShExJ.IriStem | ShExJ.IriStemRange | ShExJ.LiteralStem | ShExJ.LiteralStemRange | ShExJ.Language | ShExJ.LanguageStem | ShExJ.LanguageStemRange | ShExJ.Wildcard | ShExJ.Shape | ShExJ.tripleExpr | ShExJ.tripleExprBase | ShExJ.EachOf | ShExJ.OneOf | ShExJ.TripleConstraint | ShExJ.tripleExprRef | ShExJ.tripleExprLabel | ShExJ.SemAct | ShExJ.Annotation | ShExJ.IRIREF | ShExJ.BNODE | ShExJ.INTEGER | ShExJ.STRING | ShExJ.DECIMAL | ShExJ.DOUBLE | ShExJ.LANGTAG | ShExJ.BOOL | ShExJ.IRI;
 export declare type NodeSet = Array<SchemaNode>;
 export declare abstract class Serializable {
     abstract t: string;
@@ -99,10 +99,16 @@ export declare class Assertion extends Function {
 }
 export declare enum t_termType {
     Schema = "Schema",
+    ShapeDecl = "ShapeDecl",
     SemAct = "SemAct",
     Annotation = "Annotation"
 }
 export declare type termType = t_termType | shapeExprType | tripleExprType | valueType;
+export declare enum t_shapeDeclAttr {
+    abstract = "abstract",
+    shapeExpr = "shapeExpr"
+}
+export declare type shapeDeclAttr = t_shapeDeclAttr;
 export declare enum t_shapeExprType {
     ShapeAnd = "ShapeAnd",
     ShapeOr = "ShapeOr",
@@ -137,7 +143,7 @@ export declare enum t_attribute {
     annotations = "annotations",
     predicate = "predicate"
 }
-export declare type Attribute = t_attribute | schemaAttr | shapeExprAttr | tripleExprAttr | valueSetValueAttr | semActAttr | annotationAttr;
+export declare type Attribute = t_attribute | schemaAttr | shapeDeclAttr | shapeExprAttr | tripleExprAttr | valueSetValueAttr | semActAttr | annotationAttr;
 export declare enum t_schemaAttr {
     atContext = "@context",
     startActs = "startActs",

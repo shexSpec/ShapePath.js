@@ -4,6 +4,7 @@
 import * as ShExJ from 'shexj';
 
 export type SchemaNode = ShExJ.Schema
+  | ShExJ.ShapeDecl
   | ShExJ.shapeExpr
   | ShExJ.ShapeOr
   | ShExJ.ShapeAnd
@@ -269,8 +270,6 @@ export class AxisStep extends Step {
       if (!(node instanceof Object))
         return []
       switch ((<any>node).type) {
-        case "ShapeDecl":
-          return walkShapeExpr((<any>node).shapeExpr)
         case "ShapeAnd":
         case "ShapeOr":
           return [node].concat(walkShapeExpr((<any>node).shapeExprs))
@@ -435,10 +434,17 @@ export class Assertion extends Function {
 
 export enum t_termType {
   Schema = 'Schema',
+  ShapeDecl = 'ShapeDecl',
   SemAct = 'SemAct',
   Annotation = 'Annotation',
 }
 export type termType = t_termType | shapeExprType | tripleExprType | valueType
+
+export enum t_shapeDeclAttr {
+  abstract = 'abstract',
+  shapeExpr = 'shapeExpr',
+}
+export type shapeDeclAttr = t_shapeDeclAttr
 
 export enum t_shapeExprType {
   ShapeAnd = 'ShapeAnd',
@@ -477,7 +483,7 @@ export enum t_attribute {
   annotations = 'annotations',
   predicate = 'predicate',
 }
-export type Attribute = t_attribute | schemaAttr | shapeExprAttr | tripleExprAttr | valueSetValueAttr | semActAttr | annotationAttr
+export type Attribute = t_attribute | schemaAttr | shapeDeclAttr | shapeExprAttr | tripleExprAttr | valueSetValueAttr | semActAttr | annotationAttr
 
 export enum t_schemaAttr {
   atContext = '@context',

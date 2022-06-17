@@ -79,7 +79,7 @@ class ShapePathOnlineEvaluator {
         }
 
         // Resolve path against schema
-        const inp = [this.schema]
+        const inp = [this.schema];
         this.nodeSet = pathExpr.evalPathExpr(inp, new Ast.EvalContext(this.schema))
 
         if (this.nodeSet.length === 0) {
@@ -92,7 +92,7 @@ class ShapePathOnlineEvaluator {
       }
     } catch (e) {
       const errorMessage = 'Error while ' + currentAction + String(e);
-      console.error(new Date().toISOString() + ' ' + errorMessage);
+      console.error(new Date().toISOString() + ' ' + (typeof e === 'object' && 'stack' in e ? e.stack : errorMessage));
       document.querySelector('#shapepath-results-editor').classList.add('error');
       shapepathResultsSession.setValue(errorMessage);
     }
