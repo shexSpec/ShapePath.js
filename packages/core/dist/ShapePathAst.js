@@ -210,6 +210,8 @@ class AxisStep extends Step {
             if (!(node instanceof Object))
                 return [];
             switch (node.type) {
+                case "ShapeDecl":
+                    return walkShapeExpr(node.shapeExpr);
                 case "ShapeAnd":
                 case "ShapeOr":
                     return [node].concat(walkShapeExpr(node.shapeExprs));

@@ -2,8 +2,10 @@
   "type": "Schema",
   "shapes": [
     {
-      "type": "Shape",
+      "type": "ShapeDecl",
       "id": "http://project.example/schema#DiscItem",
+      "shapeExpr": {
+      "type": "Shape",
       "expression": {
         "type": "OneOf",
         "expressions": [
@@ -37,11 +39,13 @@
             }
           }
         ]
-      }
+      } }
     },
     {
-      "type": "Shape",
+      "type": "ShapeDecl",
       "id": "http://project.example/schema#DiscList0",
+      "shapeExpr": {
+      "type": "Shape",
       "closed": true,
       "expression": {
         "type": "EachOf",
@@ -68,11 +72,13 @@
             }
           }
         ]
-      }
+      } }
     },
     {
-      "type": "Shape",
+      "type": "ShapeDecl",
       "id": "http://project.example/schema#DiscList1",
+      "shapeExpr": {
+      "type": "Shape",
       "closed": true,
       "expression": {
         "type": "EachOf",
@@ -99,11 +105,13 @@
             }
           }
         ]
-      }
+      } }
     },
     {
-      "type": "Shape",
+      "type": "ShapeDecl",
       "id": "http://project.example/schema#Issue",
+      "shapeExpr": {
+      "type": "Shape",
       "expression": {
         "type": "EachOf",
         "expressions": [
@@ -205,7 +213,7 @@
             "max": -1
           }
         ]
-      }
+      } }
     }
   ],
   "@context": "http://www.w3.org/ns/shex.jsonld"

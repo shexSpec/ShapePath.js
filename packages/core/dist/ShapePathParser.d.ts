@@ -6,9 +6,7 @@ declare type Iri = string;
 export declare function shapeLabelShortCut(label: Iri): ChildStep[];
 export declare function predicateShortCut(label: Iri): (ChildStep | AxisStep)[];
 import { JisonParser, JisonParserApi, StateType, SymbolsType, TerminalsType, ProductionsType } from '@ts-jison/parser';
-import { JisonLexer, JisonLexerApi } from '@ts-jison/lexer';
 export declare class ShapePathParser extends JisonParser implements JisonParserApi {
-    Parser?: ShapePathParser;
     $?: any;
     constructor(yy?: {}, lexer?: ShapePathLexer);
     symbols_: SymbolsType;
@@ -20,6 +18,7 @@ export declare class ShapePathParser extends JisonParser implements JisonParserA
     };
     performAction(yytext: string, yyleng: number, yylineno: number, yy: any, yystate: number, $$: any, _$: any): any;
 }
+import { JisonLexer, JisonLexerApi } from '@ts-jison/lexer';
 export declare class ShapePathLexer extends JisonLexer implements JisonLexerApi {
     options: any;
     constructor(yy?: {});

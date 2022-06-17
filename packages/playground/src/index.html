@@ -80,19 +80,20 @@
           </div>
           <!-- htmlmin:ignore -->
           <div id="shexj-editor" class="editor">{ "type": "Schema", "shapes": [
-  { "type": "Shape", "id": "http://a.example/S2" },
-  { "type": "ShapeAnd", "id": "http://a.example/S1", "shapeExprs": [
-    { "type": "Shape", "expression": { "type": "EachOf", "expressions": [
-      { "type": "TripleConstraint", "predicate": "http://a.example/p1" },
-      { "type": "TripleConstraint", "predicate": "http://a.example/p2" }
+  { "type": "ShapeDecl", "id": "http://a.example/S2", "shapeExpr": { "type": "Shape" } },
+  { "type": "ShapeDecl", "id": "http://a.example/S1", "shapeExpr":
+    { "type": "ShapeAnd", "shapeExprs": [
+      { "type": "Shape", "expression": { "type": "EachOf", "expressions": [
+        { "type": "TripleConstraint", "predicate": "http://a.example/p1" },
+        { "type": "TripleConstraint", "predicate": "http://a.example/p2" }
+      ] } },
+      { "type": "NodeConstraint", "nodeKind": "iri" },
+      { "type": "Shape", "expression": { "type": "EachOf", "expressions": [
+        { "type": "TripleConstraint", "predicate": "http://a.example/p3" },
+        { "type": "TripleConstraint", "predicate": "http://a.example/p1" }
+      ] } }
     ] } },
-    { "type": "NodeConstraint", "nodeKind": "iri" },
-    { "type": "Shape", "expression": { "type": "EachOf", "expressions": [
-      { "type": "TripleConstraint", "predicate": "http://a.example/p3" },
-      { "type": "TripleConstraint", "predicate": "http://a.example/p1" }
-    ] } }
-  ] },
-  { "type": "Shape", "id": "http://a.example/S4" }
+  { "type": "ShapeDecl", "id": "http://a.example/S4", "shapeExpr": { "type": "Shape" } }
 ] }
 </div>
           <!-- htmlmin:ignore -->

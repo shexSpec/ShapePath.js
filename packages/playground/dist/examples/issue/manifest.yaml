@@ -26,7 +26,7 @@
   desc: Issue hrefs with no shortcuts
   schemaURL: Issue.json
   shapePath: >-
-    /shapes/*[id=<http://project.example/schema#Issue>][assert count() = 1]/thisShapeExpr::/expression/thisTripleExpr::[predicate=<http://project.example/ns#spec>]/valueExpr/shapeExprs/thisShapeExpr::/expression/thisTripleExpr::[predicate=<http://project.example/ns#href>]
+    /shapes/*[id=<http://project.example/schema#Issue>][assert count() = 1]/thisShapeExpr::/shapeExpr/expression/thisTripleExpr::[predicate=<http://project.example/ns#spec>]/valueExpr/shapeExprs/thisShapeExpr::/shapeExpr/expression/thisTripleExpr::[predicate=<http://project.example/ns#href>]
   shapePathSchemaMatch:
   - type: TripleConstraint
     predicate: http://project.example/ns#href
@@ -74,9 +74,9 @@
   desc: discussion/href and impNote/href
   schemaURL: Issue.json
   shapePath: >-
-    /shapes/*[id=<http://project.example/schema#DiscItem>][assert count() = 1]/thisShapeExpr::/expression/thisTripleExpr::[predicate=<http://project.example/ns#href>]
+    /shapes/*[id=<http://project.example/schema#DiscItem>][assert count() = 1]/thisShapeExpr::/shapeExpr/expression/thisTripleExpr::[predicate=<http://project.example/ns#href>]
     ,
-    /shapes/*[id=<http://project.example/schema#Issue>][assert count() = 1]/thisShapeExpr::/expression/thisTripleExpr::[predicate=<http://project.example/ns#spec>]/valueExpr/shapeExprs/thisShapeExpr::/expression/thisTripleExpr::[predicate=<http://project.example/ns#href>]
+    /shapes/*[id=<http://project.example/schema#Issue>][assert count() = 1]/thisShapeExpr::/shapeExpr/expression/thisTripleExpr::[predicate=<http://project.example/ns#spec>]/valueExpr/shapeExprs/thisShapeExpr::/shapeExpr/expression/thisTripleExpr::[predicate=<http://project.example/ns#href>]
   shapePathSchemaMatch:
   - type: TripleConstraint
     predicate: http://project.example/ns#href
