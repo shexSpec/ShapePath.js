@@ -35,7 +35,7 @@ exports.report = report;
 function run(pathStr, files, command, commander) {
     if (command.debug) {
         exports.log = console.warn;
-        exports.log('Executing %s with options %o on files %s', pathStr, command, files.join(','));
+        (0, exports.log)('Executing %s with options %o on files %s', pathStr, command, files.join(','));
     }
     let yy = {
         base: new URL(Base),
@@ -43,12 +43,12 @@ function run(pathStr, files, command, commander) {
     };
     if (command.resolve) {
         yy = readJson(command.resolve);
-        exports.log('Loaded URI resolution spec from %s', command.resolve);
+        (0, exports.log)('Loaded URI resolution spec from %s', command.resolve);
     }
     const pathExpr = new ShapePathParser_1.ShapePathParser(yy).parse(pathStr);
-    exports.log('%s compiles to %s', pathStr, JSON.stringify(pathExpr));
+    (0, exports.log)('%s compiles to %s', pathStr, JSON.stringify(pathExpr));
     return files.map(filePath => {
-        exports.log('Executing %s on %s', pathStr, filePath);
+        (0, exports.log)('Executing %s on %s', pathStr, filePath);
         const schema = readJson(filePath);
         const leader = command['with-filename'] ? filePath + ': ' : '';
         const schemaNodes = pathExpr.evalPathExpr([schema], new ShapePathAst_1.EvalContext(schema));
