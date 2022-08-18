@@ -1,6 +1,6 @@
 {
   "name": "shape-path-core",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A typescript library for parsing and executing ShapePaths",
   "main": "dist/shape-path-core.js",
   "types": "src/shape-path-core",
