@@ -720,6 +720,11 @@ const semanticActions = {
         $$ = ShapePathAst_1.t_shapeAttr.extra;
         return $$;
     },
+    "shapeAttr -> IT_extends"() {
+        let $$;
+        $$ = ShapePathAst_1.t_shapeAttr.extends;
+        return $$;
+    },
     "shapeAttr -> IT_expression"() {
         let $$;
         $$ = ShapePathAst_1.t_shapeAttr.expression;

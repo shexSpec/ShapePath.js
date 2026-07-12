@@ -183,6 +183,7 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 "languageTag"           return 'IT_languageTag';
 "closed"                return 'IT_closed';
 "extra"                 return 'IT_extra';
+"extends"               return 'IT_extends';
 "expression"            return 'IT_expression';
 "expressions"           return 'IT_expressions';
 "min"                   return 'IT_min';
@@ -515,6 +516,7 @@ valueSetValueAttr:
 shapeAttr:
     IT_closed	-> t_shapeAttr.closed
   | IT_extra	-> t_shapeAttr.extra
+  | IT_extends	-> t_shapeAttr.extends
   | IT_expression	-> t_shapeAttr.expression
 ;
 

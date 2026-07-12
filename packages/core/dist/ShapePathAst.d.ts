@@ -194,6 +194,7 @@ export declare type valueSetValueAttr = t_valueSetValueAttr;
 export declare enum t_shapeAttr {
     closed = "closed",
     extra = "extra",
+    extends = "extends",
     expression = "expression"
 }
 export declare type shapeAttr = t_shapeAttr;

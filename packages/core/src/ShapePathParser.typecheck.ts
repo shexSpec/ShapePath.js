@@ -1034,6 +1034,12 @@ const semanticActions = {
     return $$;
   },
 
+  "shapeAttr -> IT_extends"(): TysonTypeDictionary["shapeAttr"] {
+    let $$: TysonTypeDictionary["shapeAttr"];
+    $$ = t_shapeAttr.extends;
+    return $$;
+  },
+
   "shapeAttr -> IT_expression"(): TysonTypeDictionary["shapeAttr"] {
     let $$: TysonTypeDictionary["shapeAttr"];
     $$ = t_shapeAttr.expression;

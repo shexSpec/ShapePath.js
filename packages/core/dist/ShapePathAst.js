@@ -466,6 +466,7 @@ var t_shapeAttr;
 (function (t_shapeAttr) {
     t_shapeAttr["closed"] = "closed";
     t_shapeAttr["extra"] = "extra";
+    t_shapeAttr["extends"] = "extends";
     t_shapeAttr["expression"] = "expression";
 })(t_shapeAttr = exports.t_shapeAttr || (exports.t_shapeAttr = {}));
 var t_tripleExprAttr;

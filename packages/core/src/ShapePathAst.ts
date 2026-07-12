@@ -542,6 +542,7 @@ export type valueSetValueAttr = t_valueSetValueAttr
 export enum t_shapeAttr {
   closed = 'closed',
   extra = 'extra',
+  extends = 'extends',
   expression = 'expression',
 }
 export type shapeAttr = t_shapeAttr
