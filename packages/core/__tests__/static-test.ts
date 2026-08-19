@@ -1,6 +1,6 @@
 const Fs = require('fs')
 const Path = require('path')
-import { stringFacet, TripleConstraint } from 'shexj'
+import { stringFacets, TripleConstraint } from 'shexj'
 import { EvalContext, NodeSet, SchemaNode, stringFacetAttr } from '../src/ShapePathAst'
 import { ShapePathParser, ShapePathLexer } from '../src/ShapePathParser'
 import { Schema, SemAct } from 'shexj'

@@ -16,7 +16,9 @@ import {comparison, rvalue} from './ShapePathParserInternals'
 function makeFunction (assertionP: boolean, firstArg: FuncArg, comp: comparison = { op: FuncName.ebv, r: null }): Function {
   const { op, r } = comp
   const args = [firstArg]
-  if (r) args.push(r)
+  // not `if (r)`: 0 and "" are rvalues, and `[index() = 0]` used to lose its
+  // right-hand side and become a bare ebv of index()
+  if (r !== null && r !== undefined) args.push(r)
   const ret = new Filter(op, args)
   return assertionP
     ? new Assertion(ret)

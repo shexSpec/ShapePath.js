@@ -9,7 +9,9 @@ const ShapePathAst_1 = require("./ShapePathAst");
 function makeFunction(assertionP, firstArg, comp = { op: ShapePathAst_1.FuncName.ebv, r: null }) {
     const { op, r } = comp;
     const args = [firstArg];
-    if (r)
+    // not `if (r)`: 0 and "" are rvalues, and `[index() = 0]` used to lose its
+    // right-hand side and become a bare ebv of index()
+    if (r !== null && r !== undefined)
         args.push(r);
     const ret = new ShapePathAst_1.Filter(op, args);
     return assertionP

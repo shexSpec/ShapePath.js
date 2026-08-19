@@ -10,12 +10,12 @@ export type SchemaNode = ShExJ.Schema
   | ShExJ.ShapeAnd
   | ShExJ.ShapeNot
   | ShExJ.ShapeExternal
-  | ShExJ.shapeExprRef
-  | ShExJ.shapeExprLabel
+  | ShExJ.shapeDeclRef
+  | ShExJ.shapeDeclLabel
   | ShExJ.NodeConstraint
-  | ShExJ.xsFacet
-  | ShExJ.stringFacet
-  | ShExJ.numericFacet
+  | ShExJ.xsFacets
+  | ShExJ.stringFacets
+  | ShExJ.numericFacets
   | ShExJ.numericLiteral
   | ShExJ.valueSetValue
   | ShExJ.objectValue
@@ -206,7 +206,7 @@ export class ChildStep extends Step {
     return (this.filters || []).reduce( // For each filter,
       (filteredNodes, f) =>
         filteredNodes.filter( // trim NodeSet to nodes passing filter.
-          (node, idx) => // (Aggregates need access to current node list.)
+          (node: SchemaNode, idx: number) => // (Aggregates need access to current node list.)
             ebv(f.evalFunction(node, filteredNodes, idx, ctx)) === Pass
         )
       , selectedNodes // Start filter walk from selected nodes.
@@ -249,7 +249,7 @@ export class AxisStep extends Step {
     return (this.filters || []).reduce( // For each filter,
       (filteredNodes, f) =>
         filteredNodes.filter( // trim NodeSet to nodes passing filter.
-          (node, idx) => // (Aggregates need access to current node list.)
+          (node: SchemaNode, idx: number) => // (Aggregates need access to current node list.)
             ebv(f.evalFunction(node, filteredNodes, idx, ctx)) === Pass
         )
       , selectedNodes // Start filter walk from selected nodes.
@@ -350,11 +350,28 @@ export class Filter extends Function {
     if (this.isAggregate()) {
       switch (this.op) {
         case FuncName.index:
-          return [idx]
+          // `[2]` is shorthand for `[index() = 2]` (grammar: filterExpr ->
+          // Filter(index, [numericExpr])), so an index filter given an
+          // argument compares rather than reports.  Positions are 0-based,
+          // as index() has always reported them.
+          return this.args.length === 0
+            ? [idx]
+            : evalArgs(this.args, node, allNodes)[0] === idx ? [node] : []
         case FuncName.count:
           return [allNodes.length]
-        case FuncName.ebv:
-          return ebv(allNodes)
+        case FuncName.ebv: {
+          // the effective boolean value *of the argument*, for this node --
+          // `[index()]`, `[/id]`.  It used to answer for the whole node set,
+          // so any filter written this way passed everything.
+          const arg = this.args[0]
+          if (arg === undefined)
+            return ebv(allNodes)
+          if (arg instanceof PathExpr)
+            return ebv(arg.evalPathExpr([node], ctx))
+          if (arg instanceof Function)
+            return ebv(arg.evalFunction(node, allNodes, idx, ctx))
+          return ebv([arg])
+        }
         default:
           throw Error(`Not Implemented: Filter ${this.op} ${this.args}`)
       }
@@ -378,14 +395,19 @@ export class Filter extends Function {
     }
 
     function evalArgs(args: FuncArg[], node: SchemaNode, allNodes: NodeSet) {
-      return args.map((arg, idx) => {
+      // Note: no second parameter on the callback.  It used to be named
+      // `idx`, which shadowed the node's position with the argument's, so a
+      // nested aggregate -- the `index()` in `[index() = 1]` -- reported
+      // where it sat in the argument list instead of where the node sat in
+      // the node set.
+      return args.map(arg => {
         if (typeof arg === 'number' || typeof arg === 'string' /* || arg instanceof Iri */)
           return arg
         if (arg instanceof Function)
           return arg.evalFunction(node, allNodes, idx, ctx)[0]
         if (arg instanceof PathExpr)
           return arg.evalPathExpr([node], ctx)[0]
-      }, [])
+      })
     }
 
   }
@@ -412,6 +434,10 @@ function ebv(nodes: NodeSet): NodeSet {
     return Pass
   if (nodes.length === 0)
     return Fail
+  if (typeof nodes[0] === 'boolean')
+    // without this, ebv(Fail) is Pass: a filter that answered "no" and was
+    // asked again -- which is what the step does to every filter -- said yes
+    return nodes[0] ? Pass : Fail
   if (typeof nodes[0] === 'number')
     return nodes[0] === 0 ? Fail : Pass
   if (typeof nodes[0] === 'string')

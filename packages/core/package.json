@@ -1,6 +1,6 @@
 {
   "name": "shape-path-core",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A typescript library for parsing and executing ShapePaths",
   "main": "dist/shape-path-core.js",
   "types": "src/shape-path-core",
@@ -30,7 +30,7 @@
     "@types/commander": "^2.12.2",
     "@types/jest": "^28.1.1",
     "@types/node": "^18.0.0",
-    "@types/shexj": "^2.1.1",
+    "@types/shexj": "^2.1.7",
     "jest": "^28.1.1",
     "shex-test": "^2.1.0",
     "ts-jest": "^28.0.5",
