@@ -242,6 +242,9 @@ export class AxisStep extends Step {
           const parentMap: ParentMap = ctx.getParents()
           match = walkParents(parentMap, node)
           break
+        case Axis.descendant:
+          match = walkDescendants(node)
+          break
       }
       return ret.concat(match)
     }, [] as NodeSet)
@@ -262,6 +265,20 @@ export class AxisStep extends Step {
       if (parent === null) // top of the hieararchy
         return []
       return [parent].concat(walkParents(parentMap, parent))
+    }
+
+    /** every node below this one, not including it -- cf. XPath descendant:: */
+    function walkDescendants(node: SchemaNode): NodeSet {
+      const ret: NodeSet = []
+      Object.values(node as object).forEach(collect)
+      return ret
+
+      function collect(n: SchemaNode): void {
+        if (n === null || typeof n !== 'object')
+          return
+        ret.push(n)
+        Object.values(n as object).forEach(collect)
+      }
     }
 
     function walkShapeExpr(node: SchemaNode): NodeSet {
@@ -317,6 +334,14 @@ export enum Axis {
   self = 'self::',
   parent = 'parent::',
   ancestor = 'ancestor::',
+  /**
+   * Every node beneath this one.  ShExJ has no top-level list of triple
+   * expressions the way it has `shapes`, so a labelled one is found by
+   * looking everywhere -- including inside a nested inline shape, which
+   * `thisTripleExpr::` does not reach.  Reachable from the `$<label>`
+   * shortcut; there is deliberately no token for it yet.
+   */
+  descendant = 'descendant::',
 }
 
 export abstract class Function extends Serializable {

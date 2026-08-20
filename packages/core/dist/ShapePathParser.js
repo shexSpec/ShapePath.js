@@ -4,7 +4,7 @@
  * Returns a Parser implementing JisonParserApi and a Lexer implementing JisonLexerApi.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ShapePathLexer = exports.ShapePathParser = exports.predicateShortCut = exports.shapeLabelShortCut = void 0;
+exports.ShapePathLexer = exports.ShapePathParser = exports.predicateShortCut = exports.tripleExprLabelShortCut = exports.shapeLabelShortCut = void 0;
 const ShapePathAst_1 = require("./ShapePathAst");
 function makeFunction(assertionP, firstArg, comp = { op: ShapePathAst_1.FuncName.ebv, r: null }) {
     const { op, r } = comp;
@@ -53,6 +53,31 @@ function shapeLabelShortCut(label) {
     ];
 }
 exports.shapeLabelShortCut = shapeLabelShortCut;
+/**
+ * `$<label>` -- the triple expression that ShExC declared with that label.
+ *
+ * ShExJ has no top-level list of triple expressions the way it has `shapes`,
+ * and a label may sit on an EachOf, a OneOf or a TripleConstraint at any
+ * depth, including inside a nested inline shape.  So this looks everywhere
+ * and asserts that it found exactly one, which mirrors `@<label>`.  A label
+ * that named both a shape and a triple expression would be ambiguous here,
+ * and is already a structural error in ShEx.
+ */
+function tripleExprLabelShortCut(label) {
+    return [
+        new ShapePathAst_1.AxisStep(ShapePathAst_1.Axis.descendant, [
+            new ShapePathAst_1.Filter(ShapePathAst_1.FuncName.equal, [
+                new ShapePathAst_1.Path([new ShapePathAst_1.ChildStep(ShapePathAst_1.t_attribute.id)]),
+                label
+            ]),
+            new ShapePathAst_1.Assertion(new ShapePathAst_1.Filter(ShapePathAst_1.FuncName.equal, [
+                new ShapePathAst_1.Filter(ShapePathAst_1.FuncName.count, []),
+                1
+            ]))
+        ]),
+    ];
+}
+exports.tripleExprLabelShortCut = tripleExprLabelShortCut;
 function predicateShortCut(label) {
     return [
         new ShapePathAst_1.AxisStep(ShapePathAst_1.Axis.thisShapeExpr, filterTermType(ShapePathAst_1.t_shapeExprType.Shape, [])),
@@ -67,17 +92,17 @@ function predicateShortCut(label) {
 }
 exports.predicateShortCut = predicateShortCut;
 const parser_1 = require("@ts-jison/parser");
-const $V0 = [37, 39, 41, 42, 43, 44, 45, 46, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 102, 103, 104, 105, 106, 107, 108, 111, 112, 114, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 141, 142, 143, 144, 145], $V1 = [2, 21], $V2 = [1, 11], $V3 = [1, 12], $V4 = [1, 13], $V5 = [1, 14], $V6 = [5, 9, 38, 50, 65, 66, 67], $V7 = [5, 9, 13, 38, 50, 65, 66, 67], $V8 = [5, 9, 13, 17, 38, 50, 65, 66, 67], $V9 = [5, 9, 13, 17, 25, 26, 29, 30, 38, 50, 65, 66, 67], $Va = [46, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 102, 103, 104, 105, 106, 107, 108, 111, 112, 114, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 141, 142, 143, 144, 145], $Vb = [2, 32], $Vc = [1, 23], $Vd = [1, 24], $Ve = [1, 25], $Vf = [1, 26], $Vg = [1, 27], $Vh = [1, 28], $Vi = [1, 29], $Vj = [1, 31], $Vk = [1, 33], $Vl = [1, 34], $Vm = [146, 148, 149], $Vn = [1, 49], $Vo = [1, 50], $Vp = [1, 51], $Vq = [1, 54], $Vr = [1, 55], $Vs = [1, 56], $Vt = [1, 57], $Vu = [1, 58], $Vv = [1, 59], $Vw = [1, 60], $Vx = [1, 61], $Vy = [1, 62], $Vz = [1, 63], $VA = [1, 64], $VB = [1, 65], $VC = [1, 66], $VD = [1, 67], $VE = [1, 68], $VF = [1, 69], $VG = [1, 70], $VH = [5, 9, 13, 17, 25, 26, 29, 30, 38, 48, 50, 65, 66, 67], $VI = [2, 36], $VJ = [5, 9, 13, 17, 25, 26, 29, 30, 38, 48, 50, 65, 66, 67, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90], $VK = [2, 34], $VL = [1, 138], $VM = [25, 26, 29, 30, 37, 39, 41, 42, 43, 44, 45, 46, 57, 58, 59, 60, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 102, 103, 104, 105, 106, 107, 108, 111, 112, 114, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 141, 142, 143, 144, 145], $VN = [2, 51], $VO = [1, 157], $VP = [1, 158], $VQ = [1, 159], $VR = [62, 146, 148, 149], $VS = [50, 65, 66, 67];
+const $V0 = [38, 40, 42, 43, 44, 45, 46, 47, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 103, 104, 105, 106, 107, 108, 109, 112, 113, 115, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 142, 143, 144, 145, 146], $V1 = [2, 21], $V2 = [1, 11], $V3 = [1, 12], $V4 = [1, 13], $V5 = [1, 14], $V6 = [1, 15], $V7 = [5, 9, 39, 51, 66, 67, 68], $V8 = [5, 9, 13, 39, 51, 66, 67, 68], $V9 = [5, 9, 13, 17, 39, 51, 66, 67, 68], $Va = [5, 9, 13, 17, 25, 26, 29, 30, 31, 39, 51, 66, 67, 68], $Vb = [47, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 103, 104, 105, 106, 107, 108, 109, 112, 113, 115, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 142, 143, 144, 145, 146], $Vc = [2, 33], $Vd = [1, 24], $Ve = [1, 25], $Vf = [1, 26], $Vg = [1, 27], $Vh = [1, 28], $Vi = [1, 29], $Vj = [1, 30], $Vk = [1, 32], $Vl = [1, 34], $Vm = [1, 35], $Vn = [147, 149, 150], $Vo = [1, 50], $Vp = [1, 51], $Vq = [1, 52], $Vr = [1, 55], $Vs = [1, 56], $Vt = [1, 57], $Vu = [1, 58], $Vv = [1, 59], $Vw = [1, 60], $Vx = [1, 61], $Vy = [1, 62], $Vz = [1, 63], $VA = [1, 64], $VB = [1, 65], $VC = [1, 66], $VD = [1, 67], $VE = [1, 68], $VF = [1, 69], $VG = [1, 70], $VH = [1, 71], $VI = [5, 9, 13, 17, 25, 26, 29, 30, 31, 39, 49, 51, 66, 67, 68], $VJ = [2, 37], $VK = [5, 9, 13, 17, 25, 26, 29, 30, 31, 39, 49, 51, 66, 67, 68, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91], $VL = [2, 35], $VM = [1, 139], $VN = [25, 26, 29, 30, 31, 38, 40, 42, 43, 44, 45, 46, 47, 58, 59, 60, 61, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 103, 104, 105, 106, 107, 108, 109, 112, 113, 115, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 142, 143, 144, 145, 146], $VO = [2, 52], $VP = [1, 158], $VQ = [1, 159], $VR = [1, 160], $VS = [63, 147, 149, 150], $VT = [51, 66, 67, 68];
 class ShapePathParser extends parser_1.JisonParser {
     $;
     constructor(yy = {}, lexer = new ShapePathLexer(yy)) {
         super(yy, lexer);
     }
-    symbols_ = { "error": 2, "top": 3, "shapePath": 4, "EOF": 5, "sequenceStep": 6, "Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star": 7, "O_QGT_COMMA_E_S_QsequenceStep_E_C": 8, "GT_COMMA": 9, "unionStep": 10, "Q_O_QIT_union_E_S_QunionStep_E_C_E_Star": 11, "O_QIT_union_E_S_QunionStep_E_C": 12, "IT_UNION": 13, "intersectionStep": 14, "Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star": 15, "O_QIT_intersection_E_S_QintersectionStep_E_C": 16, "IT_INTERSECTION": 17, "startStep": 18, "QnextStep_E_Star": 19, "nextStep": 20, "Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt": 21, "step": 22, "shortcut": 23, "O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C": 24, "GT_DIVIDE": 25, "GT_DIVIDEDIVIDE": 26, "O_QGT_AT_E_Or_QGT_TILDE_E_C": 27, "iri": 28, "GT_AT": 29, "GT_TILDE": 30, "QIT_child_E_Opt": 31, "termType": 32, "Qfilter_E_Star": 33, "attributeOrAny": 34, "QtermType_E_Opt": 35, "nonChildAxis": 36, "GT_LPAREN": 37, "GT_RPAREN": 38, "IT_child": 39, "filter": 40, "IT_thisShapeExpr": 41, "IT_thisTripleExpr": 42, "IT_self": 43, "IT_parent": 44, "IT_ancestor": 45, "GT_STAR": 46, "attribute": 47, "GT_LBRACKET": 48, "filterExpr": 49, "GT_RBRACKET": 50, "QIT_ASSERT_E_Opt": 51, "Qcomparison_E_Opt": 52, "function": 53, "numericExpr": 54, "IT_ASSERT": 55, "comparison": 56, "IT_index": 57, "IT_count": 58, "IT_foo1": 59, "IT_foo2": 60, "fooArg": 61, "INTEGER": 62, "comparitor": 63, "rvalue": 64, "GT_EQUAL": 65, "GT_LT": 66, "GT_GT": 67, "shapeExprType": 68, "tripleExprType": 69, "valueType": 70, "IT_Schema": 71, "IT_SemAct": 72, "IT_Annotation": 73, "IT_ShapeAnd": 74, "IT_ShapeOr": 75, "IT_ShapeNot": 76, "IT_NodeConstraint": 77, "IT_Shape": 78, "IT_ShapeExternal": 79, "IT_EachOf": 80, "IT_OneOf": 81, "IT_TripleConstraint": 82, "IT_IriStem": 83, "IT_IriStemRange": 84, "IT_LiteralStem": 85, "IT_LiteralStemRange": 86, "IT_Language": 87, "IT_LanguageStem": 88, "IT_LanguageStemRange": 89, "IT_Wildcard": 90, "IT_type": 91, "IT_id": 92, "IT_semActs": 93, "IT_annotations": 94, "IT_predicate": 95, "schemaAttr": 96, "shapeExprAttr": 97, "tripleExprAttr": 98, "valueSetValueAttr": 99, "semActAttr": 100, "annotationAttr": 101, "GT_atContext": 102, "IT_startActs": 103, "IT_start": 104, "IT_imports": 105, "IT_shapes": 106, "IT_shapeExprs": 107, "IT_shapeExpr": 108, "nodeConstraintAttr": 109, "shapeAttr": 110, "IT_nodeKind": 111, "IT_datatype": 112, "xsFacetAttr": 113, "IT_values": 114, "stringFacetAttr": 115, "numericFacetAttr": 116, "IT_length": 117, "IT_minlength": 118, "IT_maxlength": 119, "IT_pattern": 120, "IT_flags": 121, "IT_mininclusive": 122, "IT_minexclusive": 123, "IT_maxinclusive": 124, "IT_maxexclusive": 125, "IT_totaldigits": 126, "IT_fractiondigits": 127, "IT_value": 128, "IT_language": 129, "IT_stem": 130, "IT_exclusions": 131, "IT_languageTag": 132, "IT_closed": 133, "IT_extra": 134, "IT_extends": 135, "IT_expression": 136, "IT_expressions": 137, "IT_min": 138, "IT_max": 139, "tripleConstraintAttr": 140, "IT_inverse": 141, "IT_valueExpr": 142, "IT_name": 143, "IT_code": 144, "IT_object": 145, "IRIREF": 146, "prefixedName": 147, "PNAME_LN": 148, "PNAME_NS": 149, "$accept": 0, "$end": 1 };
-    terminals_ = { 2: "error", 5: "EOF", 9: "GT_COMMA", 13: "IT_UNION", 17: "IT_INTERSECTION", 25: "GT_DIVIDE", 26: "GT_DIVIDEDIVIDE", 29: "GT_AT", 30: "GT_TILDE", 37: "GT_LPAREN", 38: "GT_RPAREN", 39: "IT_child", 41: "IT_thisShapeExpr", 42: "IT_thisTripleExpr", 43: "IT_self", 44: "IT_parent", 45: "IT_ancestor", 46: "GT_STAR", 48: "GT_LBRACKET", 50: "GT_RBRACKET", 55: "IT_ASSERT", 57: "IT_index", 58: "IT_count", 59: "IT_foo1", 60: "IT_foo2", 62: "INTEGER", 65: "GT_EQUAL", 66: "GT_LT", 67: "GT_GT", 71: "IT_Schema", 72: "IT_SemAct", 73: "IT_Annotation", 74: "IT_ShapeAnd", 75: "IT_ShapeOr", 76: "IT_ShapeNot", 77: "IT_NodeConstraint", 78: "IT_Shape", 79: "IT_ShapeExternal", 80: "IT_EachOf", 81: "IT_OneOf", 82: "IT_TripleConstraint", 83: "IT_IriStem", 84: "IT_IriStemRange", 85: "IT_LiteralStem", 86: "IT_LiteralStemRange", 87: "IT_Language", 88: "IT_LanguageStem", 89: "IT_LanguageStemRange", 90: "IT_Wildcard", 91: "IT_type", 92: "IT_id", 93: "IT_semActs", 94: "IT_annotations", 95: "IT_predicate", 102: "GT_atContext", 103: "IT_startActs", 104: "IT_start", 105: "IT_imports", 106: "IT_shapes", 107: "IT_shapeExprs", 108: "IT_shapeExpr", 111: "IT_nodeKind", 112: "IT_datatype", 114: "IT_values", 117: "IT_length", 118: "IT_minlength", 119: "IT_maxlength", 120: "IT_pattern", 121: "IT_flags", 122: "IT_mininclusive", 123: "IT_minexclusive", 124: "IT_maxinclusive", 125: "IT_maxexclusive", 126: "IT_totaldigits", 127: "IT_fractiondigits", 128: "IT_value", 129: "IT_language", 130: "IT_stem", 131: "IT_exclusions", 132: "IT_languageTag", 133: "IT_closed", 134: "IT_extra", 135: "IT_extends", 136: "IT_expression", 137: "IT_expressions", 138: "IT_min", 139: "IT_max", 141: "IT_inverse", 142: "IT_valueExpr", 143: "IT_name", 144: "IT_code", 145: "IT_object", 146: "IRIREF", 148: "PNAME_LN", 149: "PNAME_NS" };
-    productions_ = [0, [3, 2], [4, 2], [8, 2], [7, 0], [7, 2], [6, 2], [12, 2], [11, 0], [11, 2], [10, 2], [16, 2], [15, 0], [15, 2], [14, 2], [19, 0], [19, 2], [18, 2], [18, 1], [24, 1], [24, 1], [21, 0], [21, 1], [20, 2], [20, 1], [23, 2], [27, 1], [27, 1], [22, 3], [22, 4], [22, 3], [22, 5], [31, 0], [31, 1], [33, 0], [33, 2], [35, 0], [35, 1], [36, 1], [36, 1], [36, 1], [36, 1], [36, 1], [34, 1], [34, 1], [40, 3], [49, 3], [49, 3], [49, 1], [51, 0], [51, 1], [52, 0], [52, 1], [53, 3], [53, 3], [53, 4], [53, 4], [61, 2], [61, 1], [61, 1], [56, 2], [63, 1], [63, 1], [63, 1], [64, 1], [64, 1], [54, 1], [32, 1], [32, 1], [32, 1], [32, 1], [32, 1], [32, 1], [68, 1], [68, 1], [68, 1], [68, 1], [68, 1], [68, 1], [69, 1], [69, 1], [69, 1], [70, 1], [70, 1], [70, 1], [70, 1], [70, 1], [70, 1], [70, 1], [70, 1], [47, 1], [47, 1], [47, 1], [47, 1], [47, 1], [47, 1], [47, 1], [47, 1], [47, 1], [47, 1], [47, 1], [96, 1], [96, 1], [96, 1], [96, 1], [96, 1], [97, 1], [97, 1], [97, 1], [97, 1], [109, 1], [109, 1], [109, 1], [109, 1], [113, 1], [113, 1], [115, 1], [115, 1], [115, 1], [115, 1], [115, 1], [116, 1], [116, 1], [116, 1], [116, 1], [116, 1], [116, 1], [99, 1], [99, 1], [99, 1], [99, 1], [99, 1], [110, 1], [110, 1], [110, 1], [110, 1], [98, 1], [98, 1], [98, 1], [98, 1], [140, 1], [140, 1], [100, 1], [100, 1], [101, 1], [28, 1], [28, 1], [147, 1], [147, 1]];
-    table = [(0, parser_1.o)($V0, $V1, { 3: 1, 4: 2, 6: 3, 10: 4, 14: 5, 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 25: $V2, 26: $V3, 29: $V4, 30: $V5 }), { 1: [3] }, { 5: [1, 15] }, (0, parser_1.o)($V6, [2, 4], { 7: 16 }), (0, parser_1.o)($V7, [2, 8], { 11: 17 }), (0, parser_1.o)($V8, [2, 12], { 15: 18 }), (0, parser_1.o)($V9, [2, 15], { 19: 19 }), (0, parser_1.o)($Va, $Vb, { 22: 20, 31: 21, 36: 22, 37: $Vc, 39: $Vd, 41: $Ve, 42: $Vf, 43: $Vg, 44: $Vh, 45: $Vi }), (0, parser_1.o)($V9, [2, 18]), (0, parser_1.o)($V0, [2, 22]), { 28: 30, 146: $Vj, 147: 32, 148: $Vk, 149: $Vl }, (0, parser_1.o)($V0, [2, 19]), (0, parser_1.o)($V0, [2, 20]), (0, parser_1.o)($Vm, [2, 26]), (0, parser_1.o)($Vm, [2, 27]), { 1: [2, 1] }, (0, parser_1.o)([5, 38, 50, 65, 66, 67], [2, 2], { 8: 35, 9: [1, 36] }), (0, parser_1.o)($V6, [2, 6], { 12: 37, 13: [1, 38] }), (0, parser_1.o)($V7, [2, 10], { 16: 39, 17: [1, 40] }), (0, parser_1.o)($V8, [2, 14], { 27: 10, 20: 41, 24: 42, 23: 43, 25: $V2, 26: $V3, 29: $V4, 30: $V5 }), (0, parser_1.o)($V9, [2, 17]), { 32: 44, 34: 45, 46: [1, 52], 47: 53, 68: 46, 69: 47, 70: 48, 71: $Vn, 72: $Vo, 73: $Vp, 74: $Vq, 75: $Vr, 76: $Vs, 77: $Vt, 78: $Vu, 79: $Vv, 80: $Vw, 81: $Vx, 82: $Vy, 83: $Vz, 84: $VA, 85: $VB, 86: $VC, 87: $VD, 88: $VE, 89: $VF, 90: $VG, 91: [1, 71], 92: [1, 72], 93: [1, 73], 94: [1, 74], 95: [1, 75], 96: 76, 97: 77, 98: 78, 99: 79, 100: 80, 101: 81, 102: [1, 82], 103: [1, 83], 104: [1, 84], 105: [1, 85], 106: [1, 86], 107: [1, 87], 108: [1, 88], 109: 89, 110: 90, 111: [1, 103], 112: [1, 104], 113: 105, 114: [1, 106], 115: 113, 116: 114, 117: [1, 115], 118: [1, 116], 119: [1, 117], 120: [1, 118], 121: [1, 119], 122: [1, 120], 123: [1, 121], 124: [1, 122], 125: [1, 123], 126: [1, 124], 127: [1, 125], 128: [1, 95], 129: [1, 96], 130: [1, 97], 131: [1, 98], 132: [1, 99], 133: [1, 107], 134: [1, 108], 135: [1, 109], 136: [1, 110], 137: [1, 91], 138: [1, 92], 139: [1, 93], 140: 94, 141: [1, 111], 142: [1, 112], 143: [1, 100], 144: [1, 101], 145: [1, 102] }, (0, parser_1.o)($VH, $VI, { 68: 46, 69: 47, 70: 48, 35: 126, 32: 127, 71: $Vn, 72: $Vo, 73: $Vp, 74: $Vq, 75: $Vr, 76: $Vs, 77: $Vt, 78: $Vu, 79: $Vv, 80: $Vw, 81: $Vx, 82: $Vy, 83: $Vz, 84: $VA, 85: $VB, 86: $VC, 87: $VD, 88: $VE, 89: $VF, 90: $VG }), (0, parser_1.o)($V0, $V1, { 6: 3, 10: 4, 14: 5, 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 4: 128, 25: $V2, 26: $V3, 29: $V4, 30: $V5 }), (0, parser_1.o)($Va, [2, 33]), (0, parser_1.o)($VJ, [2, 38]), (0, parser_1.o)($VJ, [2, 39]), (0, parser_1.o)($VJ, [2, 40]), (0, parser_1.o)($VJ, [2, 41]), (0, parser_1.o)($VJ, [2, 42]), (0, parser_1.o)($V9, [2, 25]), (0, parser_1.o)($V9, [2, 145]), (0, parser_1.o)($V9, [2, 146]), (0, parser_1.o)($V9, [2, 147]), (0, parser_1.o)($V9, [2, 148]), (0, parser_1.o)($V6, [2, 5]), (0, parser_1.o)($V0, $V1, { 10: 4, 14: 5, 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 6: 129, 25: $V2, 26: $V3, 29: $V4, 30: $V5 }), (0, parser_1.o)($V7, [2, 9]), (0, parser_1.o)($V0, $V1, { 14: 5, 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 10: 130, 25: $V2, 26: $V3, 29: $V4, 30: $V5 }), (0, parser_1.o)($V8, [2, 13]), (0, parser_1.o)($V0, $V1, { 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 14: 131, 25: $V2, 26: $V3, 29: $V4, 30: $V5 }), (0, parser_1.o)($V9, [2, 16]), (0, parser_1.o)($Va, $Vb, { 31: 21, 36: 22, 22: 132, 37: $Vc, 39: $Vd, 41: $Ve, 42: $Vf, 43: $Vg, 44: $Vh, 45: $Vi }), (0, parser_1.o)($V9, [2, 24]), (0, parser_1.o)($VH, $VK, { 33: 133 }), (0, parser_1.o)($VH, $VI, { 68: 46, 69: 47, 70: 48, 32: 127, 35: 134, 71: $Vn, 72: $Vo, 73: $Vp, 74: $Vq, 75: $Vr, 76: $Vs, 77: $Vt, 78: $Vu, 79: $Vv, 80: $Vw, 81: $Vx, 82: $Vy, 83: $Vz, 84: $VA, 85: $VB, 86: $VC, 87: $VD, 88: $VE, 89: $VF, 90: $VG }), (0, parser_1.o)($VH, [2, 67]), (0, parser_1.o)($VH, [2, 68]), (0, parser_1.o)($VH, [2, 69]), (0, parser_1.o)($VH, [2, 70]), (0, parser_1.o)($VH, [2, 71]), (0, parser_1.o)($VH, [2, 72]), (0, parser_1.o)($VJ, [2, 43]), (0, parser_1.o)($VJ, [2, 44]), (0, parser_1.o)($VH, [2, 73]), (0, parser_1.o)($VH, [2, 74]), (0, parser_1.o)($VH, [2, 75]), (0, parser_1.o)($VH, [2, 76]), (0, parser_1.o)($VH, [2, 77]), (0, parser_1.o)($VH, [2, 78]), (0, parser_1.o)($VH, [2, 79]), (0, parser_1.o)($VH, [2, 80]), (0, parser_1.o)($VH, [2, 81]), (0, parser_1.o)($VH, [2, 82]), (0, parser_1.o)($VH, [2, 83]), (0, parser_1.o)($VH, [2, 84]), (0, parser_1.o)($VH, [2, 85]), (0, parser_1.o)($VH, [2, 86]), (0, parser_1.o)($VH, [2, 87]), (0, parser_1.o)($VH, [2, 88]), (0, parser_1.o)($VH, [2, 89]), (0, parser_1.o)($VJ, [2, 90]), (0, parser_1.o)($VJ, [2, 91]), (0, parser_1.o)($VJ, [2, 92]), (0, parser_1.o)($VJ, [2, 93]), (0, parser_1.o)($VJ, [2, 94]), (0, parser_1.o)($VJ, [2, 95]), (0, parser_1.o)($VJ, [2, 96]), (0, parser_1.o)($VJ, [2, 97]), (0, parser_1.o)($VJ, [2, 98]), (0, parser_1.o)($VJ, [2, 99]), (0, parser_1.o)($VJ, [2, 100]), (0, parser_1.o)($VJ, [2, 101]), (0, parser_1.o)($VJ, [2, 102]), (0, parser_1.o)($VJ, [2, 103]), (0, parser_1.o)($VJ, [2, 104]), (0, parser_1.o)($VJ, [2, 105]), (0, parser_1.o)($VJ, [2, 106]), (0, parser_1.o)($VJ, [2, 107]), (0, parser_1.o)($VJ, [2, 108]), (0, parser_1.o)($VJ, [2, 109]), (0, parser_1.o)($VJ, [2, 136]), (0, parser_1.o)($VJ, [2, 137]), (0, parser_1.o)($VJ, [2, 138]), (0, parser_1.o)($VJ, [2, 139]), (0, parser_1.o)($VJ, [2, 127]), (0, parser_1.o)($VJ, [2, 128]), (0, parser_1.o)($VJ, [2, 129]), (0, parser_1.o)($VJ, [2, 130]), (0, parser_1.o)($VJ, [2, 131]), (0, parser_1.o)($VJ, [2, 142]), (0, parser_1.o)($VJ, [2, 143]), (0, parser_1.o)($VJ, [2, 144]), (0, parser_1.o)($VJ, [2, 110]), (0, parser_1.o)($VJ, [2, 111]), (0, parser_1.o)($VJ, [2, 112]), (0, parser_1.o)($VJ, [2, 113]), (0, parser_1.o)($VJ, [2, 132]), (0, parser_1.o)($VJ, [2, 133]), (0, parser_1.o)($VJ, [2, 134]), (0, parser_1.o)($VJ, [2, 135]), (0, parser_1.o)($VJ, [2, 140]), (0, parser_1.o)($VJ, [2, 141]), (0, parser_1.o)($VJ, [2, 114]), (0, parser_1.o)($VJ, [2, 115]), (0, parser_1.o)($VJ, [2, 116]), (0, parser_1.o)($VJ, [2, 117]), (0, parser_1.o)($VJ, [2, 118]), (0, parser_1.o)($VJ, [2, 119]), (0, parser_1.o)($VJ, [2, 120]), (0, parser_1.o)($VJ, [2, 121]), (0, parser_1.o)($VJ, [2, 122]), (0, parser_1.o)($VJ, [2, 123]), (0, parser_1.o)($VJ, [2, 124]), (0, parser_1.o)($VJ, [2, 125]), (0, parser_1.o)($VJ, [2, 126]), (0, parser_1.o)($VH, $VK, { 33: 135 }), (0, parser_1.o)($VH, [2, 37]), { 38: [1, 136] }, (0, parser_1.o)($V6, [2, 3]), (0, parser_1.o)($V7, [2, 7]), (0, parser_1.o)($V8, [2, 11]), (0, parser_1.o)($V9, [2, 23]), (0, parser_1.o)($V9, [2, 28], { 40: 137, 48: $VL }), (0, parser_1.o)($VH, $VK, { 33: 139 }), (0, parser_1.o)($V9, [2, 30], { 40: 137, 48: $VL }), (0, parser_1.o)($VH, $VI, { 68: 46, 69: 47, 70: 48, 32: 127, 35: 140, 71: $Vn, 72: $Vo, 73: $Vp, 74: $Vq, 75: $Vr, 76: $Vs, 77: $Vt, 78: $Vu, 79: $Vv, 80: $Vw, 81: $Vx, 82: $Vy, 83: $Vz, 84: $VA, 85: $VB, 86: $VC, 87: $VD, 88: $VE, 89: $VF, 90: $VG }), (0, parser_1.o)($VH, [2, 35]), (0, parser_1.o)($VM, [2, 49], { 49: 141, 51: 142, 54: 143, 55: [1, 144], 62: [1, 145] }), (0, parser_1.o)($V9, [2, 29], { 40: 137, 48: $VL }), (0, parser_1.o)($VH, $VK, { 33: 146 }), { 50: [1, 147] }, (0, parser_1.o)($V0, $V1, { 6: 3, 10: 4, 14: 5, 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 4: 148, 53: 149, 25: $V2, 26: $V3, 29: $V4, 30: $V5, 57: [1, 150], 58: [1, 151], 59: [1, 152], 60: [1, 153] }), { 50: [2, 48] }, (0, parser_1.o)($VM, [2, 50]), { 50: [2, 66] }, (0, parser_1.o)($V9, [2, 31], { 40: 137, 48: $VL }), (0, parser_1.o)($VH, [2, 45]), { 50: $VN, 52: 154, 56: 155, 63: 156, 65: $VO, 66: $VP, 67: $VQ }, { 50: $VN, 52: 160, 56: 155, 63: 156, 65: $VO, 66: $VP, 67: $VQ }, { 37: [1, 161] }, { 37: [1, 162] }, { 37: [1, 163] }, { 37: [1, 164] }, { 50: [2, 46] }, { 50: [2, 52] }, { 28: 167, 62: [1, 166], 64: 165, 146: $Vj, 147: 32, 148: $Vk, 149: $Vl }, (0, parser_1.o)($VR, [2, 61]), (0, parser_1.o)($VR, [2, 62]), (0, parser_1.o)($VR, [2, 63]), { 50: [2, 47] }, { 38: [1, 168] }, { 38: [1, 169] }, { 28: 170, 146: $Vj, 147: 32, 148: $Vk, 149: $Vl }, { 28: 173, 61: 171, 62: [1, 172], 146: $Vj, 147: 32, 148: $Vk, 149: $Vl }, { 50: [2, 60] }, { 50: [2, 64] }, { 50: [2, 65] }, (0, parser_1.o)($VS, [2, 53]), (0, parser_1.o)($VS, [2, 54]), { 38: [1, 174] }, { 38: [1, 175] }, { 28: 176, 38: [2, 58], 146: $Vj, 147: 32, 148: $Vk, 149: $Vl }, { 38: [2, 59] }, (0, parser_1.o)($VS, [2, 55]), (0, parser_1.o)($VS, [2, 56]), { 38: [2, 57] }];
-    defaultActions = { 15: [2, 1], 143: [2, 48], 145: [2, 66], 154: [2, 46], 155: [2, 52], 160: [2, 47], 165: [2, 60], 166: [2, 64], 167: [2, 65], 173: [2, 59], 176: [2, 57] };
+    symbols_ = { "error": 2, "top": 3, "shapePath": 4, "EOF": 5, "sequenceStep": 6, "Q_O_QGT_COMMA_E_S_QsequenceStep_E_C_E_Star": 7, "O_QGT_COMMA_E_S_QsequenceStep_E_C": 8, "GT_COMMA": 9, "unionStep": 10, "Q_O_QIT_union_E_S_QunionStep_E_C_E_Star": 11, "O_QIT_union_E_S_QunionStep_E_C": 12, "IT_UNION": 13, "intersectionStep": 14, "Q_O_QIT_intersection_E_S_QintersectionStep_E_C_E_Star": 15, "O_QIT_intersection_E_S_QintersectionStep_E_C": 16, "IT_INTERSECTION": 17, "startStep": 18, "QnextStep_E_Star": 19, "nextStep": 20, "Q_O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C_E_Opt": 21, "step": 22, "shortcut": 23, "O_QGT_DIVIDE_E_Or_QGT_DIVIDE_DIVIDE_E_C": 24, "GT_DIVIDE": 25, "GT_DIVIDEDIVIDE": 26, "O_QGT_AT_E_Or_QGT_TILDE_E_Or_QGT_DOLLAR_E_C": 27, "iri": 28, "GT_AT": 29, "GT_TILDE": 30, "GT_DOLLAR": 31, "QIT_child_E_Opt": 32, "termType": 33, "Qfilter_E_Star": 34, "attributeOrAny": 35, "QtermType_E_Opt": 36, "nonChildAxis": 37, "GT_LPAREN": 38, "GT_RPAREN": 39, "IT_child": 40, "filter": 41, "IT_thisShapeExpr": 42, "IT_thisTripleExpr": 43, "IT_self": 44, "IT_parent": 45, "IT_ancestor": 46, "GT_STAR": 47, "attribute": 48, "GT_LBRACKET": 49, "filterExpr": 50, "GT_RBRACKET": 51, "QIT_ASSERT_E_Opt": 52, "Qcomparison_E_Opt": 53, "function": 54, "numericExpr": 55, "IT_ASSERT": 56, "comparison": 57, "IT_index": 58, "IT_count": 59, "IT_foo1": 60, "IT_foo2": 61, "fooArg": 62, "INTEGER": 63, "comparitor": 64, "rvalue": 65, "GT_EQUAL": 66, "GT_LT": 67, "GT_GT": 68, "shapeExprType": 69, "tripleExprType": 70, "valueType": 71, "IT_Schema": 72, "IT_SemAct": 73, "IT_Annotation": 74, "IT_ShapeAnd": 75, "IT_ShapeOr": 76, "IT_ShapeNot": 77, "IT_NodeConstraint": 78, "IT_Shape": 79, "IT_ShapeExternal": 80, "IT_EachOf": 81, "IT_OneOf": 82, "IT_TripleConstraint": 83, "IT_IriStem": 84, "IT_IriStemRange": 85, "IT_LiteralStem": 86, "IT_LiteralStemRange": 87, "IT_Language": 88, "IT_LanguageStem": 89, "IT_LanguageStemRange": 90, "IT_Wildcard": 91, "IT_type": 92, "IT_id": 93, "IT_semActs": 94, "IT_annotations": 95, "IT_predicate": 96, "schemaAttr": 97, "shapeExprAttr": 98, "tripleExprAttr": 99, "valueSetValueAttr": 100, "semActAttr": 101, "annotationAttr": 102, "GT_atContext": 103, "IT_startActs": 104, "IT_start": 105, "IT_imports": 106, "IT_shapes": 107, "IT_shapeExprs": 108, "IT_shapeExpr": 109, "nodeConstraintAttr": 110, "shapeAttr": 111, "IT_nodeKind": 112, "IT_datatype": 113, "xsFacetAttr": 114, "IT_values": 115, "stringFacetAttr": 116, "numericFacetAttr": 117, "IT_length": 118, "IT_minlength": 119, "IT_maxlength": 120, "IT_pattern": 121, "IT_flags": 122, "IT_mininclusive": 123, "IT_minexclusive": 124, "IT_maxinclusive": 125, "IT_maxexclusive": 126, "IT_totaldigits": 127, "IT_fractiondigits": 128, "IT_value": 129, "IT_language": 130, "IT_stem": 131, "IT_exclusions": 132, "IT_languageTag": 133, "IT_closed": 134, "IT_extra": 135, "IT_extends": 136, "IT_expression": 137, "IT_expressions": 138, "IT_min": 139, "IT_max": 140, "tripleConstraintAttr": 141, "IT_inverse": 142, "IT_valueExpr": 143, "IT_name": 144, "IT_code": 145, "IT_object": 146, "IRIREF": 147, "prefixedName": 148, "PNAME_LN": 149, "PNAME_NS": 150, "$accept": 0, "$end": 1 };
+    terminals_ = { 2: "error", 5: "EOF", 9: "GT_COMMA", 13: "IT_UNION", 17: "IT_INTERSECTION", 25: "GT_DIVIDE", 26: "GT_DIVIDEDIVIDE", 29: "GT_AT", 30: "GT_TILDE", 31: "GT_DOLLAR", 38: "GT_LPAREN", 39: "GT_RPAREN", 40: "IT_child", 42: "IT_thisShapeExpr", 43: "IT_thisTripleExpr", 44: "IT_self", 45: "IT_parent", 46: "IT_ancestor", 47: "GT_STAR", 49: "GT_LBRACKET", 51: "GT_RBRACKET", 56: "IT_ASSERT", 58: "IT_index", 59: "IT_count", 60: "IT_foo1", 61: "IT_foo2", 63: "INTEGER", 66: "GT_EQUAL", 67: "GT_LT", 68: "GT_GT", 72: "IT_Schema", 73: "IT_SemAct", 74: "IT_Annotation", 75: "IT_ShapeAnd", 76: "IT_ShapeOr", 77: "IT_ShapeNot", 78: "IT_NodeConstraint", 79: "IT_Shape", 80: "IT_ShapeExternal", 81: "IT_EachOf", 82: "IT_OneOf", 83: "IT_TripleConstraint", 84: "IT_IriStem", 85: "IT_IriStemRange", 86: "IT_LiteralStem", 87: "IT_LiteralStemRange", 88: "IT_Language", 89: "IT_LanguageStem", 90: "IT_LanguageStemRange", 91: "IT_Wildcard", 92: "IT_type", 93: "IT_id", 94: "IT_semActs", 95: "IT_annotations", 96: "IT_predicate", 103: "GT_atContext", 104: "IT_startActs", 105: "IT_start", 106: "IT_imports", 107: "IT_shapes", 108: "IT_shapeExprs", 109: "IT_shapeExpr", 112: "IT_nodeKind", 113: "IT_datatype", 115: "IT_values", 118: "IT_length", 119: "IT_minlength", 120: "IT_maxlength", 121: "IT_pattern", 122: "IT_flags", 123: "IT_mininclusive", 124: "IT_minexclusive", 125: "IT_maxinclusive", 126: "IT_maxexclusive", 127: "IT_totaldigits", 128: "IT_fractiondigits", 129: "IT_value", 130: "IT_language", 131: "IT_stem", 132: "IT_exclusions", 133: "IT_languageTag", 134: "IT_closed", 135: "IT_extra", 136: "IT_extends", 137: "IT_expression", 138: "IT_expressions", 139: "IT_min", 140: "IT_max", 142: "IT_inverse", 143: "IT_valueExpr", 144: "IT_name", 145: "IT_code", 146: "IT_object", 147: "IRIREF", 149: "PNAME_LN", 150: "PNAME_NS" };
+    productions_ = [0, [3, 2], [4, 2], [8, 2], [7, 0], [7, 2], [6, 2], [12, 2], [11, 0], [11, 2], [10, 2], [16, 2], [15, 0], [15, 2], [14, 2], [19, 0], [19, 2], [18, 2], [18, 1], [24, 1], [24, 1], [21, 0], [21, 1], [20, 2], [20, 1], [23, 2], [27, 1], [27, 1], [27, 1], [22, 3], [22, 4], [22, 3], [22, 5], [32, 0], [32, 1], [34, 0], [34, 2], [36, 0], [36, 1], [37, 1], [37, 1], [37, 1], [37, 1], [37, 1], [35, 1], [35, 1], [41, 3], [50, 3], [50, 3], [50, 1], [52, 0], [52, 1], [53, 0], [53, 1], [54, 3], [54, 3], [54, 4], [54, 4], [62, 2], [62, 1], [62, 1], [57, 2], [64, 1], [64, 1], [64, 1], [65, 1], [65, 1], [55, 1], [33, 1], [33, 1], [33, 1], [33, 1], [33, 1], [33, 1], [69, 1], [69, 1], [69, 1], [69, 1], [69, 1], [69, 1], [70, 1], [70, 1], [70, 1], [71, 1], [71, 1], [71, 1], [71, 1], [71, 1], [71, 1], [71, 1], [71, 1], [48, 1], [48, 1], [48, 1], [48, 1], [48, 1], [48, 1], [48, 1], [48, 1], [48, 1], [48, 1], [48, 1], [97, 1], [97, 1], [97, 1], [97, 1], [97, 1], [98, 1], [98, 1], [98, 1], [98, 1], [110, 1], [110, 1], [110, 1], [110, 1], [114, 1], [114, 1], [116, 1], [116, 1], [116, 1], [116, 1], [116, 1], [117, 1], [117, 1], [117, 1], [117, 1], [117, 1], [117, 1], [100, 1], [100, 1], [100, 1], [100, 1], [100, 1], [111, 1], [111, 1], [111, 1], [111, 1], [99, 1], [99, 1], [99, 1], [99, 1], [141, 1], [141, 1], [101, 1], [101, 1], [102, 1], [28, 1], [28, 1], [148, 1], [148, 1]];
+    table = [(0, parser_1.o)($V0, $V1, { 3: 1, 4: 2, 6: 3, 10: 4, 14: 5, 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 25: $V2, 26: $V3, 29: $V4, 30: $V5, 31: $V6 }), { 1: [3] }, { 5: [1, 16] }, (0, parser_1.o)($V7, [2, 4], { 7: 17 }), (0, parser_1.o)($V8, [2, 8], { 11: 18 }), (0, parser_1.o)($V9, [2, 12], { 15: 19 }), (0, parser_1.o)($Va, [2, 15], { 19: 20 }), (0, parser_1.o)($Vb, $Vc, { 22: 21, 32: 22, 37: 23, 38: $Vd, 40: $Ve, 42: $Vf, 43: $Vg, 44: $Vh, 45: $Vi, 46: $Vj }), (0, parser_1.o)($Va, [2, 18]), (0, parser_1.o)($V0, [2, 22]), { 28: 31, 147: $Vk, 148: 33, 149: $Vl, 150: $Vm }, (0, parser_1.o)($V0, [2, 19]), (0, parser_1.o)($V0, [2, 20]), (0, parser_1.o)($Vn, [2, 26]), (0, parser_1.o)($Vn, [2, 27]), (0, parser_1.o)($Vn, [2, 28]), { 1: [2, 1] }, (0, parser_1.o)([5, 39, 51, 66, 67, 68], [2, 2], { 8: 36, 9: [1, 37] }), (0, parser_1.o)($V7, [2, 6], { 12: 38, 13: [1, 39] }), (0, parser_1.o)($V8, [2, 10], { 16: 40, 17: [1, 41] }), (0, parser_1.o)($V9, [2, 14], { 27: 10, 20: 42, 24: 43, 23: 44, 25: $V2, 26: $V3, 29: $V4, 30: $V5, 31: $V6 }), (0, parser_1.o)($Va, [2, 17]), { 33: 45, 35: 46, 47: [1, 53], 48: 54, 69: 47, 70: 48, 71: 49, 72: $Vo, 73: $Vp, 74: $Vq, 75: $Vr, 76: $Vs, 77: $Vt, 78: $Vu, 79: $Vv, 80: $Vw, 81: $Vx, 82: $Vy, 83: $Vz, 84: $VA, 85: $VB, 86: $VC, 87: $VD, 88: $VE, 89: $VF, 90: $VG, 91: $VH, 92: [1, 72], 93: [1, 73], 94: [1, 74], 95: [1, 75], 96: [1, 76], 97: 77, 98: 78, 99: 79, 100: 80, 101: 81, 102: 82, 103: [1, 83], 104: [1, 84], 105: [1, 85], 106: [1, 86], 107: [1, 87], 108: [1, 88], 109: [1, 89], 110: 90, 111: 91, 112: [1, 104], 113: [1, 105], 114: 106, 115: [1, 107], 116: 114, 117: 115, 118: [1, 116], 119: [1, 117], 120: [1, 118], 121: [1, 119], 122: [1, 120], 123: [1, 121], 124: [1, 122], 125: [1, 123], 126: [1, 124], 127: [1, 125], 128: [1, 126], 129: [1, 96], 130: [1, 97], 131: [1, 98], 132: [1, 99], 133: [1, 100], 134: [1, 108], 135: [1, 109], 136: [1, 110], 137: [1, 111], 138: [1, 92], 139: [1, 93], 140: [1, 94], 141: 95, 142: [1, 112], 143: [1, 113], 144: [1, 101], 145: [1, 102], 146: [1, 103] }, (0, parser_1.o)($VI, $VJ, { 69: 47, 70: 48, 71: 49, 36: 127, 33: 128, 72: $Vo, 73: $Vp, 74: $Vq, 75: $Vr, 76: $Vs, 77: $Vt, 78: $Vu, 79: $Vv, 80: $Vw, 81: $Vx, 82: $Vy, 83: $Vz, 84: $VA, 85: $VB, 86: $VC, 87: $VD, 88: $VE, 89: $VF, 90: $VG, 91: $VH }), (0, parser_1.o)($V0, $V1, { 6: 3, 10: 4, 14: 5, 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 4: 129, 25: $V2, 26: $V3, 29: $V4, 30: $V5, 31: $V6 }), (0, parser_1.o)($Vb, [2, 34]), (0, parser_1.o)($VK, [2, 39]), (0, parser_1.o)($VK, [2, 40]), (0, parser_1.o)($VK, [2, 41]), (0, parser_1.o)($VK, [2, 42]), (0, parser_1.o)($VK, [2, 43]), (0, parser_1.o)($Va, [2, 25]), (0, parser_1.o)($Va, [2, 146]), (0, parser_1.o)($Va, [2, 147]), (0, parser_1.o)($Va, [2, 148]), (0, parser_1.o)($Va, [2, 149]), (0, parser_1.o)($V7, [2, 5]), (0, parser_1.o)($V0, $V1, { 10: 4, 14: 5, 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 6: 130, 25: $V2, 26: $V3, 29: $V4, 30: $V5, 31: $V6 }), (0, parser_1.o)($V8, [2, 9]), (0, parser_1.o)($V0, $V1, { 14: 5, 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 10: 131, 25: $V2, 26: $V3, 29: $V4, 30: $V5, 31: $V6 }), (0, parser_1.o)($V9, [2, 13]), (0, parser_1.o)($V0, $V1, { 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 14: 132, 25: $V2, 26: $V3, 29: $V4, 30: $V5, 31: $V6 }), (0, parser_1.o)($Va, [2, 16]), (0, parser_1.o)($Vb, $Vc, { 32: 22, 37: 23, 22: 133, 38: $Vd, 40: $Ve, 42: $Vf, 43: $Vg, 44: $Vh, 45: $Vi, 46: $Vj }), (0, parser_1.o)($Va, [2, 24]), (0, parser_1.o)($VI, $VL, { 34: 134 }), (0, parser_1.o)($VI, $VJ, { 69: 47, 70: 48, 71: 49, 33: 128, 36: 135, 72: $Vo, 73: $Vp, 74: $Vq, 75: $Vr, 76: $Vs, 77: $Vt, 78: $Vu, 79: $Vv, 80: $Vw, 81: $Vx, 82: $Vy, 83: $Vz, 84: $VA, 85: $VB, 86: $VC, 87: $VD, 88: $VE, 89: $VF, 90: $VG, 91: $VH }), (0, parser_1.o)($VI, [2, 68]), (0, parser_1.o)($VI, [2, 69]), (0, parser_1.o)($VI, [2, 70]), (0, parser_1.o)($VI, [2, 71]), (0, parser_1.o)($VI, [2, 72]), (0, parser_1.o)($VI, [2, 73]), (0, parser_1.o)($VK, [2, 44]), (0, parser_1.o)($VK, [2, 45]), (0, parser_1.o)($VI, [2, 74]), (0, parser_1.o)($VI, [2, 75]), (0, parser_1.o)($VI, [2, 76]), (0, parser_1.o)($VI, [2, 77]), (0, parser_1.o)($VI, [2, 78]), (0, parser_1.o)($VI, [2, 79]), (0, parser_1.o)($VI, [2, 80]), (0, parser_1.o)($VI, [2, 81]), (0, parser_1.o)($VI, [2, 82]), (0, parser_1.o)($VI, [2, 83]), (0, parser_1.o)($VI, [2, 84]), (0, parser_1.o)($VI, [2, 85]), (0, parser_1.o)($VI, [2, 86]), (0, parser_1.o)($VI, [2, 87]), (0, parser_1.o)($VI, [2, 88]), (0, parser_1.o)($VI, [2, 89]), (0, parser_1.o)($VI, [2, 90]), (0, parser_1.o)($VK, [2, 91]), (0, parser_1.o)($VK, [2, 92]), (0, parser_1.o)($VK, [2, 93]), (0, parser_1.o)($VK, [2, 94]), (0, parser_1.o)($VK, [2, 95]), (0, parser_1.o)($VK, [2, 96]), (0, parser_1.o)($VK, [2, 97]), (0, parser_1.o)($VK, [2, 98]), (0, parser_1.o)($VK, [2, 99]), (0, parser_1.o)($VK, [2, 100]), (0, parser_1.o)($VK, [2, 101]), (0, parser_1.o)($VK, [2, 102]), (0, parser_1.o)($VK, [2, 103]), (0, parser_1.o)($VK, [2, 104]), (0, parser_1.o)($VK, [2, 105]), (0, parser_1.o)($VK, [2, 106]), (0, parser_1.o)($VK, [2, 107]), (0, parser_1.o)($VK, [2, 108]), (0, parser_1.o)($VK, [2, 109]), (0, parser_1.o)($VK, [2, 110]), (0, parser_1.o)($VK, [2, 137]), (0, parser_1.o)($VK, [2, 138]), (0, parser_1.o)($VK, [2, 139]), (0, parser_1.o)($VK, [2, 140]), (0, parser_1.o)($VK, [2, 128]), (0, parser_1.o)($VK, [2, 129]), (0, parser_1.o)($VK, [2, 130]), (0, parser_1.o)($VK, [2, 131]), (0, parser_1.o)($VK, [2, 132]), (0, parser_1.o)($VK, [2, 143]), (0, parser_1.o)($VK, [2, 144]), (0, parser_1.o)($VK, [2, 145]), (0, parser_1.o)($VK, [2, 111]), (0, parser_1.o)($VK, [2, 112]), (0, parser_1.o)($VK, [2, 113]), (0, parser_1.o)($VK, [2, 114]), (0, parser_1.o)($VK, [2, 133]), (0, parser_1.o)($VK, [2, 134]), (0, parser_1.o)($VK, [2, 135]), (0, parser_1.o)($VK, [2, 136]), (0, parser_1.o)($VK, [2, 141]), (0, parser_1.o)($VK, [2, 142]), (0, parser_1.o)($VK, [2, 115]), (0, parser_1.o)($VK, [2, 116]), (0, parser_1.o)($VK, [2, 117]), (0, parser_1.o)($VK, [2, 118]), (0, parser_1.o)($VK, [2, 119]), (0, parser_1.o)($VK, [2, 120]), (0, parser_1.o)($VK, [2, 121]), (0, parser_1.o)($VK, [2, 122]), (0, parser_1.o)($VK, [2, 123]), (0, parser_1.o)($VK, [2, 124]), (0, parser_1.o)($VK, [2, 125]), (0, parser_1.o)($VK, [2, 126]), (0, parser_1.o)($VK, [2, 127]), (0, parser_1.o)($VI, $VL, { 34: 136 }), (0, parser_1.o)($VI, [2, 38]), { 39: [1, 137] }, (0, parser_1.o)($V7, [2, 3]), (0, parser_1.o)($V8, [2, 7]), (0, parser_1.o)($V9, [2, 11]), (0, parser_1.o)($Va, [2, 23]), (0, parser_1.o)($Va, [2, 29], { 41: 138, 49: $VM }), (0, parser_1.o)($VI, $VL, { 34: 140 }), (0, parser_1.o)($Va, [2, 31], { 41: 138, 49: $VM }), (0, parser_1.o)($VI, $VJ, { 69: 47, 70: 48, 71: 49, 33: 128, 36: 141, 72: $Vo, 73: $Vp, 74: $Vq, 75: $Vr, 76: $Vs, 77: $Vt, 78: $Vu, 79: $Vv, 80: $Vw, 81: $Vx, 82: $Vy, 83: $Vz, 84: $VA, 85: $VB, 86: $VC, 87: $VD, 88: $VE, 89: $VF, 90: $VG, 91: $VH }), (0, parser_1.o)($VI, [2, 36]), (0, parser_1.o)($VN, [2, 50], { 50: 142, 52: 143, 55: 144, 56: [1, 145], 63: [1, 146] }), (0, parser_1.o)($Va, [2, 30], { 41: 138, 49: $VM }), (0, parser_1.o)($VI, $VL, { 34: 147 }), { 51: [1, 148] }, (0, parser_1.o)($V0, $V1, { 6: 3, 10: 4, 14: 5, 18: 6, 21: 7, 23: 8, 24: 9, 27: 10, 4: 149, 54: 150, 25: $V2, 26: $V3, 29: $V4, 30: $V5, 31: $V6, 58: [1, 151], 59: [1, 152], 60: [1, 153], 61: [1, 154] }), { 51: [2, 49] }, (0, parser_1.o)($VN, [2, 51]), { 51: [2, 67] }, (0, parser_1.o)($Va, [2, 32], { 41: 138, 49: $VM }), (0, parser_1.o)($VI, [2, 46]), { 51: $VO, 53: 155, 57: 156, 64: 157, 66: $VP, 67: $VQ, 68: $VR }, { 51: $VO, 53: 161, 57: 156, 64: 157, 66: $VP, 67: $VQ, 68: $VR }, { 38: [1, 162] }, { 38: [1, 163] }, { 38: [1, 164] }, { 38: [1, 165] }, { 51: [2, 47] }, { 51: [2, 53] }, { 28: 168, 63: [1, 167], 65: 166, 147: $Vk, 148: 33, 149: $Vl, 150: $Vm }, (0, parser_1.o)($VS, [2, 62]), (0, parser_1.o)($VS, [2, 63]), (0, parser_1.o)($VS, [2, 64]), { 51: [2, 48] }, { 39: [1, 169] }, { 39: [1, 170] }, { 28: 171, 147: $Vk, 148: 33, 149: $Vl, 150: $Vm }, { 28: 174, 62: 172, 63: [1, 173], 147: $Vk, 148: 33, 149: $Vl, 150: $Vm }, { 51: [2, 61] }, { 51: [2, 65] }, { 51: [2, 66] }, (0, parser_1.o)($VT, [2, 54]), (0, parser_1.o)($VT, [2, 55]), { 39: [1, 175] }, { 39: [1, 176] }, { 28: 177, 39: [2, 59], 147: $Vk, 148: 33, 149: $Vl, 150: $Vm }, { 39: [2, 60] }, (0, parser_1.o)($VT, [2, 56]), (0, parser_1.o)($VT, [2, 57]), { 39: [2, 58] }];
+    defaultActions = { 16: [2, 1], 144: [2, 49], 146: [2, 67], 155: [2, 47], 156: [2, 53], 161: [2, 48], 166: [2, 61], 167: [2, 65], 168: [2, 66], 174: [2, 60], 177: [2, 58] };
     performAction(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
         /* this == yyval */
         var $0 = $$.length - 1;
@@ -96,13 +121,13 @@ class ShapePathParser extends parser_1.JisonParser {
             case 8:
             case 12:
             case 15:
-            case 34:
+            case 35:
                 this.$ = [];
                 break;
             case 5:
             case 9:
             case 13:
-            case 35:
+            case 36:
                 this.$ = $$[$0 - 1].concat([$$[$0]]);
                 break;
             case 6:
@@ -119,289 +144,289 @@ class ShapePathParser extends parser_1.JisonParser {
                 break;
             case 17:
             case 23:
-            case 59:
+            case 60:
                 this.$ = [$$[$0]];
                 break;
             case 21:
-            case 32:
             case 33:
-            case 36:
-            case 51:
+            case 34:
+            case 37:
+            case 52:
                 this.$ = null;
                 break;
             case 25:
-                this.$ = $$[$0 - 1] === '@' ? shapeLabelShortCut($$[$0]) : predicateShortCut($$[$0]);
-                break;
-            case 28:
-                this.$ = new ShapePathAst_1.ChildStep(ShapePathAst_1.t_attribute.Any, filterTermType($$[$0 - 1], $$[$0]));
+                this.$ = $$[$0 - 1] === '@' ? shapeLabelShortCut($$[$0]) : $$[$0 - 1] === '$' ? tripleExprLabelShortCut($$[$0]) : predicateShortCut($$[$0]);
                 break;
             case 29:
-                this.$ = new ShapePathAst_1.ChildStep($$[$0 - 2], filterTermType($$[$0 - 1], $$[$0]));
+                this.$ = new ShapePathAst_1.ChildStep(ShapePathAst_1.t_attribute.Any, filterTermType($$[$0 - 1], $$[$0]));
                 break;
             case 30:
-                this.$ = new ShapePathAst_1.AxisStep($$[$0 - 2], filterTermType($$[$0 - 1], $$[$0]));
+                this.$ = new ShapePathAst_1.ChildStep($$[$0 - 2], filterTermType($$[$0 - 1], $$[$0]));
                 break;
             case 31:
+                this.$ = new ShapePathAst_1.AxisStep($$[$0 - 2], filterTermType($$[$0 - 1], $$[$0]));
+                break;
+            case 32:
                 this.$ = new ShapePathAst_1.PathExprStep($$[$0 - 3], filterTermType($$[$0 - 1], $$[$0]));
                 break;
-            case 38:
+            case 39:
                 this.$ = ShapePathAst_1.Axis.thisShapeExpr;
                 break;
-            case 39:
+            case 40:
                 this.$ = ShapePathAst_1.Axis.thisTripleExpr;
                 break;
-            case 40:
+            case 41:
                 this.$ = ShapePathAst_1.Axis.self;
                 break;
-            case 41:
+            case 42:
                 this.$ = ShapePathAst_1.Axis.parent;
                 break;
-            case 42:
+            case 43:
                 this.$ = ShapePathAst_1.Axis.ancestor;
                 break;
-            case 43:
+            case 44:
                 this.$ = ShapePathAst_1.t_attribute.Any;
                 break;
-            case 45:
+            case 46:
                 this.$ = $$[$0 - 1];
                 break;
-            case 46:
             case 47:
+            case 48:
                 this.$ = makeFunction($$[$0 - 2], $$[$0 - 1], $$[$0] ? $$[$0] : undefined);
                 break;
-            case 48:
+            case 49:
                 this.$ = new ShapePathAst_1.Filter(ShapePathAst_1.FuncName.index, [$$[$0]]);
                 break;
-            case 49:
+            case 50:
                 this.$ = false;
                 break;
-            case 50:
+            case 51:
                 this.$ = true;
                 break;
-            case 53:
+            case 54:
                 this.$ = new ShapePathAst_1.Filter(ShapePathAst_1.FuncName.index, []);
                 break;
-            case 54:
             case 55:
             case 56:
+            case 57:
                 this.$ = new ShapePathAst_1.Filter(ShapePathAst_1.FuncName.count, []);
                 break;
-            case 57:
+            case 58:
                 this.$ = [parseInt($$[$0 - 1]), $$[$0]];
                 break;
-            case 58:
+            case 59:
                 this.$ = [parseInt($$[$0])];
                 break;
-            case 60:
+            case 61:
                 this.$ = { op: $$[$0 - 1], r: $$[$0] };
                 break;
-            case 61:
+            case 62:
                 this.$ = ShapePathAst_1.FuncName.equal;
                 break;
-            case 62:
+            case 63:
                 this.$ = ShapePathAst_1.FuncName.lessThan;
                 break;
-            case 63:
+            case 64:
                 this.$ = ShapePathAst_1.FuncName.greaterThan;
                 break;
-            case 64:
-            case 66:
+            case 65:
+            case 67:
                 this.$ = parseInt($$[$0]);
                 break;
-            case 70:
+            case 71:
                 this.$ = ShapePathAst_1.t_termType.Schema;
                 break;
-            case 71:
+            case 72:
                 this.$ = ShapePathAst_1.t_termType.SemAct;
                 break;
-            case 72:
+            case 73:
                 this.$ = ShapePathAst_1.t_termType.Annotation;
                 break;
-            case 73:
+            case 74:
                 this.$ = ShapePathAst_1.t_shapeExprType.ShapeAnd;
                 break;
-            case 74:
+            case 75:
                 this.$ = ShapePathAst_1.t_shapeExprType.ShapeOr;
                 break;
-            case 75:
+            case 76:
                 this.$ = ShapePathAst_1.t_shapeExprType.ShapeNot;
                 break;
-            case 76:
+            case 77:
                 this.$ = ShapePathAst_1.t_shapeExprType.NodeConstraint;
                 break;
-            case 77:
+            case 78:
                 this.$ = ShapePathAst_1.t_shapeExprType.Shape;
                 break;
-            case 78:
+            case 79:
                 this.$ = ShapePathAst_1.t_shapeExprType.ShapeExternal;
                 break;
-            case 79:
+            case 80:
                 this.$ = ShapePathAst_1.t_tripleExprType.EachOf;
                 break;
-            case 80:
+            case 81:
                 this.$ = ShapePathAst_1.t_tripleExprType.OneOf;
                 break;
-            case 81:
+            case 82:
                 this.$ = ShapePathAst_1.t_tripleExprType.TripleConstraint;
                 break;
-            case 82:
+            case 83:
                 this.$ = ShapePathAst_1.t_valueType.IriStem;
                 break;
-            case 83:
+            case 84:
                 this.$ = ShapePathAst_1.t_valueType.IriStemRange;
                 break;
-            case 84:
+            case 85:
                 this.$ = ShapePathAst_1.t_valueType.LiteralStem;
                 break;
-            case 85:
+            case 86:
                 this.$ = ShapePathAst_1.t_valueType.LiteralStemRange;
                 break;
-            case 86:
+            case 87:
                 this.$ = ShapePathAst_1.t_valueType.Language;
                 break;
-            case 87:
+            case 88:
                 this.$ = ShapePathAst_1.t_valueType.LanguageStem;
                 break;
-            case 88:
+            case 89:
                 this.$ = ShapePathAst_1.t_valueType.LanguageStemRange;
                 break;
-            case 89:
+            case 90:
                 this.$ = ShapePathAst_1.t_valueType.Wildcard;
                 break;
-            case 90:
+            case 91:
                 this.$ = ShapePathAst_1.t_attribute.type;
                 break;
-            case 91:
+            case 92:
                 this.$ = ShapePathAst_1.t_attribute.id;
                 break;
-            case 92:
+            case 93:
                 this.$ = ShapePathAst_1.t_attribute.semActs;
                 break;
-            case 93:
+            case 94:
                 this.$ = ShapePathAst_1.t_attribute.annotations;
                 break;
-            case 94:
+            case 95:
                 this.$ = ShapePathAst_1.t_attribute.predicate;
                 break;
-            case 101:
+            case 102:
                 this.$ = ShapePathAst_1.t_schemaAttr.atContext;
                 break;
-            case 102:
+            case 103:
                 this.$ = ShapePathAst_1.t_schemaAttr.startActs;
                 break;
-            case 103:
+            case 104:
                 this.$ = ShapePathAst_1.t_schemaAttr.start;
                 break;
-            case 104:
+            case 105:
                 this.$ = ShapePathAst_1.t_schemaAttr.imports;
                 break;
-            case 105:
+            case 106:
                 this.$ = ShapePathAst_1.t_schemaAttr.shapes;
                 break;
-            case 106:
+            case 107:
                 this.$ = ShapePathAst_1.t_shapeExprAttr.shapeExprs;
                 break;
-            case 107:
+            case 108:
                 this.$ = ShapePathAst_1.t_shapeExprAttr.shapeExpr;
                 break;
-            case 110:
+            case 111:
                 this.$ = ShapePathAst_1.t_nodeConstraintAttr.nodeKind;
                 break;
-            case 111:
+            case 112:
                 this.$ = ShapePathAst_1.t_nodeConstraintAttr.datatype;
                 break;
-            case 113:
+            case 114:
                 this.$ = ShapePathAst_1.t_nodeConstraintAttr.values;
                 break;
-            case 116:
+            case 117:
                 this.$ = ShapePathAst_1.t_stringFacetAttr.length;
                 break;
-            case 117:
+            case 118:
                 this.$ = ShapePathAst_1.t_stringFacetAttr.minlength;
                 break;
-            case 118:
+            case 119:
                 this.$ = ShapePathAst_1.t_stringFacetAttr.maxlength;
                 break;
-            case 119:
+            case 120:
                 this.$ = ShapePathAst_1.t_stringFacetAttr.pattern;
                 break;
-            case 120:
+            case 121:
                 this.$ = ShapePathAst_1.t_stringFacetAttr.flags;
                 break;
-            case 121:
+            case 122:
                 this.$ = ShapePathAst_1.t_numericFacetAttr.mininclusive;
                 break;
-            case 122:
+            case 123:
                 this.$ = ShapePathAst_1.t_numericFacetAttr.minexclusive;
                 break;
-            case 123:
+            case 124:
                 this.$ = ShapePathAst_1.t_numericFacetAttr.maxinclusive;
                 break;
-            case 124:
+            case 125:
                 this.$ = ShapePathAst_1.t_numericFacetAttr.maxexclusive;
                 break;
-            case 125:
+            case 126:
                 this.$ = ShapePathAst_1.t_numericFacetAttr.totaldigits;
                 break;
-            case 126:
+            case 127:
                 this.$ = ShapePathAst_1.t_numericFacetAttr.fractiondigits;
                 break;
-            case 127:
+            case 128:
                 this.$ = ShapePathAst_1.t_valueSetValueAttr.value;
                 break;
-            case 128:
+            case 129:
                 this.$ = ShapePathAst_1.t_valueSetValueAttr.language;
                 break;
-            case 129:
+            case 130:
                 this.$ = ShapePathAst_1.t_valueSetValueAttr.stem;
                 break;
-            case 130:
+            case 131:
                 this.$ = ShapePathAst_1.t_valueSetValueAttr.exclusions;
                 break;
-            case 131:
+            case 132:
                 this.$ = ShapePathAst_1.t_valueSetValueAttr.languageTag;
                 break;
-            case 132:
+            case 133:
                 this.$ = ShapePathAst_1.t_shapeAttr.closed;
                 break;
-            case 133:
+            case 134:
                 this.$ = ShapePathAst_1.t_shapeAttr.extra;
                 break;
-            case 134:
+            case 135:
                 this.$ = ShapePathAst_1.t_shapeAttr.extends;
                 break;
-            case 135:
+            case 136:
                 this.$ = ShapePathAst_1.t_shapeAttr.expression;
                 break;
-            case 136:
+            case 137:
                 this.$ = ShapePathAst_1.t_tripleExprAttr.expressions;
                 break;
-            case 137:
+            case 138:
                 this.$ = ShapePathAst_1.t_tripleExprAttr.min;
                 break;
-            case 138:
+            case 139:
                 this.$ = ShapePathAst_1.t_tripleExprAttr.max;
                 break;
-            case 140:
+            case 141:
                 this.$ = ShapePathAst_1.t_tripleConstraintAttr.inverse;
                 break;
-            case 141:
+            case 142:
                 this.$ = ShapePathAst_1.t_tripleConstraintAttr.valueExpr;
                 break;
-            case 142:
+            case 143:
                 this.$ = ShapePathAst_1.t_semActAttr.name;
                 break;
-            case 143:
+            case 144:
                 this.$ = ShapePathAst_1.t_semActAttr.code;
                 break;
-            case 144:
+            case 145:
                 this.$ = ShapePathAst_1.t_annotationAttr.object;
                 break;
-            case 145:
+            case 146:
                 this.$ = newIri(new URL($$[$0].substr(1, $$[$0].length - 2), yy.base).href);
                 break;
-            case 147:
             case 148:
+            case 149:
                 this.$ = pnameToUrl($$[$0], yy);
                 break;
         }
@@ -415,8 +440,8 @@ class ShapePathLexer extends lexer_1.JisonLexer {
     constructor(yy = {}) {
         super(yy);
     }
-    rules = [/^(?:\s+|(#[^\u000a\u000d]*|<!--([^-]|-[^-]|--[^>])*-->))/, /^(?:([Uu][Nn][Ii][Oo][Nn]))/, /^(?:([Ii][Nn][Tt][Ee][Rr][Ss][Ee][Cc][Tt][Ii][Oo][Nn]))/, /^(?:([Aa][Ss][Ss][Ee][Rr][Tt]))/, /^(?:child::)/, /^(?:thisShapeExpr::)/, /^(?:thisTripleExpr::)/, /^(?:self::)/, /^(?:parent::)/, /^(?:ancestor::)/, /^(?:index\b)/, /^(?:count\b)/, /^(?:foo1\b)/, /^(?:foo2\b)/, /^(?:Schema\b)/, /^(?:SemAct\b)/, /^(?:Annotation\b)/, /^(?:ShapeAnd\b)/, /^(?:ShapeOr\b)/, /^(?:ShapeNot\b)/, /^(?:NodeConstraint\b)/, /^(?:Shape\b)/, /^(?:ShapeExternal\b)/, /^(?:EachOf\b)/, /^(?:OneOf\b)/, /^(?:TripleConstraint\b)/, /^(?:IriStem\b)/, /^(?:IriStemRange\b)/, /^(?:LiteralStem\b)/, /^(?:LiteralStemRange\b)/, /^(?:Language\b)/, /^(?:LanguageStem\b)/, /^(?:LanguageStemRange\b)/, /^(?:Wildcard\b)/, /^(?:type\b)/, /^(?:id\b)/, /^(?:semActs\b)/, /^(?:annotations\b)/, /^(?:predicate\b)/, /^(?:@context\b)/, /^(?:startActs\b)/, /^(?:start\b)/, /^(?:imports\b)/, /^(?:shapes\b)/, /^(?:shapeExprs\b)/, /^(?:shapeExpr\b)/, /^(?:nodeKind\b)/, /^(?:datatype\b)/, /^(?:values\b)/, /^(?:length\b)/, /^(?:minlength\b)/, /^(?:maxlength\b)/, /^(?:pattern\b)/, /^(?:flags\b)/, /^(?:mininclusive\b)/, /^(?:minexclusive\b)/, /^(?:maxinclusive\b)/, /^(?:maxexclusive\b)/, /^(?:totaldigits\b)/, /^(?:fractiondigits\b)/, /^(?:value\b)/, /^(?:language\b)/, /^(?:stem\b)/, /^(?:exclusions\b)/, /^(?:languageTag\b)/, /^(?:closed\b)/, /^(?:extra\b)/, /^(?:extends\b)/, /^(?:expression\b)/, /^(?:expressions\b)/, /^(?:min\b)/, /^(?:max\b)/, /^(?:inverse\b)/, /^(?:valueExpr\b)/, /^(?:name\b)/, /^(?:code\b)/, /^(?:object\b)/, /^(?:(<([^\u0000-\u0020<>\"{}|^`\\]|(\\u([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])|\\U([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])))*>))/, /^(?:(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:)(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|:|[0-9]|((%([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f]))|(\\(_|~|\.|-|!|\$|&|'|\(|\)|\*|\+|,|;|=|\/|\?|#|@|%))))(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.|:|((%([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f]))|(\\(_|~|\.|-|!|\$|&|'|\(|\)|\*|\+|,|;|=|\/|\?|#|@|%))))*)))/, /^(?:((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:))/, /^(?:(([+-])?([0-9])+))/, /^(?:,)/, /^(?:@)/, /^(?:~)/, /^(?:\*)/, /^(?:\()/, /^(?:\))/, /^(?:\[)/, /^(?:\])/, /^(?:\/\/)/, /^(?:\/)/, /^(?:=)/, /^(?:<)/, /^(?:>)/, /^(?:[a-zA-Z0-9_-]+)/, /^(?:.)/, /^(?:$)/];
-    conditions = { "INITIAL": { "rules": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96], "inclusive": true } };
+    rules = [/^(?:\s+|(#[^\u000a\u000d]*|<!--([^-]|-[^-]|--[^>])*-->))/, /^(?:([Uu][Nn][Ii][Oo][Nn]))/, /^(?:([Ii][Nn][Tt][Ee][Rr][Ss][Ee][Cc][Tt][Ii][Oo][Nn]))/, /^(?:([Aa][Ss][Ss][Ee][Rr][Tt]))/, /^(?:child::)/, /^(?:thisShapeExpr::)/, /^(?:thisTripleExpr::)/, /^(?:self::)/, /^(?:parent::)/, /^(?:ancestor::)/, /^(?:index\b)/, /^(?:count\b)/, /^(?:foo1\b)/, /^(?:foo2\b)/, /^(?:Schema\b)/, /^(?:SemAct\b)/, /^(?:Annotation\b)/, /^(?:ShapeAnd\b)/, /^(?:ShapeOr\b)/, /^(?:ShapeNot\b)/, /^(?:NodeConstraint\b)/, /^(?:Shape\b)/, /^(?:ShapeExternal\b)/, /^(?:EachOf\b)/, /^(?:OneOf\b)/, /^(?:TripleConstraint\b)/, /^(?:IriStem\b)/, /^(?:IriStemRange\b)/, /^(?:LiteralStem\b)/, /^(?:LiteralStemRange\b)/, /^(?:Language\b)/, /^(?:LanguageStem\b)/, /^(?:LanguageStemRange\b)/, /^(?:Wildcard\b)/, /^(?:type\b)/, /^(?:id\b)/, /^(?:semActs\b)/, /^(?:annotations\b)/, /^(?:predicate\b)/, /^(?:@context\b)/, /^(?:startActs\b)/, /^(?:start\b)/, /^(?:imports\b)/, /^(?:shapes\b)/, /^(?:shapeExprs\b)/, /^(?:shapeExpr\b)/, /^(?:nodeKind\b)/, /^(?:datatype\b)/, /^(?:values\b)/, /^(?:length\b)/, /^(?:minlength\b)/, /^(?:maxlength\b)/, /^(?:pattern\b)/, /^(?:flags\b)/, /^(?:mininclusive\b)/, /^(?:minexclusive\b)/, /^(?:maxinclusive\b)/, /^(?:maxexclusive\b)/, /^(?:totaldigits\b)/, /^(?:fractiondigits\b)/, /^(?:value\b)/, /^(?:language\b)/, /^(?:stem\b)/, /^(?:exclusions\b)/, /^(?:languageTag\b)/, /^(?:closed\b)/, /^(?:extra\b)/, /^(?:extends\b)/, /^(?:expression\b)/, /^(?:expressions\b)/, /^(?:min\b)/, /^(?:max\b)/, /^(?:inverse\b)/, /^(?:valueExpr\b)/, /^(?:name\b)/, /^(?:code\b)/, /^(?:object\b)/, /^(?:(<([^\u0000-\u0020<>\"{}|^`\\]|(\\u([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])|\\U([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f])))*>))/, /^(?:(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:)(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|:|[0-9]|((%([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f]))|(\\(_|~|\.|-|!|\$|&|'|\(|\)|\*|\+|,|;|=|\/|\?|#|@|%))))(((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.|:|((%([0-9]|[A-F]|[a-f])([0-9]|[A-F]|[a-f]))|(\\(_|~|\.|-|!|\$|&|'|\(|\)|\*|\+|,|;|=|\/|\?|#|@|%))))*)))/, /^(?:((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])((((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040])|\.)*((([A-Z]|[a-z]|[\u00c0-\u00d6]|[\u00d8-\u00f6]|[\u00f8-\u02ff]|[\u0370-\u037d]|[\u037f-\u1fff]|[\u200c-\u200d]|[\u2070-\u218f]|[\u2c00-\u2fef]|[\u3001-\ud7ff]|[\uf900-\ufdcf]|[\ufdf0-\ufffd]|[\uD800-\uDB7F][\uDC00-\uDFFF])|_|_\b)|-|[0-9]|[\u00b7]|[\u0300-\u036f]|[\u203f-\u2040]))?)?:))/, /^(?:(([+-])?([0-9])+))/, /^(?:,)/, /^(?:@)/, /^(?:\$)/, /^(?:~)/, /^(?:\*)/, /^(?:\()/, /^(?:\))/, /^(?:\[)/, /^(?:\])/, /^(?:\/\/)/, /^(?:\/)/, /^(?:=)/, /^(?:<)/, /^(?:>)/, /^(?:[a-zA-Z0-9_-]+)/, /^(?:.)/, /^(?:$)/];
+    conditions = { "INITIAL": { "rules": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97], "inclusive": true } };
     performAction(yy, yy_, $avoiding_name_collisions, YY_START) {
         var YYSTATE = YY_START;
         switch ($avoiding_name_collisions) {
@@ -424,100 +449,101 @@ class ShapePathLexer extends lexer_1.JisonLexer {
                 break;
             case 1: return 13;
             case 2: return 17;
-            case 3: return 55;
-            case 4: return 39;
-            case 5: return 41;
-            case 6: return 42;
-            case 7: return 43;
-            case 8: return 44;
-            case 9: return 45;
-            case 10: return 57;
-            case 11: return 58;
-            case 12: return 59;
-            case 13: return 60;
-            case 14: return 71;
-            case 15: return 72;
-            case 16: return 73;
-            case 17: return 74;
-            case 18: return 75;
-            case 19: return 76;
-            case 20: return 77;
-            case 21: return 78;
-            case 22: return 79;
-            case 23: return 80;
-            case 24: return 81;
-            case 25: return 82;
-            case 26: return 83;
-            case 27: return 84;
-            case 28: return 85;
-            case 29: return 86;
-            case 30: return 87;
-            case 31: return 88;
-            case 32: return 89;
-            case 33: return 90;
-            case 34: return 91;
-            case 35: return 92;
-            case 36: return 93;
-            case 37: return 94;
-            case 38: return 95;
-            case 39: return 102;
-            case 40: return 103;
-            case 41: return 104;
-            case 42: return 105;
-            case 43: return 106;
-            case 44: return 107;
-            case 45: return 108;
-            case 46: return 111;
-            case 47: return 112;
-            case 48: return 114;
-            case 49: return 117;
-            case 50: return 118;
-            case 51: return 119;
-            case 52: return 120;
-            case 53: return 121;
-            case 54: return 122;
-            case 55: return 123;
-            case 56: return 124;
-            case 57: return 125;
-            case 58: return 126;
-            case 59: return 127;
-            case 60: return 128;
-            case 61: return 129;
-            case 62: return 130;
-            case 63: return 131;
-            case 64: return 132;
-            case 65: return 133;
-            case 66: return 134;
-            case 67: return 135;
-            case 68: return 136;
-            case 69: return 137;
-            case 70: return 138;
-            case 71: return 139;
-            case 72: return 141;
-            case 73: return 142;
-            case 74: return 143;
-            case 75: return 144;
-            case 76: return 145;
-            case 77: return 146;
-            case 78: return 148;
-            case 79: return 149;
-            case 80: return 62;
+            case 3: return 56;
+            case 4: return 40;
+            case 5: return 42;
+            case 6: return 43;
+            case 7: return 44;
+            case 8: return 45;
+            case 9: return 46;
+            case 10: return 58;
+            case 11: return 59;
+            case 12: return 60;
+            case 13: return 61;
+            case 14: return 72;
+            case 15: return 73;
+            case 16: return 74;
+            case 17: return 75;
+            case 18: return 76;
+            case 19: return 77;
+            case 20: return 78;
+            case 21: return 79;
+            case 22: return 80;
+            case 23: return 81;
+            case 24: return 82;
+            case 25: return 83;
+            case 26: return 84;
+            case 27: return 85;
+            case 28: return 86;
+            case 29: return 87;
+            case 30: return 88;
+            case 31: return 89;
+            case 32: return 90;
+            case 33: return 91;
+            case 34: return 92;
+            case 35: return 93;
+            case 36: return 94;
+            case 37: return 95;
+            case 38: return 96;
+            case 39: return 103;
+            case 40: return 104;
+            case 41: return 105;
+            case 42: return 106;
+            case 43: return 107;
+            case 44: return 108;
+            case 45: return 109;
+            case 46: return 112;
+            case 47: return 113;
+            case 48: return 115;
+            case 49: return 118;
+            case 50: return 119;
+            case 51: return 120;
+            case 52: return 121;
+            case 53: return 122;
+            case 54: return 123;
+            case 55: return 124;
+            case 56: return 125;
+            case 57: return 126;
+            case 58: return 127;
+            case 59: return 128;
+            case 60: return 129;
+            case 61: return 130;
+            case 62: return 131;
+            case 63: return 132;
+            case 64: return 133;
+            case 65: return 134;
+            case 66: return 135;
+            case 67: return 136;
+            case 68: return 137;
+            case 69: return 138;
+            case 70: return 139;
+            case 71: return 140;
+            case 72: return 142;
+            case 73: return 143;
+            case 74: return 144;
+            case 75: return 145;
+            case 76: return 146;
+            case 77: return 147;
+            case 78: return 149;
+            case 79: return 150;
+            case 80: return 63;
             case 81: return 9;
             case 82: return 29;
-            case 83: return 30;
-            case 84: return 46;
-            case 85: return 37;
+            case 83: return 31;
+            case 84: return 30;
+            case 85: return 47;
             case 86: return 38;
-            case 87: return 48;
-            case 88: return 50;
-            case 89: return 26;
-            case 90: return 25;
-            case 91: return 65;
+            case 87: return 39;
+            case 88: return 49;
+            case 89: return 51;
+            case 90: return 26;
+            case 91: return 25;
             case 92: return 66;
             case 93: return 67;
-            case 94: return 'unexpected word "' + yy_.yytext + '"';
-            case 95: return 'invalid character ' + yy_.yytext;
-            case 96: return 5;
+            case 94: return 68;
+            case 95: return 'unexpected word "' + yy_.yytext + '"';
+            case 96: return 'invalid character ' + yy_.yytext;
+            case 97: return 5;
         }
     }
 }

@@ -4,6 +4,17 @@
 import { ChildStep, AxisStep } from './ShapePathAst';
 declare type Iri = string;
 export declare function shapeLabelShortCut(label: Iri): ChildStep[];
+/**
+ * `$<label>` -- the triple expression that ShExC declared with that label.
+ *
+ * ShExJ has no top-level list of triple expressions the way it has `shapes`,
+ * and a label may sit on an EachOf, a OneOf or a TripleConstraint at any
+ * depth, including inside a nested inline shape.  So this looks everywhere
+ * and asserts that it found exactly one, which mirrors `@<label>`.  A label
+ * that named both a shape and a triple expression would be ambiguous here,
+ * and is already a structural error in ShEx.
+ */
+export declare function tripleExprLabelShortCut(label: Iri): AxisStep[];
 export declare function predicateShortCut(label: Iri): (ChildStep | AxisStep)[];
 import { JisonParser, JisonParserApi, StateType, SymbolsType, TerminalsType, ProductionsType } from '@ts-jison/parser';
 export declare class ShapePathParser extends JisonParser implements JisonParserApi {

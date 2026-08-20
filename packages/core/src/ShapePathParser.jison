@@ -69,6 +69,34 @@ export function shapeLabelShortCut(label: Iri) {
 }
 
 
+/**
+ * `$<label>` -- the triple expression that ShExC declared with that label.
+ *
+ * ShExJ has no top-level list of triple expressions the way it has `shapes`,
+ * and a label may sit on an EachOf, a OneOf or a TripleConstraint at any
+ * depth, including inside a nested inline shape.  So this looks everywhere
+ * and asserts that it found exactly one, which mirrors `@<label>`.  A label
+ * that named both a shape and a triple expression would be ambiguous here,
+ * and is already a structural error in ShEx.
+ */
+export function tripleExprLabelShortCut(label: Iri) {
+  return [
+    new AxisStep(Axis.descendant, [
+      new Filter(FuncName.equal, [
+        new Path([new ChildStep(t_attribute.id)]),
+        label
+      ]),
+      new Assertion(
+        new Filter(FuncName.equal, [
+          new Filter(FuncName.count, []),
+          1
+        ])
+      )
+    ]),
+  ]
+}
+
+
 export function predicateShortCut(label: Iri) {
   return [
     new AxisStep(Axis.thisShapeExpr, filterTermType(t_shapeExprType.Shape, [])),
@@ -217,6 +245,7 @@ IT_ASSERT               [Aa][Ss][Ss][Ee][Rr][Tt]
 
 ","                     return 'GT_COMMA';
 "@"                     return 'GT_AT';
+"$"                     return 'GT_DOLLAR';
 "~"                     return 'GT_TILDE';
 "*"                     return 'GT_STAR';
 "("                     return 'GT_LPAREN';
@@ -319,12 +348,13 @@ nextStep:
 ;
 
 shortcut:
-    _O_QGT_AT_E_Or_QGT_TILDE_E_C iri	-> $1 === '@' ? shapeLabelShortCut($2) : predicateShortCut($2)
+    _O_QGT_AT_E_Or_QGT_TILDE_E_Or_QGT_DOLLAR_E_C iri	-> $1 === '@' ? shapeLabelShortCut($2) : $1 === '$' ? tripleExprLabelShortCut($2) : predicateShortCut($2)
 ;
 
-_O_QGT_AT_E_Or_QGT_TILDE_E_C:
+_O_QGT_AT_E_Or_QGT_TILDE_E_Or_QGT_DOLLAR_E_C:
     GT_AT	
   | GT_TILDE	
+  | GT_DOLLAR	
 ;
 
 step:

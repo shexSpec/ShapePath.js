@@ -68,7 +68,15 @@ export declare enum Axis {
     thisTripleExpr = "thisTripleExpr::",
     self = "self::",
     parent = "parent::",
-    ancestor = "ancestor::"
+    ancestor = "ancestor::",
+    /**
+     * Every node beneath this one.  ShExJ has no top-level list of triple
+     * expressions the way it has `shapes`, so a labelled one is found by
+     * looking everywhere -- including inside a nested inline shape, which
+     * `thisTripleExpr::` does not reach.  Reachable from the `$<label>`
+     * shortcut; there is deliberately no token for it yet.
+     */
+    descendant = "descendant::"
 }
 export declare abstract class Function extends Serializable {
     abstract evalFunction(node: SchemaNode, allNodes: NodeSet, idx: number, ctx: EvalContext): NodeSet;

@@ -9,6 +9,14 @@ This is a monorepo which holds:
 
 2021-07-17 ericP: changed predicate separator for `::thisTripleExpr` from `.` to `~` because `.` is legal in localNames
 
+2026-08-20: `$<label>` selects the triple expression declared with that label,
+joining `@<label>` (a shape expression) and `~<iri>` (the triple constraint on
+a predicate).  ShExJ has no top-level list of triple expressions the way it has
+`shapes`, and a label may sit on an EachOf, a OneOf or a TripleConstraint at
+any depth -- including inside the inline shape of some constraint's value
+expression -- so the lookup walks the whole schema.  `$` is the sigil ShExC
+uses to declare one.
+
 2026-08-19: `[N]` selects the node at position N, counting from **0**.
 
 It is the grammar's shorthand for `[index() = N]` (`filterExpr -> Filter(index,
