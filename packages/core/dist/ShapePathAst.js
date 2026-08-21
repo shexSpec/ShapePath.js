@@ -63,46 +63,50 @@ exports.Sequence = Sequence;
 class Union extends Junction {
     t = "Union";
     evalPathExpr(nodes, ctx) {
-        const seen = [];
-        return this.exprs.reduce((ret, expr) => {
-            const res = expr.evalPathExpr(nodes, ctx);
-            res.forEach((elt) => {
-                const str = JSON.stringify(elt);
-                if (seen.indexOf(str) !== -1)
-                    return ret;
-                ret.push(elt);
-                seen.push(str);
-            });
-            return ret;
-        }, []);
+        return dedupe(this.exprs.reduce((ret, expr) => ret.concat(expr.evalPathExpr(nodes, ctx)), []));
     }
 }
 exports.Union = Union;
 class Intersection extends Junction {
     t = "Intersection";
+    /**
+     * What every expression selected, in the first one's order.
+     *
+     * This used to compute the intersection into a Map and then return the
+     * first expression's results regardless of it, so `A intersection B` was
+     * A -- which is also A intersection nothing.
+     */
     evalPathExpr(nodes, ctx) {
         const [first, ...rest] = this.exprs;
-        const firstRes = first.evalPathExpr(nodes, ctx);
-        let seen = new Map();
-        firstRes.forEach((elt) => {
-            const str = JSON.stringify(elt);
-            if (!(seen.has(str)))
-                seen.set(str, elt);
-        });
-        return rest.reduce((ret, expr) => {
-            const res = expr.evalPathExpr(nodes, ctx);
-            let next = new Map();
-            res.forEach((elt) => {
-                const str = JSON.stringify(elt);
-                if (seen.has(str) && !(next.has(str)))
-                    next.set(str, elt);
-            });
-            seen = next;
-            return ret;
-        }, firstRes);
+        return rest.reduce((kept, expr) => {
+            const alsoSelected = new Set(expr.evalPathExpr(nodes, ctx).map(itemKey));
+            return kept.filter(elt => alsoSelected.has(itemKey(elt)));
+        }, dedupe(first.evalPathExpr(nodes, ctx)));
     }
 }
 exports.Intersection = Intersection;
+/**
+ * What the junctions call one item.
+ *
+ * By value, so two structurally identical constraints in different shapes
+ * are one item here where every other operator has them as two.  Identity
+ * is probably what these want; changing it is a language decision, so it is
+ * written down as an issue in the spec rather than settled here.
+ */
+function itemKey(node) {
+    return JSON.stringify(node);
+}
+/** the nodes, first occurrence of each kept */
+function dedupe(nodes) {
+    const seen = new Set();
+    return nodes.filter(node => {
+        const key = itemKey(node);
+        if (seen.has(key))
+            return false;
+        seen.add(key);
+        return true;
+    });
+}
 class Path extends PathExpr {
     steps;
     t = 'Path';

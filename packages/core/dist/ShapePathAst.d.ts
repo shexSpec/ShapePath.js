@@ -30,6 +30,13 @@ export declare class Union extends Junction {
 }
 export declare class Intersection extends Junction {
     t: string;
+    /**
+     * What every expression selected, in the first one's order.
+     *
+     * This used to compute the intersection into a Map and then return the
+     * first expression's results regardless of it, so `A intersection B` was
+     * A -- which is also A intersection nothing.
+     */
     evalPathExpr(nodes: NodeSet, ctx: EvalContext): NodeSet;
 }
 export declare class Path extends PathExpr {
