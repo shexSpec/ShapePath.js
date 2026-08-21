@@ -98,6 +98,26 @@ describe('$<label>, the triple expression shortcut', () => {
     expect(evaluate('$<http://a.example/nope>')).toEqual([])
   })
 
+  /* A schema in hand is not always a tree.  shex.js parks its index on the
+   * schema as `_index`, pointing at the very nodes `shapes` already holds,
+   * so a naive walk reaches each labelled expression three times -- through
+   * shapes, through _index.tripleExprs and through _index.shapeExprs -- and
+   * `[assert count() = 1]` then fails on a schema that is perfectly fine. */
+  it('counts a node once however many ways the schema reaches it', () => {
+    const indexed = JSON.parse(JSON.stringify(schema))
+    const decl = (indexed as any).shapes[0]
+    const grp = decl.shapeExpr.expression
+    ;(indexed as any)._index = {
+      shapeExprs: {[Base + 'S1']: decl},
+      tripleExprs: {[Base + 'grp']: grp, [Base + 't1']: grp.expressions[0]},
+    }
+    const yy = {base: new URL(Base), prefixes: {'': Base}}
+    const found = new ShapePathParser(yy).parse('$<http://a.example/t1>')
+          .evalPathExpr([indexed] as NodeSet, new EvalContext(indexed))
+    expect(found.length).toEqual(1)
+    expect((found[0] as any).predicate).toEqual(Base + 'p1')
+  })
+
   it('goes on being a path afterwards', () => {
     expect(selected('$<http://a.example/grp>/expressions/*'))
       .toEqual(['TripleConstraint(:t1)', 'TripleConstraint(:p2)', 'TripleConstraint(:p3)'])

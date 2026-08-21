@@ -267,17 +267,36 @@ export class AxisStep extends Step {
       return [parent].concat(walkParents(parentMap, parent))
     }
 
-    /** every node below this one, not including it -- cf. XPath descendant:: */
+    /**
+     * Every node below this one, not including it -- cf. XPath descendant::.
+     *
+     * A schema in hand is not always a tree: an implementation may hang its
+     * own index off it (shex.js parks `_index` on the schema, pointing at
+     * the very nodes `shapes` holds), and a subexpression can be shared.  So
+     * two rules that XPath over XML doesn't need: properties whose name
+     * begins with "_" are not ShExJ and are not descended into, and a node
+     * already seen is not visited twice.
+     */
     function walkDescendants(node: SchemaNode): NodeSet {
       const ret: NodeSet = []
-      Object.values(node as object).forEach(collect)
+      const seen = new Set<SchemaNode>()
+      children(node).forEach(collect)
       return ret
 
       function collect(n: SchemaNode): void {
-        if (n === null || typeof n !== 'object')
+        if (n === null || typeof n !== 'object' || seen.has(n))
           return
+        seen.add(n)
         ret.push(n)
-        Object.values(n as object).forEach(collect)
+        children(n).forEach(collect)
+      }
+
+      function children(n: SchemaNode): NodeSet {
+        return Array.isArray(n)
+          ? n as NodeSet
+          : Object.keys(n as object)
+              .filter(k => k[0] !== '_')
+              .map(k => (n as any)[k])
       }
     }
 

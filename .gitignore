@@ -4,3 +4,6 @@
 
 # w3t-sys convention for ignored directory
 /**/EGP
+
+# npm pack, for checking what a publish actually shipped
+/packages/*/*.tgz
