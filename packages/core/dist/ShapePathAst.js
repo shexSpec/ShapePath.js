@@ -11,6 +11,38 @@ class EvalContext {
     constructor(schema) {
         this.schema = schema;
     }
+    // lazy eval of triple expression labels, for resolving an Inclusion
+    tripleExprs = null;
+    /**
+     * The triple expression declared with this label, if the schema has one.
+     *
+     * ShExJ has no top-level list of triple expressions the way it has
+     * `shapes`, so this is a walk: a labelled expression may sit anywhere,
+     * including inside the inline shape of some constraint's value
+     * expression.  Two rules the walk keeps, as `descendant::` does -- a
+     * property whose name begins with "_" is not ShExJ and is not descended
+     * into, and a node already seen is not visited twice.
+     */
+    getTripleExpr(label) {
+        if (this.tripleExprs === null) {
+            const index = new Map();
+            const seen = new Set();
+            collect(this.schema);
+            this.tripleExprs = index;
+            function collect(node) {
+                if (node === null || typeof node !== 'object' || seen.has(node))
+                    return;
+                seen.add(node);
+                if (Array.isArray(node))
+                    return node.forEach(collect);
+                if (typeof node.id === 'string' && TripleExprTypes.indexOf(node.type) !== -1
+                    && !index.has(node.id))
+                    index.set(node.id, node);
+                Object.keys(node).filter(k => k[0] !== '_').forEach(k => collect(node[k]));
+            }
+        }
+        return this.tripleExprs.get(label);
+    }
     // lazy eval of parents
     parents = null;
     getParents() {
@@ -258,15 +290,29 @@ class AxisStep extends Step {
                 default: return [];
             }
         }
-        function walkTripleExpr(node) {
+        /**
+         * @param seen - the expressions this walk has already reported.  A body
+         *   that includes the same expression twice, or one that includes
+         *   itself, is still that expression once.
+         */
+        function walkTripleExpr(node, seen = new Set()) {
             if (node instanceof Array)
-                return node.reduce((ret, n2) => ret.concat(walkTripleExpr(n2)), []);
-            if (!(node instanceof Object))
+                return node.reduce((ret, n2) => ret.concat(walkTripleExpr(n2, seen)), []);
+            if (typeof node === 'string') {
+                // An Inclusion: `&<#label>` is ShExJ's way of writing "and the
+                // expression called <#label> is part of this one too", so the body
+                // this axis walks takes it in.  Stopping here instead had ~<iri>
+                // report a shape's body as smaller than the matcher reads it.
+                const expr = ctx.getTripleExpr(node);
+                return expr === undefined ? [] : walkTripleExpr(expr, seen);
+            }
+            if (!(node instanceof Object) || seen.has(node))
                 return [];
+            seen.add(node);
             switch (node.type) {
                 case "EachOf":
                 case "OneOf":
-                    return [node].concat(walkTripleExpr(node.expressions));
+                    return [node].concat(walkTripleExpr(node.expressions, seen));
                 case "TripleConstraint":
                     return [node];
                 default: return [];
@@ -460,6 +506,8 @@ var t_shapeExprType;
     t_shapeExprType["Shape"] = "Shape";
     t_shapeExprType["ShapeExternal"] = "ShapeExternal";
 })(t_shapeExprType = exports.t_shapeExprType || (exports.t_shapeExprType = {}));
+/** the ShExJ types this axis walks; an Inclusion is a label, not one of these */
+const TripleExprTypes = ['EachOf', 'OneOf', 'TripleConstraint'];
 var t_tripleExprType;
 (function (t_tripleExprType) {
     t_tripleExprType["EachOf"] = "EachOf";

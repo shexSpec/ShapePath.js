@@ -9,6 +9,19 @@ This is a monorepo which holds:
 
 2021-07-17 ericP: changed predicate separator for `::thisTripleExpr` from `.` to `~` because `.` is legal in localNames
 
+2026-08-22: `thisTripleExpr::` follows an Inclusion.  ShExC's `&<#label>`
+compiles to a bare label where a triple expression would be, and it means the
+expression that label names is part of this body -- which is how the matcher
+reads it.  The axis stopped there, so `~<iri>`, which is built on it, reported
+a shape's body as smaller than the matcher does: a constraint a shape included
+by reference could not be addressed through that shape at all.
+
+An expression the walk has already reported is not reported again, so an
+expression that includes itself, and one included twice, are each that
+expression once.  Note that an included expression is *one* expression however
+many bodies take it in: `@<#A>~<p>` and `@<#B>~<p>` reach the same node when
+both include it, and something hung there is hung there for both.
+
 2026-08-20: `$<label>` selects the triple expression declared with that label,
 joining `@<label>` (a shape expression) and `~<iri>` (the triple constraint on
 a predicate).  ShExJ has no top-level list of triple expressions the way it has

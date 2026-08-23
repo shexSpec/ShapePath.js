@@ -10,6 +10,18 @@ declare type ParentMap = Map<SchemaNode, SchemaNode | null>;
 export declare class EvalContext {
     schema: ShExJ.Schema;
     constructor(schema: ShExJ.Schema);
+    tripleExprs: Map<string, SchemaNode> | null;
+    /**
+     * The triple expression declared with this label, if the schema has one.
+     *
+     * ShExJ has no top-level list of triple expressions the way it has
+     * `shapes`, so this is a walk: a labelled expression may sit anywhere,
+     * including inside the inline shape of some constraint's value
+     * expression.  Two rules the walk keeps, as `descendant::` does -- a
+     * property whose name begins with "_" is not ShExJ and is not descended
+     * into, and a node already seen is not visited twice.
+     */
+    getTripleExpr(label: string): SchemaNode | undefined;
     parents: ParentMap | null;
     getParents(): ParentMap;
 }
